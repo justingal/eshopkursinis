@@ -12,7 +12,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 public class Other extends Product{
-    private double weight;
-    private String material;
+    private String otherType;
+
+    public Other(int id, String title, String description, String manufacturer, String otherType) {
+        super(id, title, description, manufacturer);
+        this.otherType = otherType;
+    }
+
+    public Other(String title, String description, String manufacturer, String otherType) {
+        super(title, description, manufacturer);
+        this.otherType = otherType;
+    }
 
 }

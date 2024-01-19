@@ -16,10 +16,21 @@ import java.time.LocalDate;
 @Entity
 public class Puzzle extends Product {
 
-    private LocalDate puzzleDate;
+    private int piecesQuantity;
+    private String puzzleSize;
+    private String puzzleMaterial;
 
-    public Puzzle(String title, String description, LocalDate puzzleDate) {
-        super(title, description);
-        this.puzzleDate = puzzleDate;
+    public Puzzle(int id, String title, String description, String manufacturer,  int piecesQuantity, String puzzleSize, String puzzleMaterial) {
+        super(id, title, description, manufacturer);
+        this.piecesQuantity = piecesQuantity;
+        this.puzzleSize = puzzleSize;
+        this.puzzleMaterial = puzzleMaterial;
+    }
+
+    public Puzzle(String title, String description, String manufacturer, int piecesQuantity, String puzzleSize, String puzzleMaterial) {
+        super(title, description, manufacturer);
+        this.piecesQuantity = piecesQuantity;
+        this.puzzleSize = puzzleSize;
+        this.puzzleMaterial = puzzleMaterial;
     }
 }

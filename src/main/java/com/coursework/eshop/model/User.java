@@ -28,15 +28,17 @@ public abstract class User implements Serializable {
     LocalDate birthDate;
     String name;
     String surname;
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
     List<Comment> myComments;
 
 
-    public User(String login, String password, LocalDate birthDate) {
+    public User(String login, String password, LocalDate birthDate, String name, String surname) {
         this.login = login;
         this.password = password;
         this.birthDate = birthDate;
+        this.name = name;
+        this.surname = surname;
     }
 
     public User(int id, String login, String password, LocalDate birthDate) {

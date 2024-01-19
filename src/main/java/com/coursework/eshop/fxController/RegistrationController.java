@@ -1,5 +1,6 @@
 package com.coursework.eshop.fxController;
 
+//import com.coursework.eshop.HibernateControllers.UserHib;
 import com.coursework.eshop.HibernateControllers.UserHib;
 import com.coursework.eshop.model.Customer;
 import jakarta.persistence.EntityManagerFactory;
@@ -45,17 +46,14 @@ public class RegistrationController {
     public CheckBox isAdminCheck;
 
     private EntityManagerFactory entityManagerFactory;
-    private UserHib userHib;
 
+    private UserHib userHib;
     public void setData(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
         userHib = new UserHib(entityManagerFactory);
     }
 
     public void createUser() {
-        //
         userHib.createUser(new Customer());
-
-
     }
 }

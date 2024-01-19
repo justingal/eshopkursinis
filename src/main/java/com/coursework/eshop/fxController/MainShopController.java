@@ -2,13 +2,15 @@ package com.coursework.eshop.fxController;
 
 
 import com.coursework.eshop.model.Product;
+import com.coursework.eshop.model.User;
+import jakarta.persistence.EntityManagerFactory;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainShop implements Initializable {
+public class MainShopController implements Initializable {
 
 
     public ListView<Product> productList;
@@ -37,5 +39,8 @@ public class MainShop implements Initializable {
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    public void setData(EntityManagerFactory entityManagerFactory, User user) {
     }
 }

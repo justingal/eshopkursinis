@@ -1,13 +1,14 @@
 package com.coursework.eshop.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Getter
@@ -21,11 +22,15 @@ public class Manager extends User {
     private String medCertificate;
     private LocalDate employmentDate;
     private boolean isAdmin;
-    @ManyToOne
-    private Warehouse worksInWarehouse;
+    @ManyToMany
+    private List<Warehouse> warehouses;
 
-    public Manager(String login, String password, LocalDate birthDate) {
-        super(login, password, birthDate);
+    public Manager(String login, String password, LocalDate birthDate, String name, String surname, String employeeId, String medCertificate, LocalDate employmentDate, boolean isAdmin) {
+        super(login, password, birthDate, name, surname);
+        this.employeeId = employeeId;
+        this.medCertificate = medCertificate;
+        this.employmentDate = employmentDate;
+        this.isAdmin = isAdmin;
     }
 
     @Override

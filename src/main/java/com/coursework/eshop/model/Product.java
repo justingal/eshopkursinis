@@ -21,12 +21,20 @@ public class Product implements Serializable {
     String description;
     String manufacturer;
     @ManyToOne
-    private Cart cart;
-    @ManyToOne
     private Warehouse warehouse;
+    @ManyToOne
+    private Cart cart;
 
-    public Product(String title, String description) {
+    public Product(String title, String description, String manufacturer) {
         this.title = title;
         this.description = description;
+        this.manufacturer = manufacturer;
+    }
+
+    public Product(int id, String title, String description, String manufacturer) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.manufacturer = manufacturer;
     }
 }

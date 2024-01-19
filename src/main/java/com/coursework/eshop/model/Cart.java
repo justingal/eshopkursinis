@@ -24,4 +24,7 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Puzzle> puzzle;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<BoardGame> boardGame;
 }

@@ -1,38 +1,33 @@
 package com.coursework.eshop.HibernateControllers;
 
-
 import com.coursework.eshop.model.Customer;
 import com.coursework.eshop.model.User;
+import com.coursework.eshop.model.Warehouse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.Query;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 
-import java.lang.reflect.Executable;
 import java.util.ArrayList;
 import java.util.List;
-public class UserHib {
 
+public class WarehouseHib {
     private EntityManagerFactory entityManagerFactory = null;
 
-    public UserHib(EntityManagerFactory entityManagerFactory) {
+    public WarehouseHib(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
-
     private EntityManager getEntityManager() {
         return entityManagerFactory.createEntityManager();
     }
 
     //persist yra insert
-    public void createUser(User user) {
+    public void createWarehouse(Warehouse warehouse) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(user);
+            em.persist(warehouse);
             em.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,12 +37,12 @@ public class UserHib {
     }
 
     //merge yra update
-    public void updateUser(User user) {
+    public void updateWarehouse(Warehouse warehouse) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.merge(user);
+            em.merge(warehouse);
             em.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,19 +52,19 @@ public class UserHib {
     }
 
     //delete user by id
-    public void deleteUser(int id) {
+    public void deleteWarehouse(int id) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            User user = null;
+            Warehouse warehouse = null;
             try {
-                user = em.getReference(User.class, id);
-                user.getId();
+                warehouse = em.getReference(Warehouse.class, id);
+                warehouse.getId();
             } catch (Exception e) {
                 System.out.println("User not found by ID");
             }
-            em.remove(user);
+            em.remove(warehouse);
             em.getTransaction().commit();
         }catch
         (Exception e){
@@ -79,12 +74,12 @@ public class UserHib {
         }
     }
 
-    public List<Customer> getAllCustomers() {
+    public List<Warehouse> getAllWarehouse() {
         EntityManager em = null;
         try {
             em = getEntityManager();
             CriteriaQuery query = em.getCriteriaBuilder().createQuery();
-            query.select(query.from(Customer.class));
+            query.select(query.from(Warehouse.class));
             Query q = em.createQuery(query);
             return q.getResultList();
         } catch(Exception e){
@@ -93,25 +88,5 @@ public class UserHib {
             if (em != null) em.close();
         }
         return new ArrayList<>();
-    }
-
-    public User getUserByCredentials(String login, String password) {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<User> cq = cb.createQuery(User.class);
-            Root<User> root = cq.from(User.class);
-            CriteriaQuery<User> query = null;
-            query.select(root).where(cb.and(cb.like(root.get("login"), login), cb.like(root.get("password"), password)));
-            Query q;
-
-            q = em.createQuery(query);
-            return (User) q.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        } finally {
-            if (em != null) em.close();
-        }
     }
 }

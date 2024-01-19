@@ -1,27 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShopController">
     <children>
         <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
-                <Tab text="Products">
+                <Tab fx:id="productsTab" text="Products">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
                                 <ListView fx:id="productList" layoutX="14.0" layoutY="14.0" prefHeight="347.0" prefWidth="236.0" AnchorPane.bottomAnchor="8.400000000000034" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="14.0" />
+                        <Button layoutX="274.0" layoutY="319.0" mnemonicParsing="false" text="Leave a comment" />
                             </children>
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="Users">
+                <Tab fx:id="usersTab" text="Users">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ListView layoutX="14.0" layoutY="15.0" prefHeight="336.0" prefWidth="200.0" />
+                     </children></AnchorPane>
                     </content>
                 </Tab>
+            <Tab fx:id="warehouseTab" text="Warehouse">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab fx:id="ordersTab" text="Orders">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
             </tabs>
         </TabPane>
     </children>

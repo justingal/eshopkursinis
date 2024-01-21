@@ -1,5 +1,6 @@
 package com.coursework.eshop.fxController;
 
+import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
 import com.coursework.eshop.model.User;
 import com.coursework.eshop.HibernateControllers.UserHib;
@@ -55,13 +56,16 @@ public class LoginController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } else {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Login Info", "Wrong credentials", "Wrong credentials");
-        }
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Login INFO", "Wrong data", "Please check credentials, no such user");
     }
-
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        entityManagerFactory = Persistence.createEntityManagerFactory("coursework-eshop");
+        entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
+    }
+
+    public void setData(EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
 }

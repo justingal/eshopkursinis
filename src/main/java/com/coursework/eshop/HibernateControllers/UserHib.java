@@ -1,6 +1,7 @@
 package com.coursework.eshop.HibernateControllers;
 
 
+import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.Customer;
 import com.coursework.eshop.model.User;
 import jakarta.persistence.EntityManager;
@@ -95,23 +96,42 @@ public class UserHib {
         return new ArrayList<>();
     }
 
-    public User getUserByCredentials(String login, String password) {
+    public List<User> getAllUsers() {
         EntityManager em = null;
         try {
             em = getEntityManager();
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<User> cq = cb.createQuery(User.class);
-            Root<User> root = cq.from(User.class);
-            CriteriaQuery<User> query = null;
+            CriteriaQuery query = em.getCriteriaBuilder().createQuery();
+            query.select(query.from(User.class));
+            Query q = em.createQuery(query);
+            return q.getResultList();
+        } catch(Exception e){
+            e.printStackTrace();
+        } finally {
+            if (em != null) em.close();
+        }
+        return new ArrayList<>();
+    }
+
+    public User getUserByCredentials(String login, String password) {
+        EntityManager entityManager = getEntityManager();
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<User> query = cb.createQuery(User.class);
+            Root<User> root = query.from(User.class);
             query.select(root).where(cb.and(cb.like(root.get("login"), login), cb.like(root.get("password"), password)));
             Query q;
 
-            q = em.createQuery(query);
+            q = entityManager.createQuery(query);
             return (User) q.getSingleResult();
         } catch (NoResultException e) {
+            JavaFxCustomsUtils.generateAlert(
+                    javafx.scene.control.Alert.AlertType.ERROR,
+                    "Error",
+                    "Error",
+                    "Error while getting user by credentials");
             return null;
         } finally {
-            if (em != null) em.close();
+            if (entityManager != null) entityManager.close();
         }
     }
 }

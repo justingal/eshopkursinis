@@ -1,5 +1,7 @@
 package com.coursework.eshop.HibernateControllers;
 
+import com.coursework.eshop.fxController.JavaFxCustomsUtils;
+import com.coursework.eshop.model.Warehouse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
@@ -9,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GenericHib {
-    private EntityManagerFactory entityManagerFactory;
+    private final EntityManagerFactory entityManagerFactory;
     private EntityManager em;
 
     public GenericHib(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
     }
 
-    EntityManager getEntityManager() {
+    public EntityManager getEntityManager() {
         return entityManagerFactory.createEntityManager();
     }
 
@@ -80,20 +82,25 @@ public class GenericHib {
 
     //READ operacija, tik istrauks visus irasus, kurie yra DB
 
-    public <T> List<T> getAllRecords(Class<T> entityClass) {
-        EntityManager em = null;
-        List<T> result = new ArrayList<>();
+    public <T> List<T> getAllRecords(Class <T> entityClass) {
+        List<T> result = new ArrayList<T>();
         try {
             em = getEntityManager();
-            CriteriaQuery query = em.getCriteriaBuilder().createQuery();
-            query.select(query.from(entityClass));
-            Query q = em.createQuery(query);
-            result = q.getResultList();
+            CriteriaQuery<T> criteriaQuery = em.getCriteriaBuilder().createQuery(entityClass);
+            criteriaQuery.select(criteriaQuery.from(entityClass));
+            result = em.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            e.printStackTrace();
+            JavaFxCustomsUtils.generateAlert(
+                    javafx.scene.control.Alert.AlertType.ERROR,
+                    "Error",
+                    "Error",
+                    "Error while reading all records"
+            );
         } finally {
             if (em != null) em.close();
         }
         return result;
     }
+
+
 }

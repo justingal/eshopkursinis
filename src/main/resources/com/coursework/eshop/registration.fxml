@@ -9,8 +9,7 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="369.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.RegistrationController">
+<AnchorPane prefHeight="369.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.RegistrationController">
     <children>
         <TextField fx:id="loginField" layoutX="26.0" layoutY="27.0" prefHeight="26.0" prefWidth="163.0" promptText="Enter login:" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="235.8" />
         <PasswordField fx:id="passwordField" layoutX="26.0" layoutY="70.0" prefHeight="26.0" prefWidth="163.0" promptText="Enter passwrod:" />
@@ -24,7 +23,7 @@
         </RadioButton>
         <RadioButton fx:id="managerCheckbox" layoutX="122.0" layoutY="287.0" mnemonicParsing="false" text="Manager" toggleGroup="$userType" />
         <Button layoutX="324.0" layoutY="332.0" mnemonicParsing="false" onAction="#createUser" text="Create User" />
-        <Button layoutX="33.0" layoutY="332.0" mnemonicParsing="false" text="Return" />
+        <Button fx:id="returnButton" layoutX="33.0" layoutY="332.0" mnemonicParsing="false" onAction="#returnToLogin" text="Return" />
         <TextField fx:id="addressField" layoutX="226.0" layoutY="28.0" prefHeight="26.0" prefWidth="175.0" promptText="Enter home address:" />
         <TextField fx:id="cardNoField" layoutX="227.0" layoutY="71.0" prefHeight="26.0" prefWidth="175.0" promptText="Enter card No:" />
         <DatePicker fx:id="birthDateField" layoutX="27.0" layoutY="251.0" promptText="Enter birth date:" />

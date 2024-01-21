@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -19,6 +20,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    private LocalDate dateCreated;
     @ManyToOne
     private Customer customer;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
@@ -27,4 +29,5 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<BoardGame> boardGame;
+
 }

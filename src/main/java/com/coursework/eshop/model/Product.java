@@ -12,29 +12,36 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-@MappedSuperclass
+@Entity
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     String title;
     String description;
-    String manufacturer;
+    String author;
     @ManyToOne
     private Warehouse warehouse;
     @ManyToOne
     private Cart cart;
 
-    public Product(String title, String description, String manufacturer) {
+    public Product(String title, String description, String author) {
         this.title = title;
         this.description = description;
-        this.manufacturer = manufacturer;
+        this.author = author;
     }
 
-    public Product(int id, String title, String description, String manufacturer) {
+    public Product(int id, String title, String description, String author) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.manufacturer = manufacturer;
+        this.author = author;
+    }
+
+    public Product(String title, String description, String author, Warehouse warehouse) {
+        this.title = title;
+        this.description = description;
+        this.author = author;
+        this.warehouse = warehouse;
     }
 }

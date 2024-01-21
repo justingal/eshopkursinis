@@ -16,14 +16,20 @@ public class BoardGame extends Product {
     private String playersQuantity;
     private String gameDuration;
 
-    public BoardGame(int id, String title, String description, String manufacturer, String playersQuantity, String gameDuration) {
-        super(id, title, description, manufacturer);
+    public BoardGame(int id, String title, String description, String author, String playersQuantity, String gameDuration) {
+        super(id, title, description, author);
         this.playersQuantity = playersQuantity;
         this.gameDuration = gameDuration;
     }
 
-    public BoardGame(String title, String description, String manufacturer, String playersQuantity, String gameDuration) {
-        super(title, description, manufacturer);
+    public BoardGame(String title, String description, String author, String playersQuantity, String gameDuration) {
+        super(title, description, author);
+        this.playersQuantity = playersQuantity;
+        this.gameDuration = gameDuration;
+    }
+
+    public BoardGame(String title, String description, String author, Warehouse warehouse, String playersQuantity, String gameDuration) {
+        super(title, description, author, warehouse);
         this.playersQuantity = playersQuantity;
         this.gameDuration = gameDuration;
     }

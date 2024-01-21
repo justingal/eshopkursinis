@@ -32,16 +32,6 @@ public class Customer extends User {
         this.cardNo = cardNo;
     }
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "address='" + address + '\'' +
-                ", cardNo='" + cardNo + '\'' +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", birthDate=" + birthDate +
-                '}';
-    }
 
 
 }

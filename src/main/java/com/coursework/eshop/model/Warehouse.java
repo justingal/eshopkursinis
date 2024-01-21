@@ -45,10 +45,6 @@ public class Warehouse implements Serializable {
 
     @Override
     public String toString() {
-        return "Warehouse{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", address='" + address + '\'' +
-                '}';
+        return title;
     }
 }

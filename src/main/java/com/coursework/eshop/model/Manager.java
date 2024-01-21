@@ -33,8 +33,4 @@ public class Manager extends User {
         this.isAdmin = isAdmin;
     }
 
-    @Override
-    public String toString() {
-        return "Free text, ka noriu";
-    }
 }

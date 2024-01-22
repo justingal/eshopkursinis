@@ -2,14 +2,22 @@ package com.coursework.eshop.fxController;
 
 
 import com.coursework.eshop.HibernateControllers.GenericHib;
+import com.coursework.eshop.fxController.tableviews.CustomerTableParameters;
+import com.coursework.eshop.fxController.tableviews.ManagerTableParameters;
 import com.coursework.eshop.model.*;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Table;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.List;
@@ -64,14 +72,118 @@ public class MainShopController  {
     public TextField puzzleMaterialField;
     @FXML
     public TextField puzzleSizeField;
+    @FXML
+    public TableColumn<CustomerTableParameters, Integer> idTableCol;
+    @FXML
+    public TableColumn<CustomerTableParameters, String> loginTableCol;
+    @FXML
+    public TableColumn<CustomerTableParameters, String> passwordTableCol;
+    @FXML
+    public TableColumn<CustomerTableParameters, String> addressTableCol;
+    @FXML
+    public TableColumn< CustomerTableParameters, Void> dummyCol;
+    @FXML
+    public TableColumn< ManagerTableParameters, Integer> idManagerTableCol;
+    @FXML
+    public TableColumn<ManagerTableParameters,String> loginManagerTableCol;
+    @FXML
+    public TableColumn <ManagerTableParameters,String> passwordManagerTableCol;
+    @FXML
+    public TableColumn <ManagerTableParameters,String> employeeIdManagerTableCol;
 
 
+    private ObservableList<ManagerTableParameters> dataManager = FXCollections.observableArrayList();
+    private ObservableList<CustomerTableParameters> data = FXCollections.observableArrayList();
     private EntityManagerFactory entityManagerFactory;
     User currentUser;
     private GenericHib genericHib;
 
     public void initialize() {
+
         productType.getItems().addAll(ProductType.values());
+        // ---------------------set tableview settings---------------------
+        // ---------------------CUSTOMER---------------------
+        customerTable.setEditable(true);
+        idTableCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        loginTableCol.setCellValueFactory(new PropertyValueFactory<>("login"));
+        loginTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        loginTableCol.setOnEditCommit( event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setLogin(event.getNewValue());
+            Customer customer = genericHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            customer.setLogin(event.getNewValue());
+            genericHib.update(customer);
+        });
+        passwordTableCol.setCellValueFactory(new PropertyValueFactory<>("password"));
+        passwordTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        passwordTableCol.setOnEditCommit( event -> {
+           event.getTableView().getItems().get(event.getTablePosition().getRow()).setPassword(event.getNewValue());
+           Customer customer = genericHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+              customer.setPassword(event.getNewValue());
+                genericHib.update(customer);
+        });
+        addressTableCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+        addressTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        addressTableCol.setOnEditCommit( event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setAddress(event.getNewValue());
+            Customer customer = genericHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            customer.setAddress(event.getNewValue());
+            genericHib.update(customer);
+        });
+        // ---------------------DELETE BUTTON---------------------
+        /*Callback<TableColumn<CustomerTableParameters, Void>, TableCell<CustomerTableParameters, Void>> callback = param -> {
+            final TableCell<CustomerTableParameters, Void> cell = new TableCell<>() {
+                private final Button deleteButton = new Button("Delete");
+
+                {
+                    deleteButton.setOnAction(event -> {
+                        CustomerTableParameters row = getTableView().getItems().get(getIndex());
+                        GenericHib.delete(Customer.class, row.getId());
+                    });
+                }
+
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(deleteButton);
+                    }
+                }
+            };
+            return cell;
+        };
+
+        dummyCol.setCellFactory(callback);*/
+
+        // ---------------------MANAGER---------------------
+        managerTable.setEditable(true);
+        idManagerTableCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        loginManagerTableCol.setCellValueFactory(new PropertyValueFactory<>("login"));
+        loginManagerTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        loginManagerTableCol.setOnEditCommit( event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setLogin(event.getNewValue());
+            Manager manager = genericHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            manager.setLogin(event.getNewValue());
+            genericHib.update(manager);
+        });
+        passwordManagerTableCol.setCellValueFactory(new PropertyValueFactory<>("password"));
+        passwordManagerTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        passwordManagerTableCol.setOnEditCommit( event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setPassword(event.getNewValue());
+            Manager manager = genericHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            manager.setPassword(event.getNewValue());
+            genericHib.update(manager);
+        });
+        employeeIdManagerTableCol.setCellValueFactory(new PropertyValueFactory<>("employeeId"));
+        employeeIdManagerTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        employeeIdManagerTableCol.setOnEditCommit( event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setEmployeeId(event.getNewValue());
+            Manager manager = genericHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            manager.setEmployeeId(event.getNewValue());
+            genericHib.update(manager);
+        });
+
     }
 
     public void setData(EntityManagerFactory entityManagerFactory, User user) {
@@ -107,7 +219,7 @@ public class MainShopController  {
 
     public void loadTabValues() {
         if (productsTab.isSelected()) {
-
+            loadProductListManager();
             warehouseComboBox.getItems().clear();
             warehouseComboBox.getItems().addAll(genericHib.getAllRecords(Warehouse.class));
         }else if( warehouseTab.isSelected()){
@@ -118,7 +230,35 @@ public class MainShopController  {
                 titleWarehouseField.setText(selectedWarehouse.getTitle());
                 addressWarehouseField.setText(selectedWarehouse.getAddress());
             }
+        }else if( usersTab.isSelected()){
+            loadUserTables();
         }
+    }
+
+    private void loadUserTables() {
+        customerTable.getItems().clear();
+        List <Customer> customerList = genericHib.getAllRecords(Customer.class);
+        for (Customer c : customerList) {
+            CustomerTableParameters customerTableParameters = new CustomerTableParameters();
+            customerTableParameters.setId(c.getId());
+            customerTableParameters.setLogin(c.getLogin());
+            customerTableParameters.setPassword(c.getPassword());
+            customerTableParameters.setAddress(c.getAddress());
+            data.add(customerTableParameters);
+        }
+        customerTable.setItems(data);
+
+        managerTable.getItems().clear();
+        List <Manager> managerList = genericHib.getAllRecords(Manager.class);
+        for (Manager m : managerList) {
+            ManagerTableParameters managerTableParameters = new ManagerTableParameters();
+            managerTableParameters.setId(m.getId());
+            managerTableParameters.setLogin(m.getLogin());
+            managerTableParameters.setPassword(m.getPassword());
+            managerTableParameters.setEmployeeId(m.getEmployeeId());
+            dataManager.add(managerTableParameters);
+        }
+        managerTable.setItems(dataManager);
     }
 
     public void enableProductField(ActionEvent actionEvent) {
@@ -148,8 +288,12 @@ public class MainShopController  {
 
     private void loadProductListManager() {
         productListManager.getItems().clear();
-        List<Product> products = genericHib.getAllRecords(Product.class);
-        productListManager.getItems().addAll(products);
+        List<BoardGame> boardGames = genericHib.getAllRecords(BoardGame.class);
+        productListManager.getItems().addAll(boardGames);
+        List<Puzzle> puzzles = genericHib.getAllRecords(Puzzle.class);
+        productListManager.getItems().addAll(puzzles);
+        List<Other> others = genericHib.getAllRecords(Other.class);
+        productListManager.getItems().addAll(others);
     }
 
     public void addNewProduct() {
@@ -165,12 +309,55 @@ public class MainShopController  {
         loadProductListManager();
     }
 
-    public void updateProduct(ActionEvent actionEvent) {
+    public void updateProduct() {
+        Product selectedProduct = productListManager.getSelectionModel().getSelectedItem();
+        Product product = genericHib.getEntityById(selectedProduct.getClass(), selectedProduct.getId());
+
+        product.setTitle(productTitleField.getText());
+        product.setDescription(descriptionField.getText());
+        product.setAuthor(authorField.getText());
+        product.setWarehouse(genericHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()));
+
+        if (productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME) {
+            BoardGame boardGame = (BoardGame) product;
+            boardGame.setPlayersQuantity(playersQuantityField.getText());
+            boardGame.setGameDuration(gameDurationFIeld.getText());
+        } else if (productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE) {
+            Puzzle puzzle = (Puzzle) product;
+            puzzle.setPiecesQuantity(Integer.parseInt(piecesQuantityField.getText()));
+            puzzle.setPuzzleMaterial(puzzleMaterialField.getText());
+            puzzle.setPuzzleSize(puzzleSizeField.getText());
+        }
+        genericHib.update(product);
         loadProductListManager();
     }
 
-    public void deleteProduct(ActionEvent actionEvent) {
-        loadProductListManager();
+    public void deleteProduct() {
+    }
+    public void loadProductManagerData() {
+        Product selectedProduct = productListManager.getSelectionModel().getSelectedItem();
+
+        if (selectedProduct != null) {
+            productTitleField.setText(selectedProduct.getTitle());
+            descriptionField.setText(selectedProduct.getDescription());
+            authorField.setText(selectedProduct.getAuthor());
+            warehouseComboBox.getSelectionModel().select(selectedProduct.getWarehouse());
+
+            if (selectedProduct instanceof BoardGame) {
+                BoardGame boardGame = (BoardGame) selectedProduct;
+                productType.getSelectionModel().select(ProductType.BOARD_GAME);
+                playersQuantityField.setText(boardGame.getPlayersQuantity());
+                gameDurationFIeld.setText(boardGame.getGameDuration());
+            } else if (selectedProduct instanceof Puzzle) {
+                Puzzle puzzle = (Puzzle) selectedProduct;
+                productType.getSelectionModel().select(ProductType.PUZZLE);
+                piecesQuantityField.setText(String.valueOf(puzzle.getPiecesQuantity()));
+                puzzleMaterialField.setText(puzzle.getPuzzleMaterial());
+                puzzleSizeField.setText(puzzle.getPuzzleSize());
+            } else {
+                productType.getSelectionModel().select(ProductType.OTHER);
+            }
+        }
     }
 
     //---------------------------------Warehouse---------------------------------
@@ -197,7 +384,7 @@ public class MainShopController  {
         Warehouse selectedWarehouse = warehouseList.getSelectionModel().getSelectedItem();
         Warehouse warehouse = genericHib.getEntityById(Warehouse.class, selectedWarehouse.getId());
         genericHib.delete(selectedWarehouse.getClass(), selectedWarehouse.getId());
-    loadWarehouseList();
+        loadWarehouseList();
     }
 
     public void loadWarehouseData() {
@@ -205,5 +392,6 @@ public class MainShopController  {
         titleWarehouseField.setText(selectedWarehouse.getTitle());
         addressWarehouseField.setText(selectedWarehouse.getAddress());
     }
+
 
 }

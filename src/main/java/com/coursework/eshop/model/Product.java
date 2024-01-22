@@ -12,7 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity
+@MappedSuperclass
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,5 +43,10 @@ public class Product implements Serializable {
         this.description = description;
         this.author = author;
         this.warehouse = warehouse;
+    }
+
+    @Override
+    public String toString() {
+        return title;
     }
 }

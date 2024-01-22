@@ -5,11 +5,7 @@ module com.coursework.eshop {
     requires java.sql;
     requires org.hibernate.orm.core;
     requires jakarta.persistence;
-   /* requires spring.web;
-    requires spring.core;
-    requires spring.context;
-    requires com.google.gson;
-*/
+
 
     opens com.coursework.eshop to javafx.fxml;
     exports com.coursework.eshop;
@@ -17,7 +13,7 @@ module com.coursework.eshop {
     exports com.coursework.eshop.model;
     opens com.coursework.eshop.fxController to javafx.fxml;
     exports com.coursework.eshop.fxController to javafx.fxml;
-    //opens com.coursework.eshop.fxController.tableviewparameters to javafx.base;
+    opens com.coursework.eshop.fxController.tableviews to javafx.base;
     opens com.coursework.eshop.HibernateControllers to javafx.fxml;
     exports com.coursework.eshop.HibernateControllers to javafx.fxml;
 

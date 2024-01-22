@@ -33,4 +33,8 @@ public class BoardGame extends Product {
         this.playersQuantity = playersQuantity;
         this.gameDuration = gameDuration;
     }
+    @Override
+    public String toString() {
+        return title;
+    }
 }

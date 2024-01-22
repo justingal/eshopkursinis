@@ -20,7 +20,7 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <ListView fx:id="productList" layoutX="14.0" layoutY="14.0" prefHeight="347.0" prefWidth="236.0" AnchorPane.bottomAnchor="8.400000000000034" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="14.0" />
+                                <ListView fx:id="productList" layoutX="14.0" layoutY="12.0" prefHeight="347.0" prefWidth="236.0" AnchorPane.bottomAnchor="11.199999999999989" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="350.79999999999995" AnchorPane.topAnchor="12.0" />
                         <Button layoutX="267.0" layoutY="336.0" mnemonicParsing="false" onAction="#leaveComment" text="Leave a comment" />
                         <Button layoutX="290.0" layoutY="234.0" mnemonicParsing="false" onAction="#addToCart" text="Add" />
                         <ListView fx:id="currentOrder" layoutX="265.0" layoutY="14.0" prefHeight="200.0" prefWidth="322.0" />
@@ -34,14 +34,20 @@
                      <children>
                         <TableView fx:id="customerTable" layoutX="14.0" layoutY="14.0" prefHeight="163.0" prefWidth="574.0">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="C1" />
-                            <TableColumn prefWidth="75.0" text="C2" />
+                            <TableColumn fx:id="idTableCol" prefWidth="75.0" text="ID" />
+                            <TableColumn fx:id="loginTableCol" prefWidth="75.0" text="Login" />
+                              <TableColumn fx:id="passwordTableCol" prefWidth="75.0" text="Password" />
+                              <TableColumn fx:id="addressTableCol" prefWidth="75.0" text="Address" />
+                              <TableColumn fx:id="dummyCol" prefWidth="75.0" text="Action" />
                           </columns>
                         </TableView>
                         <TableView fx:id="managerTable" layoutX="14.0" layoutY="186.0" prefHeight="182.0" prefWidth="574.0">
                            <columns>
-                              <TableColumn prefWidth="75.0" text="C1" />
-                              <TableColumn prefWidth="75.0" text="C2" />
+                              <TableColumn fx:id="idManagerTableCol" prefWidth="75.0" text="ID" />
+                              <TableColumn fx:id="loginManagerTableCol" prefWidth="75.0" text="Login" />
+                              <TableColumn fx:id="passwordManagerTableCol" prefWidth="75.0" text="Password" />
+                              <TableColumn fx:id="employeeIdManagerTableCol" prefWidth="75.0" text="Employee id" />
+                              <TableColumn prefWidth="75.0" text="Action" />
                            </columns>
                         </TableView>
                      </children></AnchorPane>
@@ -70,7 +76,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="379.0" prefWidth="650.0">
                      <children>
-                        <ListView fx:id="productListManager" layoutX="14.0" layoutY="14.0" prefHeight="178.0" prefWidth="251.0" />
+                        <ListView fx:id="productListManager" layoutX="14.0" layoutY="14.0" onMouseClicked="#loadProductManagerData" prefHeight="178.0" prefWidth="251.0" />
                         <TextField fx:id="productTitleField" layoutX="14.0" layoutY="204.0" prefHeight="26.0" prefWidth="250.0" promptText="Title" />
                         <TextArea fx:id="descriptionField" layoutX="14.0" layoutY="274.0" prefHeight="82.0" prefWidth="247.0" promptText="Description" />
                         <TextField fx:id="authorField" layoutX="13.0" layoutY="237.0" prefHeight="26.0" prefWidth="249.0" promptText="Author" />

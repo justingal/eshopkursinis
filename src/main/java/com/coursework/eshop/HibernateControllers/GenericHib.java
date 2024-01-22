@@ -90,12 +90,7 @@ public class GenericHib {
             criteriaQuery.select(criteriaQuery.from(entityClass));
             result = em.createQuery(criteriaQuery).getResultList();
         } catch (Exception e) {
-            JavaFxCustomsUtils.generateAlert(
-                    javafx.scene.control.Alert.AlertType.ERROR,
-                    "Error",
-                    "Error",
-                    "Error while reading all records"
-            );
+
         } finally {
             if (em != null) em.close();
         }

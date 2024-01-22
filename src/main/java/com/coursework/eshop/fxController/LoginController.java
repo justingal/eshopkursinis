@@ -56,7 +56,7 @@ public class LoginController implements Initializable {
             stage.setScene(scene);
             stage.show();
         } else {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Login INFO", "Wrong data", "Please check credentials, no such user");
+            //JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Login INFO", "Wrong data", "Please check credentials, no such user");
     }
     }
     @Override

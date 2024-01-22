@@ -348,12 +348,14 @@ public class MainShopController  {
                 productType.getSelectionModel().select(ProductType.BOARD_GAME);
                 playersQuantityField.setText(boardGame.getPlayersQuantity());
                 gameDurationFIeld.setText(boardGame.getGameDuration());
+                warehouseComboBox.getSelectionModel().select(selectedProduct.getWarehouse());
             } else if (selectedProduct instanceof Puzzle) {
                 Puzzle puzzle = (Puzzle) selectedProduct;
                 productType.getSelectionModel().select(ProductType.PUZZLE);
                 piecesQuantityField.setText(String.valueOf(puzzle.getPiecesQuantity()));
                 puzzleMaterialField.setText(puzzle.getPuzzleMaterial());
                 puzzleSizeField.setText(puzzle.getPuzzleSize());
+                warehouseComboBox.getSelectionModel().select(selectedProduct.getWarehouse());
             } else {
                 productType.getSelectionModel().select(ProductType.OTHER);
             }

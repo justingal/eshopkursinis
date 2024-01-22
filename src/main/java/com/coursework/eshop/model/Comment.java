@@ -19,4 +19,16 @@ public class Comment {
     private String commentBody;
     @ManyToOne
     private User user;
+
+
+    public Comment(String title, String commentBody, User user) {
+        this.title = title;
+        this.commentBody = commentBody;
+        this.user = user;
+    }
+
+    @Override
+    public String toString() {
+        return title + ":  " + commentBody;
+    }
 }

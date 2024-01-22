@@ -1,6 +1,7 @@
 package com.coursework.eshop.fxController;
 
 
+import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.HibernateControllers.GenericHib;
 import com.coursework.eshop.fxController.tableviews.CustomerTableParameters;
 import com.coursework.eshop.fxController.tableviews.ManagerTableParameters;
@@ -90,6 +91,10 @@ public class MainShopController  {
     public TableColumn <ManagerTableParameters,String> passwordManagerTableCol;
     @FXML
     public TableColumn <ManagerTableParameters,String> employeeIdManagerTableCol;
+    public TextField commentTitleField;
+    public TextArea commentTextArea;
+    public ListView<Comment> commentListView;
+    public Tab commentTab;
 
 
     private ObservableList<ManagerTableParameters> dataManager = FXCollections.observableArrayList();
@@ -101,6 +106,11 @@ public class MainShopController  {
     public void initialize() {
 
         productType.getItems().addAll(ProductType.values());
+        commentListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                loadCommentData();
+            }
+        });
         // ---------------------set tableview settings---------------------
         // ---------------------CUSTOMER---------------------
         customerTable.setEditable(true);
@@ -196,6 +206,7 @@ public class MainShopController  {
     private void loadData() {
         genericHib = new GenericHib(entityManagerFactory);
         productList.getItems().addAll(genericHib.getAllRecords(Product.class));
+        commentListView.getItems().addAll(genericHib.getAllRecords(Comment.class));
     }
 
     private void limitAccess() {
@@ -232,6 +243,9 @@ public class MainShopController  {
             }
         }else if( usersTab.isSelected()){
             loadUserTables();
+        }else if( commentTab.isSelected()){
+            loadCommentList();
+
         }
     }
 
@@ -333,6 +347,9 @@ public class MainShopController  {
     }
 
     public void deleteProduct() {
+        Product selectedProduct = productListManager.getSelectionModel().getSelectedItem();
+        CustomHib.deleteProduct(selectedProduct.getId());
+        loadProductListManager();
     }
     public void loadProductManagerData() {
         Product selectedProduct = productListManager.getSelectionModel().getSelectedItem();
@@ -394,6 +411,39 @@ public class MainShopController  {
         titleWarehouseField.setText(selectedWarehouse.getTitle());
         addressWarehouseField.setText(selectedWarehouse.getAddress());
     }
+//---------------------------------Comments---------------------------------
+
+    public void addNewComment(ActionEvent actionEvent) {
+        Comment comment = new Comment(commentTitleField.getText(), commentTextArea.getText(), currentUser);
+        genericHib.create(comment);
+        loadCommentList();
+
+    }
+
+    private void loadCommentList() {
+        commentListView.getItems().clear();
+        commentListView.getItems().addAll(genericHib.getAllRecords(Comment.class));
+
+    }
+
+    public void updateComment(ActionEvent actionEvent) {
+        Comment selectedComment = commentListView.getSelectionModel().getSelectedItem();
+        Comment comment = genericHib.getEntityById(Comment.class, selectedComment.getId());
+        comment.setTitle(commentTitleField.getText());
+        comment.setCommentBody(commentTextArea.getText());
+        genericHib.update(comment);
+        loadCommentList();
+
+    }
+    public void loadCommentData() {
+        Comment selectedComment = commentListView.getSelectionModel().getSelectedItem();
+        if (selectedComment != null) {
+            commentTitleField.setText(selectedComment.getTitle());
+            commentTextArea.setText(selectedComment.getCommentBody());
+        }
+    }
 
 
+    public void deleteComment(ActionEvent actionEvent) {
+    }
 }

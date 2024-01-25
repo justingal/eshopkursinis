@@ -54,13 +54,13 @@
                     </content>
                 </Tab>
             <Tab fx:id="warehousesTab" onSelectionChanged="#loadTabValues" text="Warehouse">
-                <fx:include source="warehouseTab.fxml" />
+                <fx:include source="warehouseTab.fxml" fx:id="warehouseTab"/>
             </Tab>
             <Tab fx:id="productsTab" onSelectionChanged="#loadTabValues" text="Product">
-                <fx:include source="productTab.fxml" />
+                <fx:include source="productTab.fxml" fx:id="productTab"/>
             </Tab>
             <Tab fx:id="commentsTab" onSelectionChanged="#loadTabValues" text="Comment">
-                <fx:include source="commentTab.fxml" />
+                <fx:include source="commentTab.fxml" fx:id="commentTab" />
             </Tab>
             </tabs>
         </TabPane>

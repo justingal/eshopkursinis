@@ -7,7 +7,7 @@
     <class>com.coursework.eshop.model.User</class>
     <properties>
       <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
-      <property name="jakarta.persistence.jdbc.url"    value="jdbc:mysql://localhost:3306/eshop_hibernate?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
+      <property name="jakarta.persistence.jdbc.url"    value="jdbc:mysql://localhost:3306/ezshop?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
       <property name="jakarta.persistence.jdbc.user"   value="root" />
       <property name="jakarta.persistence.jdbc.password" value="" />
       <property name="jakarta.persistence.schema-generation.database.action" value="create" />

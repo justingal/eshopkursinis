@@ -11,13 +11,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MainShopController  {
@@ -31,11 +29,9 @@ public class MainShopController  {
     @FXML
     public Tab usersTab;
     @FXML
-    public Tab warehouseTab;
+    public Tab warehousesTab;
     @FXML
     public Tab ordersTab;
-    @FXML
-    public Tab warehousesTab;
 
     @FXML
     public TableView customerTable;
@@ -224,14 +220,6 @@ public class MainShopController  {
         };
 
         dummyManagerCol.setCellFactory(managerDeleteCallback);
-//------------------------KAZKA BANDAU SU USER TAB------------------------
-        try {
-            Tab userTab = new Tab("Users");
-            userTab.setContent(FXMLLoader.load(getClass().getResource("UserTab.fxml")));
-            tabPane.getTabs().add(userTab);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -259,7 +247,7 @@ public class MainShopController  {
             }
         }else if(currentUser.getClass()== Customer.class){
                 tabPane.getTabs().remove(usersTab);
-                tabPane.getTabs().remove(warehouseTab);
+                tabPane.getTabs().remove(warehousesTab);
                 tabPane.getTabs().remove(productsTab);
         }
     }

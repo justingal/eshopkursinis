@@ -19,7 +19,6 @@ import java.util.List;
 
 public class MainShopController  {
 
-
     public ListView<Product> productList;
     @FXML
     public ListView<Cart> currentOrder;
@@ -53,10 +52,6 @@ public class MainShopController  {
     private EntityManagerFactory entityManagerFactory;
     private User currentUser;
     private CustomHib customHib;
-
-    public void initialize() {
-        customHib = new CustomHib(entityManagerFactory);
-    }
 
     public void setData(EntityManagerFactory entityManagerFactory, User user) {
         this.entityManagerFactory = entityManagerFactory;

@@ -53,19 +53,8 @@
                      </children></AnchorPane>
                     </content>
                 </Tab>
-            <Tab fx:id="warehouseTab" onSelectionChanged="#loadTabValues" text="Warehouse">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <ListView fx:id="warehouseList" layoutX="26.0" layoutY="33.0" onMouseClicked="#loadWarehouseData" prefHeight="312.0" prefWidth="200.0" />
-                        <Button layoutX="257.0" layoutY="319.0" mnemonicParsing="false" onAction="#addNewWarehouse" prefHeight="26.0" prefWidth="86.0" text="Add new" />
-                        <Button layoutX="356.0" layoutY="319.0" mnemonicParsing="false" onAction="#updateWarehouse" prefHeight="26.0" prefWidth="86.0" text="Update" />
-                        <Button layoutX="453.0" layoutY="319.0" mnemonicParsing="false" onAction="#removeWarehouse" prefHeight="26.0" prefWidth="90.0" text="Remove" />
-                        <TextField fx:id="addressWarehouseField" layoutX="258.0" layoutY="73.0" promptText="Address" />
-                        <TextField fx:id="titleWarehouseField" layoutX="258.0" layoutY="33.0" promptText="Title" />
-                     </children>
-                  </AnchorPane>
-              </content>
+            <Tab fx:id="warehousesTab" onSelectionChanged="#loadTabValues" text="Warehouse">
+                <fx:include source="warehouseTab.fxml" fx:id="warehouseTab"
             </Tab>
             <Tab fx:id="ordersTab" onSelectionChanged="#loadTabValues" text="Orders">
               <content>

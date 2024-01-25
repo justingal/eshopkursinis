@@ -7,24 +7,19 @@ import com.coursework.eshop.fxController.tableviews.CustomerTableParameters;
 import com.coursework.eshop.fxController.tableviews.ManagerTableParameters;
 import com.coursework.eshop.model.*;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Table;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import com.coursework.eshop.fxController.MainShop.WarehouseTabController;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class MainShopController  {
 
@@ -41,11 +36,8 @@ public class MainShopController  {
     @FXML
     public Tab ordersTab;
     @FXML
-    public ListView<Warehouse>warehouseList;
-    @FXML
-    public TextField addressWarehouseField;
-    @FXML
-    public TextField titleWarehouseField;
+    public Tab warehousesTab;
+
     @FXML
     public TableView customerTable;
     @FXML
@@ -102,6 +94,8 @@ public class MainShopController  {
     @FXML
     public TextField diceNumberField;
 
+    @FXML
+    WarehouseTabController warehouseTabController;
 
     private ObservableList<ManagerTableParameters> dataManager = FXCollections.observableArrayList();
     private ObservableList<CustomerTableParameters> data = FXCollections.observableArrayList();
@@ -109,6 +103,8 @@ public class MainShopController  {
     User currentUser;
     private GenericHib genericHib;
     private CustomHib customHib;
+
+
 
     public void initialize() {
 
@@ -280,14 +276,8 @@ public class MainShopController  {
             loadProductListManager();
             warehouseComboBox.getItems().clear();
             warehouseComboBox.getItems().addAll(genericHib.getAllRecords(Warehouse.class));
-        }else if( warehouseTab.isSelected()){
-            loadWarehouseList();
-            warehouseList.getSelectionModel().select(0);
-            Warehouse selectedWarehouse = warehouseList.getSelectionModel().getSelectedItem();
-            if (selectedWarehouse != null) {
-                titleWarehouseField.setText(selectedWarehouse.getTitle());
-                addressWarehouseField.setText(selectedWarehouse.getAddress());
-            }
+        }else if( warehousesTab.isSelected()){
+            warehouseTabController.setData(customHib);
         }else if( usersTab.isSelected()){
             loadUserTables();
         }else if( commentTab.isSelected()){
@@ -435,37 +425,9 @@ public class MainShopController  {
     }
 
     //---------------------------------Warehouse---------------------------------
-    private void loadWarehouseList() {
-        warehouseList.getItems().clear();
-        warehouseList.getItems().addAll(genericHib.getAllRecords(Warehouse.class));
-    }
 
-    public void addNewWarehouse(ActionEvent actionEvent) {
-        genericHib.create(new Warehouse(titleWarehouseField.getText(), addressWarehouseField.getText()));
-        loadWarehouseList();
-    }
 
-    public void updateWarehouse(ActionEvent actionEvent) {
-        Warehouse selectedWarehouse = warehouseList.getSelectionModel().getSelectedItem();
-        Warehouse warehouse = genericHib.getEntityById(Warehouse.class, selectedWarehouse.getId());
-        warehouse.setTitle(titleWarehouseField.getText());
-        warehouse.setAddress(addressWarehouseField.getText());
-        genericHib.update(warehouse);
-        loadWarehouseList();
-    }
 
-    public void removeWarehouse(ActionEvent actionEvent) {
-        Warehouse selectedWarehouse = warehouseList.getSelectionModel().getSelectedItem();
-        Warehouse warehouse = genericHib.getEntityById(Warehouse.class, selectedWarehouse.getId());
-        genericHib.delete(selectedWarehouse.getClass(), selectedWarehouse.getId());
-        loadWarehouseList();
-    }
-
-    public void loadWarehouseData() {
-        Warehouse selectedWarehouse = warehouseList.getSelectionModel().getSelectedItem();
-        titleWarehouseField.setText(selectedWarehouse.getTitle());
-        addressWarehouseField.setText(selectedWarehouse.getAddress());
-    }
 //---------------------------------Comments---------------------------------
 
     public void addNewComment(ActionEvent actionEvent) {

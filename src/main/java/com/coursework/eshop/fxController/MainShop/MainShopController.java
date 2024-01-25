@@ -77,6 +77,7 @@ public class MainShopController {
 
     public void loadTabValues() {
         if (productsTab.isSelected()) {
+
             productTabController.setData(customHib);
         }else if( warehousesTab.isSelected()){
             warehouseTabController.setData(customHib);

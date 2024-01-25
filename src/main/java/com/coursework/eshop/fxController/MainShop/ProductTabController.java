@@ -46,9 +46,10 @@ public class ProductTabController {
 
     public void setData(CustomHib customHib) {
         this.customHib = customHib;
-        productType.getItems().addAll(ProductType.values());
         loadProductListManager();
         warehouseComboBox.getItems().clear();
+        productType.getItems().clear();
+        productType.getItems().addAll(ProductType.values());
         warehouseComboBox.getItems().addAll(customHib.getAllRecords(Warehouse.class));
     }
 

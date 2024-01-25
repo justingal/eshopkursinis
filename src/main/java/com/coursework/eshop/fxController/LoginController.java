@@ -1,10 +1,9 @@
 package com.coursework.eshop.fxController;
 
+import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
-import com.coursework.eshop.fxController.MainShop.MainShopController;
 import com.coursework.eshop.model.User;
-import com.coursework.eshop.HibernateControllers.UserHib;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -41,7 +40,7 @@ public class LoginController implements Initializable {
     }
 
     public void validateAndConnect() throws IOException {
-        UserHib userHib = new UserHib(entityManagerFactory);
+        CustomHib userHib = new CustomHib(entityManagerFactory);
         User user = userHib.getUserByCredentials(loginField.getText(), passwordField.getText());
         //Cia galim optimizuoti, kol kas paliksiu kaip pvz su userHib
         if (user != null) {

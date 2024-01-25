@@ -1,8 +1,9 @@
-package com.coursework.eshop.fxController.MainShop;
+package com.coursework.eshop.fxController;
 
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
-import com.coursework.eshop.HibernateControllers.GenericHib;
+import com.coursework.eshop.fxController.MainShop.CommentTabController;
+import com.coursework.eshop.fxController.MainShop.WarehouseTabController;
 import com.coursework.eshop.fxController.tableviews.CustomerTableParameters;
 import com.coursework.eshop.fxController.tableviews.ManagerTableParameters;
 import com.coursework.eshop.model.*;
@@ -80,9 +81,7 @@ public class MainShopController  {
     public TableColumn <ManagerTableParameters,String> passwordManagerTableCol;
     @FXML
     public TableColumn <ManagerTableParameters,String> employeeIdManagerTableCol;
-    public TextField commentTitleField;
-    public TextArea commentTextArea;
-    public ListView<Comment> commentListView;
+    @FXML
     public Tab commentTab;
     @FXML
     public TableColumn dummyManagerCol;
@@ -90,25 +89,22 @@ public class MainShopController  {
     public TextField diceNumberField;
 
     @FXML
-    WarehouseTabController warehouseTabController;
+    private WarehouseTabController warehouseTabController;
+
+    @FXML
+    private CommentTabController commentTabController;
 
     private ObservableList<ManagerTableParameters> dataManager = FXCollections.observableArrayList();
     private ObservableList<CustomerTableParameters> data = FXCollections.observableArrayList();
     private EntityManagerFactory entityManagerFactory;
     User currentUser;
-    private GenericHib genericHib;
     private CustomHib customHib;
 
 
 
     public void initialize() {
-
+        customHib = new CustomHib(entityManagerFactory);
         productType.getItems().addAll(ProductType.values());
-        commentListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                loadCommentData();
-            }
-        });
         // ---------------------set tableview settings---------------------
         // ---------------------CUSTOMER---------------------
         customerTable.setEditable(true);
@@ -117,25 +113,25 @@ public class MainShopController  {
         loginTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
         loginTableCol.setOnEditCommit( event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setLogin(event.getNewValue());
-            Customer customer = genericHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            Customer customer = customHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
             customer.setLogin(event.getNewValue());
-            genericHib.update(customer);
+            customHib.update(customer);
         });
         passwordTableCol.setCellValueFactory(new PropertyValueFactory<>("password"));
         passwordTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
         passwordTableCol.setOnEditCommit( event -> {
            event.getTableView().getItems().get(event.getTablePosition().getRow()).setPassword(event.getNewValue());
-           Customer customer = genericHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+           Customer customer = customHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
               customer.setPassword(event.getNewValue());
-                genericHib.update(customer);
+                customHib.update(customer);
         });
         addressTableCol.setCellValueFactory(new PropertyValueFactory<>("address"));
         addressTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
         addressTableCol.setOnEditCommit( event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setAddress(event.getNewValue());
-            Customer customer = genericHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            Customer customer = customHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
             customer.setAddress(event.getNewValue());
-            genericHib.update(customer);
+            customHib.update(customer);
         });
         // ---------------------DELETE BUTTON---------------------
         Callback<TableColumn<CustomerTableParameters, Void>, TableCell<CustomerTableParameters, Void>> customerDeleteCallback = param -> {
@@ -173,25 +169,25 @@ public class MainShopController  {
         loginManagerTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
         loginManagerTableCol.setOnEditCommit( event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setLogin(event.getNewValue());
-            Manager manager = genericHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            Manager manager = customHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
             manager.setLogin(event.getNewValue());
-            genericHib.update(manager);
+            customHib.update(manager);
         });
         passwordManagerTableCol.setCellValueFactory(new PropertyValueFactory<>("password"));
         passwordManagerTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
         passwordManagerTableCol.setOnEditCommit( event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setPassword(event.getNewValue());
-            Manager manager = genericHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            Manager manager = customHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
             manager.setPassword(event.getNewValue());
-            genericHib.update(manager);
+            customHib.update(manager);
         });
         employeeIdManagerTableCol.setCellValueFactory(new PropertyValueFactory<>("employeeId"));
         employeeIdManagerTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
         employeeIdManagerTableCol.setOnEditCommit( event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setEmployeeId(event.getNewValue());
-            Manager manager = genericHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
+            Manager manager = customHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
             manager.setEmployeeId(event.getNewValue());
-            genericHib.update(manager);
+            customHib.update(manager);
         });
         // ---------------------DELETE BUTTON---------------------
         Callback<TableColumn<ManagerTableParameters, Void>, TableCell<ManagerTableParameters, Void>> managerDeleteCallback = param -> {
@@ -226,7 +222,6 @@ public class MainShopController  {
     public void setData(EntityManagerFactory entityManagerFactory, User user) {
         this.entityManagerFactory = entityManagerFactory;
         this.currentUser = user;
-        this.customHib = new CustomHib(entityManagerFactory); // Initialize here
         limitAccess();
         loadData();
 
@@ -234,9 +229,9 @@ public class MainShopController  {
 
 
     private void loadData() {
-        genericHib = new GenericHib(entityManagerFactory);
-        productList.getItems().addAll(genericHib.getAllRecords(Product.class));
-        commentListView.getItems().addAll(genericHib.getAllRecords(Comment.class));
+        customHib = new CustomHib(entityManagerFactory);
+        productList.getItems().addAll(customHib.getAllRecords(Product.class));
+
     }
 
     private void limitAccess() {
@@ -262,20 +257,19 @@ public class MainShopController  {
         if (productsTab.isSelected()) {
             loadProductListManager();
             warehouseComboBox.getItems().clear();
-            warehouseComboBox.getItems().addAll(genericHib.getAllRecords(Warehouse.class));
+            warehouseComboBox.getItems().addAll(customHib.getAllRecords(Warehouse.class));
         }else if( warehousesTab.isSelected()){
             warehouseTabController.setData(customHib);
         }else if( usersTab.isSelected()){
             loadUserTables();
         }else if( commentTab.isSelected()){
-            loadCommentList();
-
+            commentTabController.setData(customHib, currentUser);
         }
     }
 
     private void loadUserTables() {
         customerTable.getItems().clear();
-        List <Customer> customerList = genericHib.getAllRecords(Customer.class);
+        List <Customer> customerList = customHib.getAllRecords(Customer.class);
         for (Customer c : customerList) {
             CustomerTableParameters customerTableParameters = new CustomerTableParameters();
             customerTableParameters.setId(c.getId());
@@ -287,7 +281,7 @@ public class MainShopController  {
         customerTable.setItems(data);
 
         managerTable.getItems().clear();
-        List <Manager> managerList = genericHib.getAllRecords(Manager.class);
+        List <Manager> managerList = customHib.getAllRecords(Manager.class);
         for (Manager m : managerList) {
             ManagerTableParameters managerTableParameters = new ManagerTableParameters();
             managerTableParameters.setId(m.getId());
@@ -326,35 +320,35 @@ public class MainShopController  {
 
     private void loadProductListManager() {
         productListManager.getItems().clear();
-        List<BoardGame> boardGames = genericHib.getAllRecords(BoardGame.class);
+        List<BoardGame> boardGames = customHib.getAllRecords(BoardGame.class);
         productListManager.getItems().addAll(boardGames);
-        List<Puzzle> puzzles = genericHib.getAllRecords(Puzzle.class);
+        List<Puzzle> puzzles = customHib.getAllRecords(Puzzle.class);
         productListManager.getItems().addAll(puzzles);
-        List<Dice> dices = genericHib.getAllRecords(Dice.class);
+        List<Dice> dices = customHib.getAllRecords(Dice.class);
         productListManager.getItems().addAll(dices);
     }
 
     public void addNewProduct() {
         if(productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME){
-            genericHib.create(new BoardGame(productTitleField.getText(),descriptionField.getText(), authorField.getText(), genericHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), playersQuantityField.getText(), gameDurationFIeld.getText()));
+            customHib.create(new BoardGame(productTitleField.getText(),descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), playersQuantityField.getText(), gameDurationFIeld.getText()));
         }
         else if( productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE){
-            genericHib.create(new Puzzle(productTitleField.getText(), descriptionField.getText(), authorField.getText(), genericHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Integer.parseInt(piecesQuantityField.getText()) , puzzleMaterialField.getText(), puzzleSizeField.getText()));
+            customHib.create(new Puzzle(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Integer.parseInt(piecesQuantityField.getText()) , puzzleMaterialField.getText(), puzzleSizeField.getText()));
         }
         else if( productType.getSelectionModel().getSelectedItem() == ProductType.DICE){
-            genericHib.create(new Dice(productTitleField.getText(), descriptionField.getText(), authorField.getText(), genericHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Integer.parseInt(diceNumberField.getText())));
+            customHib.create(new Dice(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Integer.parseInt(diceNumberField.getText())));
         }
         loadProductListManager();
     }
 
     public void updateProduct() {
         Product selectedProduct = productListManager.getSelectionModel().getSelectedItem();
-        Product product = genericHib.getEntityById(selectedProduct.getClass(), selectedProduct.getId());
+        Product product = customHib.getEntityById(selectedProduct.getClass(), selectedProduct.getId());
 
         product.setTitle(productTitleField.getText());
         product.setDescription(descriptionField.getText());
         product.setAuthor(authorField.getText());
-        product.setWarehouse(genericHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()));
+        product.setWarehouse(customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()));
 
         if (productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME) {
             BoardGame boardGame = (BoardGame) product;
@@ -366,7 +360,7 @@ public class MainShopController  {
             puzzle.setPuzzleMaterial(puzzleMaterialField.getText());
             puzzle.setPuzzleSize(puzzleSizeField.getText());
         }
-        genericHib.update(product);
+        customHib.update(product);
         loadProductListManager();
     }
 
@@ -411,48 +405,4 @@ public class MainShopController  {
         }
     }
 
-    //---------------------------------Warehouse---------------------------------
-
-
-
-//---------------------------------Comments---------------------------------
-
-    public void addNewComment(ActionEvent actionEvent) {
-        Comment comment = new Comment(commentTitleField.getText(), commentTextArea.getText(), currentUser);
-        genericHib.create(comment);
-        loadCommentList();
-
-    }
-
-    private void loadCommentList() {
-        commentListView.getItems().clear();
-        commentListView.getItems().addAll(genericHib.getAllRecords(Comment.class));
-
-    }
-
-    public void updateComment(ActionEvent actionEvent) {
-        Comment selectedComment = commentListView.getSelectionModel().getSelectedItem();
-        Comment comment = genericHib.getEntityById(Comment.class, selectedComment.getId());
-        comment.setTitle(commentTitleField.getText());
-        comment.setCommentBody(commentTextArea.getText());
-        genericHib.update(comment);
-        loadCommentList();
-
-    }
-    public void loadCommentData() {
-        Comment selectedComment = commentListView.getSelectionModel().getSelectedItem();
-        if (selectedComment != null) {
-            commentTitleField.setText(selectedComment.getTitle());
-            commentTextArea.setText(selectedComment.getCommentBody());
-        }
-    }
-
-
-    public void deleteComment() {
-        Comment selectedComment = commentListView.getSelectionModel().getSelectedItem();
-        if (selectedComment != null) {
-            customHib.deleteComment(selectedComment.getId());
-            loadCommentList();
-        }
-    }
 }

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.MainShopController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShopController">
     <children>
         <TabPane fx:id="tabPane" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
@@ -54,7 +54,7 @@
                     </content>
                 </Tab>
             <Tab fx:id="warehousesTab" onSelectionChanged="#loadTabValues" text="Warehouse">
-                <fx:include source="warehouseTab.fxml" fx:id="warehouseTab"/>
+                <fx:include source="warehouseTab.fxml"/>
             </Tab>
             <Tab fx:id="ordersTab" onSelectionChanged="#loadTabValues" text="Orders">
               <content>
@@ -88,19 +88,8 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab fx:id="commentTab" text="Comment">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <TextField fx:id="commentTitleField" layoutX="42.0" layoutY="29.0" prefHeight="26.0" prefWidth="200.0" promptText="Title" />
-                        <TextArea fx:id="commentTextArea" layoutX="42.0" layoutY="72.0" prefHeight="200.0" prefWidth="200.0" promptText="Insert text:" />
-                        <ListView fx:id="commentListView" layoutX="330.0" layoutY="29.0" prefHeight="240.0" prefWidth="200.0" />
-                        <Button layoutX="42.0" layoutY="311.0" mnemonicParsing="false" onAction="#addNewComment" prefHeight="26.0" prefWidth="58.0" text="Add" />
-                        <Button layoutX="116.0" layoutY="311.0" mnemonicParsing="false" onAction="#updateComment" text="Update" />
-                        <Button layoutX="182.0" layoutY="311.0" mnemonicParsing="false" onAction="#deleteComment" prefHeight="26.0" prefWidth="58.0" text="Delete" />
-                     </children>
-                  </AnchorPane>
-              </content>
+            <Tab fx:id="commentTab" onSelectionChanged="#loadTabValues" text="Comment">
+                <fx:include source="commentTab.fxml"/>
             </Tab>
             </tabs>
         </TabPane>

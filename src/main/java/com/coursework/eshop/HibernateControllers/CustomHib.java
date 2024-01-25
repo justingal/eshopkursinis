@@ -4,6 +4,11 @@ import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 public class CustomHib extends GenericHib{
     public CustomHib(EntityManagerFactory entityManagerFactory) {
@@ -101,6 +106,29 @@ public class CustomHib extends GenericHib{
                     "Error",
                     "Error",
                     "Error while deleting manager");
+        } finally {
+            if (entityManager != null) entityManager.close();
+        }
+    }
+
+    public User getUserByCredentials(String login, String password) {
+        EntityManager entityManager = getEntityManager();
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<User> query = cb.createQuery(User.class);
+            Root<User> root = query.from(User.class);
+            query.select(root).where(cb.and(cb.like(root.get("login"), login), cb.like(root.get("password"), password)));
+            Query q;
+
+            q = entityManager.createQuery(query);
+            return (User) q.getSingleResult();
+        } catch (NoResultException e) {
+            JavaFxCustomsUtils.generateAlert(
+                    javafx.scene.control.Alert.AlertType.ERROR,
+                    "Error",
+                    "Error",
+                    "Error while getting user by credentials");
+            return null;
         } finally {
             if (entityManager != null) entityManager.close();
         }

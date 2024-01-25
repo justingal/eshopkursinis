@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MainShopController implements Initializable {
+public class MainShopController {
 
     public ListView<Product> productList;
     @FXML
@@ -50,45 +50,6 @@ public class MainShopController implements Initializable {
     private User currentUser;
     private CustomHib customHib;
 
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("warehouseTab.fxml"));
-        FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getClassLoader().getResource("commentTab.fxml"));
-        FXMLLoader fxmlLoader3 = new FXMLLoader(getClass().getClassLoader().getResource("productTab.fxml"));
-        FXMLLoader fxmlLoader4 = new FXMLLoader(getClass().getClassLoader().getResource("userTab.fxml"));
-        Tab warehousesTab = null;
-        Tab commentsTab = null;
-        Tab productsTab = null;
-        Tab usersTab = null;
-        try {
-            warehousesTab = fxmlLoader.load();
-            commentsTab = fxmlLoader2.load();
-            productsTab = fxmlLoader3.load();
-            usersTab = fxmlLoader4.load();
-            warehouseTabController = fxmlLoader.getController();
-            commentTabController = fxmlLoader2.getController();
-            productTabController = fxmlLoader3.getController();
-            userTabController = fxmlLoader4.getController();
-            warehouseTabController.setData(customHib);
-            commentTabController.setData(customHib, currentUser);
-            productTabController.setData(customHib);
-            userTabController.setData(customHib);
-            warehousesTab.setContent(warehouseTabController.getWarehouseTabAnchor());
-            commentsTab.setContent(commentTabController.getCommentTabAnchor());
-            productsTab.setContent(productTabController.getProductTabAnchor());
-            usersTab.setContent(userTabController.getUserTabAnchor());
-
-        } catch (IOException e) {
-            JavaFxCustomsUtils.generateAlert(
-                    Alert.AlertType.ERROR,
-                    "Error",
-                    "Error",
-                    "Error"
-            );
-        }
-
-    }
 
     public void setData(EntityManagerFactory entityManagerFactory, User user) {
         this.entityManagerFactory = entityManagerFactory;

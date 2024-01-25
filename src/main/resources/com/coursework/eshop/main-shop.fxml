@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShopController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.MainShopController">
     <children>
         <TabPane fx:id="tabPane" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
@@ -54,7 +54,7 @@
                     </content>
                 </Tab>
             <Tab fx:id="warehousesTab" onSelectionChanged="#loadTabValues" text="Warehouse">
-                <fx:include source="warehouseTab.fxml"/>
+                <fx:include source="warehouseTab.fxml" fx:id="warehouseTab"/>
             </Tab>
             <Tab fx:id="ordersTab" onSelectionChanged="#loadTabValues" text="Orders">
               <content>
@@ -88,8 +88,8 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab fx:id="commentTab" onSelectionChanged="#loadTabValues" text="Comment">
-                <fx:include source="commentTab.fxml"/>
+            <Tab fx:id="commentsTab" onSelectionChanged="#loadTabValues" text="Comment">
+                <fx:include source="commentTab.fxml" fx:id="commentTab"/>
             </Tab>
             </tabs>
         </TabPane>

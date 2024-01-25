@@ -3,6 +3,7 @@ package com.coursework.eshop.fxController;
 import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
+import com.coursework.eshop.fxController.MainShop.MainShopController;
 import com.coursework.eshop.model.User;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.fxml.FXML;

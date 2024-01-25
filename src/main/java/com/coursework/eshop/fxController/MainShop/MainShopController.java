@@ -1,4 +1,4 @@
-package com.coursework.eshop.fxController;
+package com.coursework.eshop.fxController.MainShop;
 
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
@@ -15,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 
 import java.util.List;
@@ -82,11 +83,11 @@ public class MainShopController  {
     @FXML
     public TableColumn <ManagerTableParameters,String> employeeIdManagerTableCol;
     @FXML
-    public Tab commentTab;
-    @FXML
     public TableColumn dummyManagerCol;
     @FXML
     public TextField diceNumberField;
+    @FXML
+    public Tab commentsTab;
 
     @FXML
     private WarehouseTabController warehouseTabController;
@@ -97,7 +98,7 @@ public class MainShopController  {
     private ObservableList<ManagerTableParameters> dataManager = FXCollections.observableArrayList();
     private ObservableList<CustomerTableParameters> data = FXCollections.observableArrayList();
     private EntityManagerFactory entityManagerFactory;
-    User currentUser;
+    private User currentUser;
     private CustomHib customHib;
 
 
@@ -262,7 +263,7 @@ public class MainShopController  {
             warehouseTabController.setData(customHib);
         }else if( usersTab.isSelected()){
             loadUserTables();
-        }else if( commentTab.isSelected()){
+        }else if( commentsTab.isSelected()){
             commentTabController.setData(customHib, currentUser);
         }
     }

@@ -15,7 +15,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
+import lombok.Getter;
 
 import java.net.URL;
 import java.util.List;
@@ -48,6 +50,9 @@ public class UserTabController implements Initializable {
     public TableColumn <ManagerTableParameters,String> employeeIdManagerTableCol;
     @FXML
     public TableColumn dummyManagerCol;
+    @Getter
+    @FXML
+    public AnchorPane userTabAnchor;
 
     private ObservableList<ManagerTableParameters> dataManager = FXCollections.observableArrayList();
     private ObservableList<CustomerTableParameters> data = FXCollections.observableArrayList();

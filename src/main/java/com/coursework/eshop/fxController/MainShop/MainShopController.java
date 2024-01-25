@@ -66,21 +66,33 @@ public class MainShopController implements Initializable {
         FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("commentTab.fxml"));
         FXMLLoader fxmlLoader3 = new FXMLLoader(getClass().getResource("productTab.fxml"));
         FXMLLoader fxmlLoader4 = new FXMLLoader(getClass().getResource("userTab.fxml"));
+        Tab warehousesTab = null;
+        Tab commentsTab = null;
+        Tab productsTab = null;
+        Tab usersTab = null;
         try {
+            warehousesTab = fxmlLoader.load();
+            commentsTab = fxmlLoader2.load();
+            productsTab = fxmlLoader3.load();
+            usersTab = fxmlLoader4.load();
             warehouseTabController = fxmlLoader.getController();
             commentTabController = fxmlLoader2.getController();
             productTabController = fxmlLoader3.getController();
             userTabController = fxmlLoader4.getController();
-            fxmlLoader.setController(warehouseTabController);
-            fxmlLoader2.setController(commentTabController);
-            fxmlLoader3.setController(productTabController);
-            fxmlLoader4.setController(userTabController);
-            fxmlLoader.load();
-            fxmlLoader2.load();
-            fxmlLoader3.load();
-            fxmlLoader4.load();
+            warehouseTabController = fxmlLoader.getController();
+            commentTabController = fxmlLoader2.getController();
+            productTabController = fxmlLoader3.getController();
+            userTabController = fxmlLoader4.getController();
+            warehouseTabController.setData(customHib);
+            commentTabController.setData(customHib, currentUser);
+            productTabController.setData(customHib);
+            userTabController.setData(customHib);
+            warehousesTab.setContent(warehouseTabController.getWarehouseTabAnchor());
+            commentsTab.setContent(commentTabController.getCommentTabAnchor());
+            productsTab.setContent(productTabController.getProductTabAnchor());
+            usersTab.setContent(userTabController.getUserTabAnchor());
+
         } catch (IOException e) {
-            e.printStackTrace();
             JavaFxCustomsUtils.generateAlert(
                     Alert.AlertType.ERROR,
                     "Error",
@@ -88,6 +100,7 @@ public class MainShopController implements Initializable {
                     "Error"
             );
         }
+
     }
 
     public void setData(EntityManagerFactory entityManagerFactory, User user) {

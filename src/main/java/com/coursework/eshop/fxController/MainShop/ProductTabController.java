@@ -8,6 +8,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import lombok.Getter;
 
 import java.util.List;
 
@@ -36,6 +38,9 @@ public class ProductTabController {
     public TextField puzzleSizeField;
     @FXML
     public TextField diceNumberField;
+    @Getter
+    @FXML
+    public AnchorPane productTabAnchor;
 
     private CustomHib customHib;
 

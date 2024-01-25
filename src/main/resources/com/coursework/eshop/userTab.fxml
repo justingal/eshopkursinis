@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.UserTabController">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.UserTabController" fx:id="userTabAnchor">
     <children>
         <TableView fx:id="customerTable" layoutX="14.0" layoutY="14.0" prefHeight="163.0" prefWidth="574.0">
             <columns>

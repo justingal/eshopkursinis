@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Text?>
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.ProductTabController">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.ProductTabController" fx:id="productTabAnchor">
     <children>
         <ListView fx:id="productListManager" layoutX="14.0" layoutY="14.0" onMouseClicked="#loadProductManagerData" prefHeight="178.0" prefWidth="251.0" />
         <TextField fx:id="productTitleField" layoutX="14.0" layoutY="204.0" prefHeight="26.0" prefWidth="250.0" promptText="Title:" />

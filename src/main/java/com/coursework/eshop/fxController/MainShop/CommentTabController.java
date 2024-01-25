@@ -8,6 +8,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import lombok.Getter;
 
 public class CommentTabController {
 
@@ -17,6 +19,9 @@ public class CommentTabController {
     public TextArea commentTextArea;
     @FXML
     public ListView<Comment> commentListView;
+    @Getter
+    @FXML
+    public AnchorPane commentTabAnchor;
     private CustomHib customHib;
     private User currentUser;
 

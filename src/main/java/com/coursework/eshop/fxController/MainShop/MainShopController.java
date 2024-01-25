@@ -2,6 +2,7 @@ package com.coursework.eshop.fxController.MainShop;
 
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
+import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.fxController.tableviews.CustomerTableParameters;
 import com.coursework.eshop.fxController.tableviews.ManagerTableParameters;
 import com.coursework.eshop.model.*;
@@ -10,14 +11,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class MainShopController  {
+public class MainShopController implements Initializable {
 
     public ListView<Product> productList;
     @FXML
@@ -52,6 +58,37 @@ public class MainShopController  {
     private EntityManagerFactory entityManagerFactory;
     private User currentUser;
     private CustomHib customHib;
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("warehouseTab.fxml"));
+        FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("commentTab.fxml"));
+        FXMLLoader fxmlLoader3 = new FXMLLoader(getClass().getResource("productTab.fxml"));
+        FXMLLoader fxmlLoader4 = new FXMLLoader(getClass().getResource("userTab.fxml"));
+        try {
+            warehouseTabController = fxmlLoader.getController();
+            commentTabController = fxmlLoader2.getController();
+            productTabController = fxmlLoader3.getController();
+            userTabController = fxmlLoader4.getController();
+            fxmlLoader.setController(warehouseTabController);
+            fxmlLoader2.setController(commentTabController);
+            fxmlLoader3.setController(productTabController);
+            fxmlLoader4.setController(userTabController);
+            fxmlLoader.load();
+            fxmlLoader2.load();
+            fxmlLoader3.load();
+            fxmlLoader4.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            JavaFxCustomsUtils.generateAlert(
+                    Alert.AlertType.ERROR,
+                    "Error",
+                    "Error",
+                    "Error"
+            );
+        }
+    }
 
     public void setData(EntityManagerFactory entityManagerFactory, User user) {
         this.entityManagerFactory = entityManagerFactory;
@@ -88,5 +125,6 @@ public class MainShopController  {
             commentTabController.setData(customHib, currentUser);
         }
     }
+
 
 }

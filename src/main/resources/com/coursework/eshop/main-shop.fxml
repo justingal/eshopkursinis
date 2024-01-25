@@ -56,40 +56,11 @@
             <Tab fx:id="warehousesTab" onSelectionChanged="#loadTabValues" text="Warehouse">
                 <fx:include source="warehouseTab.fxml" />
             </Tab>
-            <Tab fx:id="ordersTab" onSelectionChanged="#loadTabValues" text="Orders">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </Tab>
             <Tab fx:id="productsTab" onSelectionChanged="#loadTabValues" text="Product">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="379.0" prefWidth="650.0">
-                     <children>
-                        <ListView fx:id="productListManager" layoutX="14.0" layoutY="14.0" onMouseClicked="#loadProductManagerData" prefHeight="178.0" prefWidth="251.0" />
-                        <TextField fx:id="productTitleField" layoutX="14.0" layoutY="204.0" prefHeight="26.0" prefWidth="250.0" promptText="Title:" />
-                        <TextArea fx:id="descriptionField" layoutX="14.0" layoutY="274.0" prefHeight="82.0" prefWidth="247.0" promptText="Description:" />
-                        <TextField fx:id="authorField" layoutX="13.0" layoutY="237.0" prefHeight="26.0" prefWidth="249.0" promptText="Author:" />
-                        <ComboBox fx:id="productType" layoutX="279.0" layoutY="14.0" onAction="#enableProductField" prefHeight="26.0" prefWidth="220.0" promptText="Product type" />
-                        <ComboBox fx:id="warehouseComboBox" layoutX="278.0" layoutY="49.0" prefHeight="26.0" prefWidth="222.0" promptText="Warehouse" />
-                        <TextField fx:id="gameDurationFIeld" layoutX="279.0" layoutY="102.0" prefHeight="26.0" prefWidth="137.0" promptText="Game Duration:" />
-                        <TextField fx:id="playersQuantityField" layoutX="425.0" layoutY="102.0" prefHeight="26.0" prefWidth="129.0" promptText="Players Quantity:" />
-                        <Text layoutX="393.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Board game" />
-                        <Text layoutX="404.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Puzzle" />
-                        <TextField fx:id="piecesQuantityField" layoutX="279.0" layoutY="159.0" prefHeight="26.0" prefWidth="137.0" promptText="Pieces Quantity:" />
-                        <TextField fx:id="puzzleMaterialField" layoutX="278.0" layoutY="191.0" prefHeight="26.0" prefWidth="275.0" promptText="Puzzle Material:" />
-                        <TextField fx:id="puzzleSizeField" layoutX="421.0" layoutY="159.0" prefHeight="26.0" prefWidth="132.0" promptText="Puzzle Size:" />
-                        <Button layoutX="292.0" layoutY="323.0" mnemonicParsing="false" onAction="#addNewProduct" text="Add new" />
-                        <Button layoutX="393.0" layoutY="323.0" mnemonicParsing="false" onAction="#updateProduct" text="Update" />
-                        <Button layoutX="487.0" layoutY="323.0" mnemonicParsing="false" onAction="#deleteProduct" text="Delete" />
-                        <Text layoutX="409.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dice" />
-                        <TextField fx:id="diceNumberField" layoutX="395.0" layoutY="238.0" prefHeight="12.0" prefWidth="44.0" />
-                        <Text layoutX="320.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dice number:" />
-                     </children>
-                  </AnchorPane>
-              </content>
+                <fx:include source="productTab.fxml" />
             </Tab>
             <Tab fx:id="commentsTab" onSelectionChanged="#loadTabValues" text="Comment">
-                <fx:include source="commentTab.fxml" fx:id="commentTab"/>
+                <fx:include source="commentTab.fxml" />
             </Tab>
             </tabs>
         </TabPane>

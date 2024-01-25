@@ -54,7 +54,7 @@
                     </content>
                 </Tab>
             <Tab fx:id="warehousesTab" onSelectionChanged="#loadTabValues" text="Warehouse">
-                <fx:include source="warehouseTab.fxml" fx:id="warehouseTab"
+                <fx:include source="warehouseTab.fxml" fx:id="warehouseTab"/>
             </Tab>
             <Tab fx:id="ordersTab" onSelectionChanged="#loadTabValues" text="Orders">
               <content>

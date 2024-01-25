@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.UserTabController">
+    <children>
+        <TableView fx:id="customerTable" layoutX="14.0" layoutY="14.0" prefHeight="163.0" prefWidth="574.0">
+            <columns>
+                <TableColumn fx:id="idTableCol" prefWidth="75.0" text="ID" />
+                <TableColumn fx:id="loginTableCol" prefWidth="75.0" text="Login" />
+                <TableColumn fx:id="passwordTableCol" prefWidth="75.0" text="Password" />
+                <TableColumn fx:id="addressTableCol" prefWidth="75.0" text="Address" />
+                <TableColumn fx:id="dummyCol" prefWidth="75.0" text="Action" />
+            </columns>
+        </TableView>
+        <TableView fx:id="managerTable" layoutX="14.0" layoutY="186.0" prefHeight="182.0" prefWidth="574.0">
+            <columns>
+                <TableColumn fx:id="idManagerTableCol" prefWidth="75.0" text="ID" />
+                <TableColumn fx:id="loginManagerTableCol" prefWidth="75.0" text="Login" />
+                <TableColumn fx:id="passwordManagerTableCol" prefWidth="75.0" text="Password" />
+                <TableColumn fx:id="employeeIdManagerTableCol" prefWidth="75.0" text="Employee id" />
+                <TableColumn fx:id="dummyManagerCol" prefWidth="75.0" text="Action" />
+            </columns>
+        </TableView>
+    </children>
+</AnchorPane>

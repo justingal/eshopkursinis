@@ -2,8 +2,6 @@ package com.coursework.eshop.fxController.MainShop;
 
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
-import com.coursework.eshop.fxController.MainShop.CommentTabController;
-import com.coursework.eshop.fxController.MainShop.WarehouseTabController;
 import com.coursework.eshop.fxController.tableviews.CustomerTableParameters;
 import com.coursework.eshop.fxController.tableviews.ManagerTableParameters;
 import com.coursework.eshop.model.*;
@@ -15,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 
 import java.util.List;

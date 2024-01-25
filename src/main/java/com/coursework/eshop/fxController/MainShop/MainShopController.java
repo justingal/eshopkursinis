@@ -39,6 +39,8 @@ public class MainShopController  {
     public Tab productsTab;
 
     @FXML
+    public Tab commentsTab;
+    @FXML
     public TableColumn<CustomerTableParameters, Integer> idTableCol;
     @FXML
     public TableColumn<CustomerTableParameters, String> loginTableCol;
@@ -59,8 +61,7 @@ public class MainShopController  {
     @FXML
     public TableColumn dummyManagerCol;
 
-    @FXML
-    public Tab commentsTab;
+
 
     @FXML
     private WarehouseTabController warehouseTabController;

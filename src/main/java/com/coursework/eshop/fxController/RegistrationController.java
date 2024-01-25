@@ -63,8 +63,46 @@ public class RegistrationController {
     }
 
     public void createUser() {
+        if (loginField.getText().isEmpty()){
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no login");
+        }
+        if (passwordField.getText().isEmpty()){
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no password");
+        }
+        if (repeatPasswordField.getText().isEmpty()){
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no repeated password");
+        }
+        if (!repeatPasswordField.getText().equals(passwordField.getText())){
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Passwords do not match");
+        }
+        if (nameField.getText().isEmpty()){
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no name");
+        }
+        if (surnameField.getText().isEmpty()){
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no surname");
+        }
+        if (addressField.getText().isEmpty()){
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no address");
+        }
+        if (cardNoField.getText().isEmpty()){
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no card number");
+        }
+        if (birthDateField.getValue() == null){
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no birth date");
+        }
+        if (!loginField.getText().isEmpty() &&
+                !passwordField.getText().isEmpty() &&
+                repeatPasswordField.getText().equals(passwordField.getText()) &&
+                !repeatPasswordField.getText().isEmpty() &&
+                !nameField.getText().isEmpty() &&
+                !surnameField.getText().isEmpty() &&
+                !addressField.getText().isEmpty() &&
+                !cardNoField.getText().isEmpty() &&
+                birthDateField.getValue() != null) {
 
-        userHib.createUser(new Customer(loginField.getText(), passwordField.getText(), birthDateField.getValue(),nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText() ));
+            userHib.createUser(new Customer(loginField.getText(), passwordField.getText(), birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
+        }
     }
 
     public void returnToLogin() throws IOException {

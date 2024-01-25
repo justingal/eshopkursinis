@@ -16,5 +16,7 @@ module com.coursework.eshop {
     opens com.coursework.eshop.fxController.tableviews to javafx.base;
     opens com.coursework.eshop.HibernateControllers to javafx.fxml;
     exports com.coursework.eshop.HibernateControllers to javafx.fxml;
+    exports com.coursework.eshop.fxController.MainShop to javafx.fxml;
+    opens com.coursework.eshop.fxController.MainShop to javafx.fxml;
 
 }

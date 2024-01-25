@@ -2,16 +2,15 @@ package com.coursework.eshop.fxController;
 
 import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
+import com.coursework.eshop.fxController.MainShop.MainShopController;
 import com.coursework.eshop.model.User;
 import com.coursework.eshop.HibernateControllers.UserHib;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;

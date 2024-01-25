@@ -34,7 +34,7 @@ public class Warehouse implements Serializable {
     private List<BoardGame> inStockBoardGames;
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Other> inStockOthers;
+    private List<Dice> inStockDices;
 
     public Warehouse(String title, String address) {
         this.title = title;

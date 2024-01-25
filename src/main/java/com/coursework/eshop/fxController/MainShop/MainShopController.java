@@ -1,4 +1,4 @@
-package com.coursework.eshop.fxController;
+package com.coursework.eshop.fxController.MainShop;
 
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,6 +21,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -95,6 +97,10 @@ public class MainShopController  {
     public TextArea commentTextArea;
     public ListView<Comment> commentListView;
     public Tab commentTab;
+    @FXML
+    public TableColumn dummyManagerCol;
+    @FXML
+    public TextField diceNumberField;
 
 
     private ObservableList<ManagerTableParameters> dataManager = FXCollections.observableArrayList();
@@ -102,6 +108,7 @@ public class MainShopController  {
     private EntityManagerFactory entityManagerFactory;
     User currentUser;
     private GenericHib genericHib;
+    private CustomHib customHib;
 
     public void initialize() {
 
@@ -140,17 +147,18 @@ public class MainShopController  {
             genericHib.update(customer);
         });
         // ---------------------DELETE BUTTON---------------------
-        /*Callback<TableColumn<CustomerTableParameters, Void>, TableCell<CustomerTableParameters, Void>> callback = param -> {
+        Callback<TableColumn<CustomerTableParameters, Void>, TableCell<CustomerTableParameters, Void>> customerDeleteCallback = param -> {
             final TableCell<CustomerTableParameters, Void> cell = new TableCell<>() {
                 private final Button deleteButton = new Button("Delete");
 
                 {
                     deleteButton.setOnAction(event -> {
                         CustomerTableParameters row = getTableView().getItems().get(getIndex());
-                        GenericHib.delete(Customer.class, row.getId());
+                        customHib.delete(Customer.class, row.getId());
+                        customerTable.getItems().clear();
+                        loadUserTables();
                     });
                 }
-
                 @Override
                 protected void updateItem(Void item, boolean empty) {
                     super.updateItem(item, empty);
@@ -164,7 +172,8 @@ public class MainShopController  {
             return cell;
         };
 
-        dummyCol.setCellFactory(callback);*/
+        dummyCol.setCellFactory(customerDeleteCallback);
+
 
         // ---------------------MANAGER---------------------
         managerTable.setEditable(true);
@@ -193,15 +202,53 @@ public class MainShopController  {
             manager.setEmployeeId(event.getNewValue());
             genericHib.update(manager);
         });
+        // ---------------------DELETE BUTTON---------------------
+        Callback<TableColumn<ManagerTableParameters, Void>, TableCell<ManagerTableParameters, Void>> managerDeleteCallback = param -> {
+            final TableCell<ManagerTableParameters, Void> cell = new TableCell<>() {
+                private final Button deleteButton = new Button("Delete");
+
+                {
+                    deleteButton.setOnAction(event -> {
+                        ManagerTableParameters row = getTableView().getItems().get(getIndex());
+                        customHib.delete(Customer.class, row.getId());
+                        managerTable.getItems().clear();
+                        loadUserTables();
+                    });
+                }
+                @Override
+                protected void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(deleteButton);
+                    }
+                }
+            };
+            return cell;
+        };
+
+        dummyManagerCol.setCellFactory(managerDeleteCallback);
+//------------------------KAZKA BANDAU SU USER TAB------------------------
+        try {
+            Tab userTab = new Tab("Users");
+            userTab.setContent(FXMLLoader.load(getClass().getResource("UserTab.fxml")));
+            tabPane.getTabs().add(userTab);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
     public void setData(EntityManagerFactory entityManagerFactory, User user) {
         this.entityManagerFactory = entityManagerFactory;
         this.currentUser = user;
+        this.customHib = new CustomHib(entityManagerFactory); // Initialize here
         limitAccess();
         loadData();
+
     }
+
 
     private void loadData() {
         genericHib = new GenericHib(entityManagerFactory);
@@ -290,7 +337,7 @@ public class MainShopController  {
             puzzleMaterialField.setDisable(false);
             puzzleSizeField.setDisable(false);
         }
-        else if(productType.getSelectionModel().getSelectedItem() == ProductType.OTHER){
+        else if(productType.getSelectionModel().getSelectedItem() == ProductType.DICE){
             gameDurationFIeld.setDisable(true);
             playersQuantityField.setDisable(true);
             piecesQuantityField.setDisable(true);
@@ -306,8 +353,8 @@ public class MainShopController  {
         productListManager.getItems().addAll(boardGames);
         List<Puzzle> puzzles = genericHib.getAllRecords(Puzzle.class);
         productListManager.getItems().addAll(puzzles);
-        List<Other> others = genericHib.getAllRecords(Other.class);
-        productListManager.getItems().addAll(others);
+        List<Dice> dices = genericHib.getAllRecords(Dice.class);
+        productListManager.getItems().addAll(dices);
     }
 
     public void addNewProduct() {
@@ -317,8 +364,8 @@ public class MainShopController  {
         else if( productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE){
             genericHib.create(new Puzzle(productTitleField.getText(), descriptionField.getText(), authorField.getText(), genericHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Integer.parseInt(piecesQuantityField.getText()) , puzzleMaterialField.getText(), puzzleSizeField.getText()));
         }
-        else if( productType.getSelectionModel().getSelectedItem() == ProductType.OTHER){
-            genericHib.create(new Product(productTitleField.getText(), descriptionField.getText(), authorField.getText(), genericHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId())));
+        else if( productType.getSelectionModel().getSelectedItem() == ProductType.DICE){
+            genericHib.create(new Dice(productTitleField.getText(), descriptionField.getText(), authorField.getText(), genericHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Integer.parseInt(diceNumberField.getText())));
         }
         loadProductListManager();
     }
@@ -348,9 +395,12 @@ public class MainShopController  {
 
     public void deleteProduct() {
         Product selectedProduct = productListManager.getSelectionModel().getSelectedItem();
-        CustomHib.deleteProduct(selectedProduct.getId());
-        loadProductListManager();
+        if (selectedProduct != null) {
+            customHib.deleteProduct(selectedProduct.getId(), productType.getSelectionModel().getSelectedItem());
+            loadProductListManager();
+        }
     }
+
     public void loadProductManagerData() {
         Product selectedProduct = productListManager.getSelectionModel().getSelectedItem();
 
@@ -374,7 +424,12 @@ public class MainShopController  {
                 puzzleSizeField.setText(puzzle.getPuzzleSize());
                 warehouseComboBox.getSelectionModel().select(selectedProduct.getWarehouse());
             } else {
-                productType.getSelectionModel().select(ProductType.OTHER);
+                productType.getSelectionModel().select(ProductType.DICE);
+                Dice dice = (Dice) selectedProduct;
+                productType.getSelectionModel().select(ProductType.DICE);
+                warehouseComboBox.getSelectionModel().select(selectedProduct.getWarehouse());
+                diceNumberField.setText(String.valueOf(dice.getDiceNumber()));
+
             }
         }
     }
@@ -444,6 +499,11 @@ public class MainShopController  {
     }
 
 
-    public void deleteComment(ActionEvent actionEvent) {
+    public void deleteComment() {
+        Comment selectedComment = commentListView.getSelectionModel().getSelectedItem();
+        if (selectedComment != null) {
+            customHib.deleteComment(selectedComment.getId());
+            loadCommentList();
+        }
     }
 }

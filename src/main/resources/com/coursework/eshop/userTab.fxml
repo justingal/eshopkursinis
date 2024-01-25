@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.UserTabController">
+    <TableView fx:id="userTable" prefHeight="200.0" prefWidth="300.0">
+        <columns>
+            <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID">
+                <cellValueFactory>
+                    <PropertyValueFactory property="id" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="loginColumn" prefWidth="75.0" text="Login">
+                <cellValueFactory>
+                    <PropertyValueFactory property="login" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="passwordColumn" prefWidth="75.0" text="Password">
+                <cellValueFactory>
+                    <PropertyValueFactory property="password" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn fx:id="addressColumn" prefWidth="75.0" text="Address">
+                <cellValueFactory>
+                    <PropertyValueFactory property="address" />
+                </cellValueFactory>
+            </TableColumn>
+            <!-- Galite pridėti daugiau stulpelių, jei reikia -->
+        </columns>
+    </TableView>
+</AnchorPane>

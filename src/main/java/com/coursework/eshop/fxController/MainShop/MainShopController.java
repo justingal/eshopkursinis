@@ -62,10 +62,10 @@ public class MainShopController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("warehouseTab.fxml"));
-        FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("commentTab.fxml"));
-        FXMLLoader fxmlLoader3 = new FXMLLoader(getClass().getResource("productTab.fxml"));
-        FXMLLoader fxmlLoader4 = new FXMLLoader(getClass().getResource("userTab.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("com/coursework/eshop/warehouseTab.fxml"));
+        FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("com/coursework/eshop/commentTab.fxml"));
+        FXMLLoader fxmlLoader3 = new FXMLLoader(getClass().getResource("com/coursework/eshop/productTab.fxml"));
+        FXMLLoader fxmlLoader4 = new FXMLLoader(getClass().getResource("com/coursework/eshop/userTab.fxml"));
         Tab warehousesTab = null;
         Tab commentsTab = null;
         Tab productsTab = null;

@@ -3,24 +3,15 @@ package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
-import com.coursework.eshop.fxController.tableviews.CustomerTableParameters;
-import com.coursework.eshop.fxController.tableviews.ManagerTableParameters;
 import com.coursework.eshop.model.*;
 import jakarta.persistence.EntityManagerFactory;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainShopController implements Initializable {
@@ -75,14 +66,6 @@ public class MainShopController implements Initializable {
             commentsTab = fxmlLoader2.load();
             productsTab = fxmlLoader3.load();
             usersTab = fxmlLoader4.load();
-            warehouseTabController = fxmlLoader.getController();
-            commentTabController = fxmlLoader2.getController();
-            productTabController = fxmlLoader3.getController();
-            userTabController = fxmlLoader4.getController();
-            warehouseTabController = fxmlLoader.getController();
-            commentTabController = fxmlLoader2.getController();
-            productTabController = fxmlLoader3.getController();
-            userTabController = fxmlLoader4.getController();
             warehouseTabController.setData(customHib);
             commentTabController.setData(customHib, currentUser);
             productTabController.setData(customHib);

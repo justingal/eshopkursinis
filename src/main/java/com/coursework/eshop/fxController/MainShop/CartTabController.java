@@ -15,14 +15,28 @@ import java.util.List;
 public class CartTabController {
 
 
-    public ListView <Cart> cartList;
+    @FXML
+    public ListView <Product> cartList;
+    @FXML
     public Label priceLabel;
     private CustomHib customHib;
+
+    private Cart cart;
     public List<Product> productCart;
     public void setData(CustomHib customHib) {
         this.customHib = customHib;
     }
+    public void updateCartView() {
+        if (cart != null) {
+            cartList.getItems().clear();
+            cartList.getItems().addAll(cart.getProducts()); // Atnaujinti produktų sąrašą
+            priceLabel.setText(String.valueOf(cart.getTotalPrice())); // Atnaujinti bendrą kainą
+        }
+    }
 
 
+    public void setCart(Cart cart) {
+            this.cart = cart;
 
+    }
 }

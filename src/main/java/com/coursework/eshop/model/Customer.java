@@ -21,6 +21,7 @@ public class Customer extends User {
     private String address;
     private String cardNo;
     @OneToOne
+    @JoinColumn(name = "myCart_id")
     Cart myCart;
 
     public Customer(String login, String password, LocalDate birthDate, String name, String surname, String address, String cardNo) {

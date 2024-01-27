@@ -65,6 +65,7 @@ public class MainShopController {
     public void setData(EntityManagerFactory entityManagerFactory, User user) {
         this.entityManagerFactory = entityManagerFactory;
         this.currentUser = user;
+        this.cart = new Cart();
         limitAccess();
         loadData();
     }
@@ -89,10 +90,13 @@ public class MainShopController {
             authorField.setText(selectedProduct.getAuthor());
             quantityField.setText(String.valueOf(selectedProduct.getQuantity()));
             if (selectedProduct instanceof BoardGame) {
+                BoardGame boardGame = (BoardGame) selectedProduct;
                 descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Players number: "+(boardGame.getPlayersQuantity())+ "\r\n"+"Game duration: "+(boardGame.getGameDuration()));
             } else if (selectedProduct instanceof Puzzle) {
+                Puzzle puzzle = (Puzzle) selectedProduct;
                 descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Puzzle pieces quantity: "+(String.valueOf(puzzle.getPiecesQuantity())+ "\r\n"+"Puzzle material: "+(puzzle.getPuzzleMaterial())+ "\r\n"+"PuzzleSize: "+(puzzle.getPuzzleSize())));
             } else {
+                Dice dice = (Dice) selectedProduct;
                 descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Dice number: "+(String.valueOf(dice.getDiceNumber())));
             }
         }
@@ -126,20 +130,13 @@ public class MainShopController {
         }
     }
 
-
+    private Cart cart = new Cart();
     public void addProductToCart() {
         Product selectedProduct = productList.getSelectionModel().getSelectedItem();
         if (selectedProduct != null) {
-
-            if (selectedProduct instanceof BoardGame) {
-
-            } else if (selectedProduct instanceof Puzzle) {
-                private List<Puzzle> inOrderPuzzles;
-
-            } else if (selectedProduct instanceof Dice) {
-
-            }
-
+            cart.addProduct(selectedProduct); // Pridėti produktą į krepšelį
+            cartTabController.setCart(cart); // Perduoti Cart objektą į CartTabController
+            cartTabController.updateCartView(); // Atnaujinti krepšelio vaizdą
         }
     }
 

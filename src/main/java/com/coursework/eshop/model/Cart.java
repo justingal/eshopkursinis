@@ -43,4 +43,44 @@ public class Cart {
         }
     }
 
+    public void addProduct(Product product) {
+        if (product instanceof BoardGame) {
+            if (inOrderBoardGames == null) {
+                inOrderBoardGames = new ArrayList<>();
+            }
+            inOrderBoardGames.add((BoardGame) product);
+        } else if (product instanceof Puzzle) {
+            if (inOrderPuzzles == null) {
+                inOrderPuzzles = new ArrayList<>();
+            }
+            inOrderPuzzles.add((Puzzle) product);
+        } else if (product instanceof Dice) {
+            if (inOrderDices == null) {
+                inOrderDices = new ArrayList<>();
+            }
+            inOrderDices.add((Dice) product);
+        }
+        // Čia galite pridėti logiką atnaujinti bendrą krepšelio būseną
+    }
+    public List<Product> getProducts() {
+        List<Product> allProducts = new ArrayList<>();
+        if (inOrderBoardGames != null) {
+            allProducts.addAll(inOrderBoardGames);
+        }
+        if (inOrderPuzzles != null) {
+            allProducts.addAll(inOrderPuzzles);
+        }
+        if (inOrderDices != null) {
+            allProducts.addAll(inOrderDices);
+        }
+        return allProducts;
+    }
+    public double getTotalPrice() {
+        double totalPrice = 0.0;
+        for (Product product : getProducts()) {
+            totalPrice += product.getPrice();
+        }
+        return totalPrice;
+    }
+
 }

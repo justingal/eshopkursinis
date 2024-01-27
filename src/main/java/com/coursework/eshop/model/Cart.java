@@ -75,6 +75,18 @@ public class Cart {
         }
         return allProducts;
     }
+
+    public void removeProduct(Product product) {
+        if (product instanceof BoardGame && inOrderBoardGames != null) {
+            inOrderBoardGames.remove(product);
+        } else if (product instanceof Puzzle && inOrderPuzzles != null) {
+            inOrderPuzzles.remove(product);
+        } else if (product instanceof Dice && inOrderDices != null) {
+            inOrderDices.remove(product);
+        }
+
+    }
+
     public double getTotalPrice() {
         double totalPrice = 0.0;
         for (Product product : getProducts()) {

@@ -4,6 +4,7 @@ import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.model.Cart;
 import com.coursework.eshop.model.Product;
 import com.coursework.eshop.model.Warehouse;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -39,4 +40,13 @@ public class CartTabController {
             this.cart = cart;
 
     }
+
+    public void removeFromCart() {
+            Product selectedProduct = cartList.getSelectionModel().getSelectedItem();
+            if (selectedProduct != null && cart != null) {
+                cart.removeProduct(selectedProduct); // Pašalinti produktą iš krepšelio
+                updateCartView(); // Atnaujinti krepšelio vaizdą
+            }
+    }
 }
+

@@ -9,6 +9,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,13 +24,23 @@ public class Cart {
     private LocalDate dateCreated;
     @ManyToOne
     private Customer customer;
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Puzzle> inOrderPuzzles;
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<BoardGame> inOrderBoardGames;
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Dice> inOrderDices;
+
+    public void addProductToBoardGamesList(BoardGame boardGame) {
+        if (boardGame != null) {
+            if (inOrderBoardGames == null) {
+                inOrderBoardGames = new ArrayList<>();
+            }
+            inOrderBoardGames.add(boardGame);
+        }
+    }
+
 }

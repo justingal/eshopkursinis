@@ -1,8 +1,6 @@
 package com.coursework.eshop.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +20,8 @@ import java.util.List;
 public class Customer extends User {
     private String address;
     private String cardNo;
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Cart> myPurchases;
+    @OneToOne
+    Cart myCart;
 
     public Customer(String login, String password, LocalDate birthDate, String name, String surname, String address, String cardNo) {
         super(login, password, birthDate, name, surname);

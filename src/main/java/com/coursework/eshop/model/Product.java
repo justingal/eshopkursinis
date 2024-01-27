@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,8 +25,8 @@ public class Product implements Serializable {
     int quantity;
     @ManyToOne
     private Warehouse warehouse;
-    @ManyToOne
-    private Cart cart;
+    @ManyToMany
+    private List<Cart> cart;
 
 
     public Product(String title, String description, String author, double price, int quantity) {
@@ -53,6 +54,8 @@ public class Product implements Serializable {
         this.price = price;
         this.quantity = quantity;
     }
+
+
 
     @Override
     public String toString() {

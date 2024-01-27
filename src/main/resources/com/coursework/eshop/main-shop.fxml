@@ -26,7 +26,7 @@
                         <Text layoutX="257.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Other info" />
                         <TextField fx:id="priceField" layoutX="463.0" layoutY="257.0" prefHeight="26.0" prefWidth="45.0" />
                         <Text layoutX="473.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price" />
-                        <Button layoutX="435.0" layoutY="318.0" mnemonicParsing="false" onAction="#addNewCart" text="Add to cart" />
+                        <Button layoutX="435.0" layoutY="318.0" mnemonicParsing="false" onAction="#addProductToCart" text="Add to cart" />
                         <TextField fx:id="quantityField" layoutX="261.0" layoutY="257.0" prefHeight="26.0" prefWidth="45.0" />
                         <Text layoutX="263.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Product left" />
                             </children>

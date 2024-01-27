@@ -2,6 +2,7 @@ package com.coursework.eshop.fxController.MainShop;
 
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
+import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
@@ -59,6 +60,7 @@ public class MainShopController {
     private User currentUser;
     private CustomHib customHib;
 
+    private List<Product> productCart;
 
     public void setData(EntityManagerFactory entityManagerFactory, User user) {
         this.entityManagerFactory = entityManagerFactory;
@@ -87,13 +89,10 @@ public class MainShopController {
             authorField.setText(selectedProduct.getAuthor());
             quantityField.setText(String.valueOf(selectedProduct.getQuantity()));
             if (selectedProduct instanceof BoardGame) {
-                BoardGame boardGame = (BoardGame) selectedProduct;
                 descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Players number: "+(boardGame.getPlayersQuantity())+ "\r\n"+"Game duration: "+(boardGame.getGameDuration()));
             } else if (selectedProduct instanceof Puzzle) {
-                Puzzle puzzle = (Puzzle) selectedProduct;
                 descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Puzzle pieces quantity: "+(String.valueOf(puzzle.getPiecesQuantity())+ "\r\n"+"Puzzle material: "+(puzzle.getPuzzleMaterial())+ "\r\n"+"PuzzleSize: "+(puzzle.getPuzzleSize())));
             } else {
-                Dice dice = (Dice) selectedProduct;
                 descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Dice number: "+(String.valueOf(dice.getDiceNumber())));
             }
         }
@@ -128,7 +127,20 @@ public class MainShopController {
     }
 
 
-    public void addNewCart() {
-        
+    public void addProductToCart() {
+        Product selectedProduct = productList.getSelectionModel().getSelectedItem();
+        if (selectedProduct != null) {
+
+            if (selectedProduct instanceof BoardGame) {
+
+            } else if (selectedProduct instanceof Puzzle) {
+                private List<Puzzle> inOrderPuzzles;
+
+            } else if (selectedProduct instanceof Dice) {
+
+            }
+
+        }
     }
+
 }

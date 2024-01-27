@@ -49,7 +49,6 @@ public class GenericHib {
         }
     }
 
-    //Su delete bus niuansai, kol kas nerasau
     public <T> void delete(Class<T> entityClass, int id) {
         EntityManager em = null;
         try {
@@ -80,7 +79,6 @@ public class GenericHib {
         return result;
     }
 
-    //READ operacija, tik istrauks visus irasus, kurie yra DB
 
     public <T> List<T> getAllRecords(Class <T> entityClass) {
         List<T> result = new ArrayList<T>();

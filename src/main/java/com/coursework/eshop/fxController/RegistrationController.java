@@ -100,6 +100,12 @@ public class RegistrationController {
 
             userHib.create(new Customer(loginField.getText(), passwordField.getText(), birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
+            try {
+               returnToLogin();
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

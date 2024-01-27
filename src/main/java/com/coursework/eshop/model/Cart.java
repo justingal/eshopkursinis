@@ -25,9 +25,11 @@ public class Cart {
     private Customer customer;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Puzzle> puzzle;
+    private List<Puzzle> inOrderPuzzles;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<BoardGame> boardGame;
-
+    private List<BoardGame> inOrderBoardGames;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Dice> inOrderDices;
 }

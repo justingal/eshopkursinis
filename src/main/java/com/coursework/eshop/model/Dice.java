@@ -14,13 +14,13 @@ import lombok.Setter;
 public class Dice extends Product {
     int diceNumber;
 
-    public Dice(String title, String description, String author, Warehouse warehouse, int diceNumber) {
-        super(title, description, author, warehouse);
+    public Dice(String title, String description, String author, Warehouse warehouse,double price, int quantity, int diceNumber) {
+        super(title, description, author, warehouse, price, quantity);
         this.diceNumber = diceNumber;
     }
 
-    public Dice(int id, String title, String description, String author, int diceNumber) {
-        super(id, title, description, author);
+    public Dice(int id, String title, String description, String author, double price, int quantity, int diceNumber) {
+        super(id, title, description, author, price, quantity);
         this.diceNumber = diceNumber;
     }
 }

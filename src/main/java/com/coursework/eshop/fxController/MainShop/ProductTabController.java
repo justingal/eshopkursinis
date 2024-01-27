@@ -41,6 +41,8 @@ public class ProductTabController {
     @Getter
     @FXML
     public AnchorPane productTabAnchor;
+    public TextField priceField;
+    public TextField quantityField;
 
     private CustomHib customHib;
 
@@ -53,7 +55,7 @@ public class ProductTabController {
         warehouseComboBox.getItems().addAll(customHib.getAllRecords(Warehouse.class));
     }
 
-    private void loadProductListManager() {
+    public void loadProductListManager() {
         productListManager.getItems().clear();
         List<BoardGame> boardGames = customHib.getAllRecords(BoardGame.class);
         productListManager.getItems().addAll(boardGames);
@@ -65,15 +67,16 @@ public class ProductTabController {
 
     public void addNewProduct() {
         if(productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME){
-            customHib.create(new BoardGame(productTitleField.getText(),descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), playersQuantityField.getText(), gameDurationFIeld.getText()));
+            customHib.create(new BoardGame(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()), playersQuantityField.getText(), gameDurationFIeld.getText()));
         }
         else if( productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE){
-            customHib.create(new Puzzle(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Integer.parseInt(piecesQuantityField.getText()) , puzzleMaterialField.getText(), puzzleSizeField.getText()));
+            customHib.create(new Puzzle(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()),Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()), Integer.parseInt(piecesQuantityField.getText()) , puzzleMaterialField.getText(), puzzleSizeField.getText()));
         }
         else if( productType.getSelectionModel().getSelectedItem() == ProductType.DICE){
-            customHib.create(new Dice(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Integer.parseInt(diceNumberField.getText())));
+            customHib.create(new Dice(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()), Integer.parseInt(diceNumberField.getText())));
         }
         loadProductListManager();
+        //MainShopController.showProductInfo();
     }
 
     public void updateProduct() {
@@ -147,6 +150,7 @@ public class ProductTabController {
             piecesQuantityField.setDisable(true);
             puzzleMaterialField.setDisable(true);
             puzzleSizeField.setDisable(true);
+            diceNumberField.setDisable(true);
         }
         else if(productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE){
             gameDurationFIeld.setDisable(true);
@@ -154,6 +158,7 @@ public class ProductTabController {
             piecesQuantityField.setDisable(false);
             puzzleMaterialField.setDisable(false);
             puzzleSizeField.setDisable(false);
+            diceNumberField.setDisable(true);
         }
         else if(productType.getSelectionModel().getSelectedItem() == ProductType.DICE){
             gameDurationFIeld.setDisable(true);
@@ -161,6 +166,7 @@ public class ProductTabController {
             piecesQuantityField.setDisable(true);
             puzzleMaterialField.setDisable(true);
             puzzleSizeField.setDisable(true);
+            diceNumberField.setDisable(false);
         }
     }
 }

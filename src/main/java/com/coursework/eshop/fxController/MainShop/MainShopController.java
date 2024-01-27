@@ -2,29 +2,26 @@ package com.coursework.eshop.fxController.MainShop;
 
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
-import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.*;
 import jakarta.persistence.EntityManagerFactory;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.List;
 
 public class MainShopController {
 
     public ListView<Product> productList;
-    @FXML
-    public ListView<Cart> currentOrder;
-    @FXML
-    public Tab primaryTab;
+
     @FXML
     public Tab usersTab;
     @FXML
     public Tab warehousesTab;
+
+    @FXML
+    public Tab primaryTab;
 
     @FXML
     public TabPane tabPane;
@@ -33,9 +30,21 @@ public class MainShopController {
 
     @FXML
     public Tab commentsTab;
+    @FXML
+    public Tab cartsTab;
+    public TextField titleField;
+    public TextField authorField;
+    public TextArea descriptionField;
+    public TextField typeField;
+    public TextField priceField;
+    public TextField quantityField;
+
 
     @FXML
     private WarehouseTabController warehouseTabController;
+
+    @FXML
+    private CartTabController cartTabController;
 
     @FXML
     private CommentTabController commentTabController;
@@ -56,13 +65,38 @@ public class MainShopController {
         this.currentUser = user;
         limitAccess();
         loadData();
-
     }
 
     private void loadData() {
         customHib = new CustomHib(entityManagerFactory);
-        productList.getItems().addAll(customHib.getAllRecords(Product.class));
+        loadProductList();
+    }
 
+    private void loadProductList() {
+        productList.getItems().clear();
+        productList.getItems().addAll(customHib.getAllRecords(BoardGame.class));
+    }
+
+
+    public void loadProductFields() {
+        Product selectedProduct = productList.getSelectionModel().getSelectedItem();
+
+        if (selectedProduct != null) {
+            titleField.setText(selectedProduct.getTitle());
+            priceField.setText(String.valueOf(selectedProduct.getPrice()));
+            authorField.setText(selectedProduct.getAuthor());
+            quantityField.setText(String.valueOf(selectedProduct.getQuantity()));
+            if (selectedProduct instanceof BoardGame) {
+                BoardGame boardGame = (BoardGame) selectedProduct;
+                descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Players number: "+(boardGame.getPlayersQuantity())+ "\r\n"+"Game duration: "+(boardGame.getGameDuration()));
+            } else if (selectedProduct instanceof Puzzle) {
+                Puzzle puzzle = (Puzzle) selectedProduct;
+                descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Puzzle pieces quantity: "+(String.valueOf(puzzle.getPiecesQuantity())+ "\r\n"+"Puzzle material: "+(puzzle.getPuzzleMaterial())+ "\r\n"+"PuzzleSize: "+(puzzle.getPuzzleSize())));
+            } else {
+                Dice dice = (Dice) selectedProduct;
+                descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Dice number: "+(String.valueOf(dice.getDiceNumber())));
+            }
+        }
     }
 
     private void limitAccess() {
@@ -76,8 +110,10 @@ public class MainShopController {
     }
 
     public void loadTabValues() {
-        if (productsTab.isSelected()) {
-
+        if (primaryTab.isSelected()) {
+            loadProductList();
+        }
+        else if (productsTab.isSelected()) {
             productTabController.setData(customHib);
         }else if( warehousesTab.isSelected()){
             warehouseTabController.setData(customHib);
@@ -86,7 +122,13 @@ public class MainShopController {
         }else if( commentsTab.isSelected()){
             commentTabController.setData(customHib, currentUser);
         }
+        else if(cartsTab.isSelected()) {
+            cartTabController.setData(customHib);
+        }
     }
 
 
+    public void addNewCart() {
+        
+    }
 }

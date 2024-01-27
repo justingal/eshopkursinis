@@ -20,33 +20,43 @@ public class Product implements Serializable {
     String title;
     String description;
     String author;
+    double price;
+    int quantity;
     @ManyToOne
     private Warehouse warehouse;
     @ManyToOne
     private Cart cart;
 
-    public Product(String title, String description, String author) {
+
+    public Product(String title, String description, String author, double price, int quantity) {
         this.title = title;
         this.description = description;
         this.author = author;
+        this.price = price;
+        this.quantity = quantity;
     }
 
-    public Product(int id, String title, String description, String author) {
+    public Product(int id, String title, String description, String author, double price, int quantity) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.author = author;
+        this.price = price;
+        this.quantity = quantity;
     }
 
-    public Product(String title, String description, String author, Warehouse warehouse) {
+    public Product(String title, String description, String author, Warehouse warehouse, double price, int quantity) {
         this.title = title;
         this.description = description;
         this.author = author;
         this.warehouse = warehouse;
+        this.price = price;
+        this.quantity = quantity;
     }
 
     @Override
     public String toString() {
-        return title;
+        return title +" "+price+"€";
     }
+
 }

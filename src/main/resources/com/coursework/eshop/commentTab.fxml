@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.CommentTabController" fx:id="commentTabAnchor">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.CommentTabController" >
     <children>
         <TextField fx:id="commentTitleField" layoutX="42.0" layoutY="29.0" prefHeight="26.0" prefWidth="200.0" promptText="Title" />
         <TextArea fx:id="commentTextArea" layoutX="42.0" layoutY="72.0" prefHeight="200.0" prefWidth="200.0" promptText="Insert text:" />

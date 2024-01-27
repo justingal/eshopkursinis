@@ -16,25 +16,22 @@ public class BoardGame extends Product {
     private String playersQuantity;
     private String gameDuration;
 
-    public BoardGame(int id, String title, String description, String author, String playersQuantity, String gameDuration) {
-        super(id, title, description, author);
+    public BoardGame(int id, String title, String description, String author, int price, int quantity, String playersQuantity, String gameDuration) {
+        super(id, title, description, author, price, quantity);
         this.playersQuantity = playersQuantity;
         this.gameDuration = gameDuration;
     }
 
-    public BoardGame(String title, String description, String author, String playersQuantity, String gameDuration) {
-        super(title, description, author);
+    public BoardGame(String title, String description, String author, double price, int quantity,String playersQuantity, String gameDuration) {
+        super(title, description, author, price, quantity);
         this.playersQuantity = playersQuantity;
         this.gameDuration = gameDuration;
     }
 
-    public BoardGame(String title, String description, String author, Warehouse warehouse, String playersQuantity, String gameDuration) {
-        super(title, description, author, warehouse);
+    public BoardGame(String title, String description, String author, Warehouse warehouse, double price, int quantity, String playersQuantity, String gameDuration) {
+        super(title, description, author, warehouse, price, quantity);
         this.playersQuantity = playersQuantity;
         this.gameDuration = gameDuration;
     }
-    @Override
-    public String toString() {
-        return title;
-    }
+
 }

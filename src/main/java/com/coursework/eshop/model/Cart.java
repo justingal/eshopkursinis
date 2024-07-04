@@ -34,12 +34,24 @@ public class Cart {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Dice> inOrderDices;
 
-    public void addProductToBoardGamesList(BoardGame boardGame) {
+    public void addProductToBoardGamesList(BoardGame boardGame, Dice dice, Puzzle puzzle) {
         if (boardGame != null) {
             if (inOrderBoardGames == null) {
                 inOrderBoardGames = new ArrayList<>();
             }
             inOrderBoardGames.add(boardGame);
+            if (puzzle != null) {
+                if (inOrderPuzzles == null) {
+                    inOrderPuzzles = new ArrayList<>();
+                }
+                inOrderPuzzles.add(puzzle);
+            }
+            if (dice != null) {
+                if (inOrderDices == null) {
+                    inOrderDices = new ArrayList<>();
+                }
+                inOrderDices.add(dice);
+            }
         }
     }
 
@@ -75,7 +87,11 @@ public class Cart {
         }
         return allProducts;
     }
-
+    public void clearCart() {
+        inOrderPuzzles.clear();
+        inOrderBoardGames.clear();
+        inOrderDices.clear();
+    }
     public void removeProduct(Product product) {
         if (product instanceof BoardGame && inOrderBoardGames != null) {
             inOrderBoardGames.remove(product);

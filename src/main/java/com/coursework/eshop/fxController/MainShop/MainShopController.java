@@ -78,6 +78,8 @@ public class MainShopController {
     private void loadProductList() {
         productList.getItems().clear();
         productList.getItems().addAll(customHib.getAllRecords(BoardGame.class));
+        productList.getItems().addAll(customHib.getAllRecords(Puzzle.class));
+        productList.getItems().addAll(customHib.getAllRecords(Dice.class));
     }
 
 
@@ -94,7 +96,7 @@ public class MainShopController {
                 descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Players number: "+(boardGame.getPlayersQuantity())+ "\r\n"+"Game duration: "+(boardGame.getGameDuration()));
             } else if (selectedProduct instanceof Puzzle) {
                 Puzzle puzzle = (Puzzle) selectedProduct;
-                descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Puzzle pieces quantity: "+(String.valueOf(puzzle.getPiecesQuantity())+ "\r\n"+"Puzzle material: "+(puzzle.getPuzzleMaterial())+ "\r\n"+"PuzzleSize: "+(puzzle.getPuzzleSize())));
+                descriptionField.setText("Type: Puzzle "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Puzzle pieces quantity: "+(String.valueOf(puzzle.getPiecesQuantity())+ "\r\n"+"Puzzle material: "+(puzzle.getPuzzleMaterial())+ "\r\n"+"PuzzleSize: "+(puzzle.getPuzzleSize())));
             } else {
                 Dice dice = (Dice) selectedProduct;
                 descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Dice number: "+(String.valueOf(dice.getDiceNumber())));

@@ -23,4 +23,9 @@ public class Dice extends Product {
         super(id, title, description, author, price, quantity);
         this.diceNumber = diceNumber;
     }
+
+    public Dice(String title, String description, String author, double price, int quantity, int diceNumber) {
+        super(title, description, author, price, quantity);
+        this.diceNumber = diceNumber;
+    }
 }

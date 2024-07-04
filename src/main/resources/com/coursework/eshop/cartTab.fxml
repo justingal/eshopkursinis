@@ -11,7 +11,7 @@
       <ListView fx:id="cartList" layoutX="32.0" layoutY="33.0" prefHeight="110.0" prefWidth="542.0" AnchorPane.bottomAnchor="223.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="28.0" AnchorPane.topAnchor="33.0" />
       <Text layoutX="440.0" layoutY="257.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Full price:" />
       <Label fx:id="priceLabel" layoutX="503.0" layoutY="235.0" prefHeight="34.0" prefWidth="36.0" text="Label" />
-      <Button layoutX="25.0" layoutY="290.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="530.0" text="Buy now!" />
+      <Button layoutX="25.0" layoutY="290.0" mnemonicParsing="false" onAction="#moveCartToOrder" prefHeight="26.0" prefWidth="530.0" text="Buy now!" />
       <Button layoutX="431.0" layoutY="183.0" mnemonicParsing="false" onAction="#removeFromCart" prefHeight="26.0" prefWidth="118.0" text="Remove from cart" />
    </children>
 </AnchorPane>

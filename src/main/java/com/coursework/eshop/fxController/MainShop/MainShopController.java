@@ -90,7 +90,6 @@ public class MainShopController {
             titleField.setText(selectedProduct.getTitle());
             priceField.setText(String.valueOf(selectedProduct.getPrice()));
             authorField.setText(selectedProduct.getAuthor());
-            quantityField.setText(String.valueOf(selectedProduct.getQuantity()));
             if (selectedProduct instanceof BoardGame) {
                 BoardGame boardGame = (BoardGame) selectedProduct;
                 descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Players number: "+(boardGame.getPlayersQuantity())+ "\r\n"+"Game duration: "+(boardGame.getGameDuration()));
@@ -135,8 +134,8 @@ public class MainShopController {
     private Cart cart = new Cart();
     public void addProductToCart() {
         Product selectedProduct = productList.getSelectionModel().getSelectedItem();
-        if (selectedProduct != null) {
-            cart.addProduct(selectedProduct); // Pridėti produktą į krepšelį
+        if (selectedProduct != null && !cart.hasProduct(selectedProduct)) {
+            cart.addProduct(selectedProduct); // Pridėti produktą į krepšelį, jei jo dar nėra
             cartTabController.setCart(cart); // Perduoti Cart objektą į CartTabController
             cartTabController.updateCartView(); // Atnaujinti krepšelio vaizdą
         }

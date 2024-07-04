@@ -47,40 +47,11 @@ public class CartTabController {
             }
     }
 
-    public void updateBoardGameQuantity(BoardGame boardGame, int quantity) {
-        BoardGame boardGameInDb = customHib.getEntityById(BoardGame.class, boardGame.getId());
-        if (boardGameInDb != null) {
-            int newQuantity = boardGameInDb.getQuantity() - quantity;
-            boardGameInDb.setQuantity(newQuantity);
-            customHib.update(boardGameInDb);
-        }
-    }
-
-    public void updatePuzzleQuantity(Puzzle puzzle, int quantity) {
-        Puzzle puzzleInDb = customHib.getEntityById(Puzzle.class, puzzle.getId());
-        if (puzzleInDb != null) {
-            int newQuantity = puzzleInDb.getQuantity() - quantity;
-            puzzleInDb.setQuantity(newQuantity);
-            customHib.update(puzzleInDb);
-        }
-    }
-    public void updateDiceQuantity(Dice dice, int quantity) {
-        Dice diceInDb = customHib.getEntityById(Dice.class, dice.getId());
-        if (diceInDb != null) {
-            int newQuantity = diceInDb.getQuantity() - quantity;
-            diceInDb.setQuantity(newQuantity);
-            customHib.update(diceInDb);
-        }
-    }
 
     public void moveCartToOrder() {
         if (cart != null) {
             List<Product> productsInCart = cart.getProducts();
-            for (Product product : productsInCart) {
-                updateBoardGameQuantity((BoardGame) product, 1);
-                updatePuzzleQuantity((Puzzle) product, 1);
-                updateDiceQuantity((Dice) product, 1);
-            }
+
             cart.clearCart();
             updateCartView();
         }

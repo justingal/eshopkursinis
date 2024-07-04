@@ -42,7 +42,6 @@ public class ProductTabController {
     @FXML
     public AnchorPane productTabAnchor;
     public TextField priceField;
-    public TextField quantityField;
 
     private CustomHib customHib;
 
@@ -67,13 +66,13 @@ public class ProductTabController {
 
     public void addNewProduct() {
         if(productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME){
-            customHib.create(new BoardGame(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()), playersQuantityField.getText(), gameDurationFIeld.getText()));
+            customHib.create(new BoardGame(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Double.parseDouble(priceField.getText()), playersQuantityField.getText(), gameDurationFIeld.getText()));
         }
         else if( productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE){
-            customHib.create(new Puzzle(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()),Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()), Integer.parseInt(piecesQuantityField.getText()) , puzzleMaterialField.getText(), puzzleSizeField.getText()));
+            customHib.create(new Puzzle(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()),Double.parseDouble(priceField.getText()),  Integer.parseInt(piecesQuantityField.getText()) , puzzleMaterialField.getText(), puzzleSizeField.getText()));
         }
         else if( productType.getSelectionModel().getSelectedItem() == ProductType.DICE){
-            customHib.create(new Dice(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()), Integer.parseInt(diceNumberField.getText())));
+            customHib.create(new Dice(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Double.parseDouble(priceField.getText()),  Integer.parseInt(diceNumberField.getText())));
         }
         loadProductListManager();
         //MainShopController.showProductInfo();

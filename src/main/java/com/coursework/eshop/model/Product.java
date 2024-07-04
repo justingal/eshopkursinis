@@ -22,37 +22,33 @@ public class Product implements Serializable {
     String description;
     String author;
     double price;
-    int quantity;
     @ManyToOne
     private Warehouse warehouse;
     @ManyToMany
     private List<Cart> cart;
 
 
-    public Product(String title, String description, String author, double price, int quantity) {
+    public Product(String title, String description, String author, double price) {
         this.title = title;
         this.description = description;
         this.author = author;
         this.price = price;
-        this.quantity = quantity;
     }
 
-    public Product(int id, String title, String description, String author, double price, int quantity) {
+    public Product(int id, String title, String description, String author, double price) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.author = author;
         this.price = price;
-        this.quantity = quantity;
     }
 
-    public Product(String title, String description, String author, Warehouse warehouse, double price, int quantity) {
+    public Product(String title, String description, String author, Warehouse warehouse, double price) {
         this.title = title;
         this.description = description;
         this.author = author;
         this.warehouse = warehouse;
         this.price = price;
-        this.quantity = quantity;
     }
 
 

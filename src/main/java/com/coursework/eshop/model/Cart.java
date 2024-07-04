@@ -55,6 +55,17 @@ public class Cart {
         }
     }
 
+    public boolean hasProduct(Product product) {
+        if (product instanceof BoardGame && inOrderBoardGames != null) {
+            return inOrderBoardGames.stream().anyMatch(p -> p.getId() == product.getId());
+        } else if (product instanceof Puzzle && inOrderPuzzles != null) {
+            return inOrderPuzzles.stream().anyMatch(p -> p.getId() == product.getId());
+        } else if (product instanceof Dice && inOrderDices != null) {
+            return inOrderDices.stream().anyMatch(p -> p.getId() == product.getId());
+        }
+        return false;
+    } //chatgpt kodas
+
     public void addProduct(Product product) {
         if (product instanceof BoardGame) {
             if (inOrderBoardGames == null) {

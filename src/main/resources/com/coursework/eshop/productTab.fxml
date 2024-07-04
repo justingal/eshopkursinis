@@ -30,7 +30,5 @@
         <TextField fx:id="diceNumberField" layoutX="278.0" layoutY="237.0" prefHeight="26.0" prefWidth="88.0" promptText="Dice number:" />
       <Text layoutX="457.0" layoutY="292.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price:" />
       <TextField fx:id="priceField" layoutX="490.0" layoutY="274.0" prefHeight="26.0" prefWidth="55.0" />
-      <Text layoutX="438.0" layoutY="255.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quantity:" />
-      <TextField fx:id="quantityField" layoutX="490.0" layoutY="237.0" prefHeight="26.0" prefWidth="55.0" />
     </children>
 </AnchorPane>

@@ -20,22 +20,22 @@ public class Puzzle extends Product {
     private String puzzleSize;
     private String puzzleMaterial;
 
-    public Puzzle(int id, String title, String description, String author, double price, int quantity, int piecesQuantity, String puzzleSize, String puzzleMaterial) {
-        super(id, title, description, author, price, quantity);
+    public Puzzle(int id, String title, String description, String author, double price, int piecesQuantity, String puzzleSize, String puzzleMaterial) {
+        super(id, title, description, author, price);
         this.piecesQuantity = piecesQuantity;
         this.puzzleSize = puzzleSize;
         this.puzzleMaterial = puzzleMaterial;
     }
 
-    public Puzzle(String title, String description, String author, double price, int quantity, int piecesQuantity, String puzzleSize, String puzzleMaterial) {
-        super(title, description, author, price, quantity);
+    public Puzzle(String title, String description, String author, double price, int piecesQuantity, String puzzleSize, String puzzleMaterial) {
+        super(title, description, author, price);
         this.piecesQuantity = piecesQuantity;
         this.puzzleSize = puzzleSize;
         this.puzzleMaterial = puzzleMaterial;
     }
 
-    public Puzzle(String title, String description, String author, Warehouse warehouse, double price, int quantity, int piecesQuantity, String puzzleSize, String puzzleMaterial) {
-        super(title, description, author, warehouse, price, quantity);
+    public Puzzle(String title, String description, String author, Warehouse warehouse, double price, int piecesQuantity, String puzzleSize, String puzzleMaterial) {
+        super(title, description, author, warehouse, price);
         this.piecesQuantity = piecesQuantity;
         this.puzzleSize = puzzleSize;
         this.puzzleMaterial = puzzleMaterial;

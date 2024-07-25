@@ -1,5 +1,6 @@
 package com.coursework.eshop.fxController;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
@@ -11,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -42,22 +44,28 @@ public class LoginController implements Initializable {
 
     public void validateAndConnect() throws IOException {
         CustomHib userHib = new CustomHib(entityManagerFactory);
-        User user = userHib.getUserByCredentials(loginField.getText(), passwordField.getText());
-        //Cia galim optimizuoti, kol kas paliksiu kaip pvz su userHib
+        User user = userHib.getUserByLogin(loginField.getText());
+
         if (user != null) {
-            FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("main-shop.fxml"));
-            Parent parent = fxmlLoader.load();
-            MainShopController mainShopController = fxmlLoader.getController();
-            mainShopController.setData(entityManagerFactory, user);
-            Scene scene = new Scene(parent);
-            Stage stage = (Stage) loginField.getScene().getWindow();
-            stage.setTitle("Shop");
-            stage.setScene(scene);
-            stage.show();
+            BCrypt.Result result = BCrypt.verifyer().verify(passwordField.getText().toCharArray(), user.getPassword());
+            if (result.verified) {
+                FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("main-shop.fxml"));
+                Parent parent = fxmlLoader.load();
+                MainShopController mainShopController = fxmlLoader.getController();
+                mainShopController.setData(entityManagerFactory, user);
+                Scene scene = new Scene(parent);
+                Stage stage = (Stage) loginField.getScene().getWindow();
+                stage.setTitle("Shop");
+                stage.setScene(scene);
+                stage.show();
+            } else {
+                JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Login INFO", "Wrong data", "Please check credentials, incorrect password");
+            }
         } else {
-            //JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Login INFO", "Wrong data", "Please check credentials, no such user");
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Login INFO", "Wrong data", "Please check credentials, no such user");
+        }
     }
-    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 

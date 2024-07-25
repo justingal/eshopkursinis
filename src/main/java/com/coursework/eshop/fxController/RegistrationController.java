@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.io.IOException;
 //import utils.DatabaseUtils;
@@ -49,8 +50,6 @@ public class RegistrationController {
     public TextField medCertificateField;
     @FXML
     public DatePicker employmentDateField;
-    @FXML
-    public CheckBox isAdminCheck;
 
     private EntityManagerFactory entityManagerFactory;
 
@@ -98,12 +97,12 @@ public class RegistrationController {
                 !cardNoField.getText().isEmpty() &&
                 birthDateField.getValue() != null) {
 
-            userHib.create(new Customer(loginField.getText(), passwordField.getText(), birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
+            String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
+            userHib.create(new Customer(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
             try {
-               returnToLogin();
-            }
-            catch(IOException e) {
+                returnToLogin();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -125,7 +124,6 @@ public class RegistrationController {
         employeeIdField.setVisible(false);
         medCertificateField.setVisible(false);
         employmentDateField.setVisible(false);
-        isAdminCheck.setVisible(false);
 
     }
 }

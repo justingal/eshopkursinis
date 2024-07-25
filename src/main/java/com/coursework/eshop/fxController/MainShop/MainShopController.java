@@ -2,15 +2,11 @@ package com.coursework.eshop.fxController.MainShop;
 
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
-import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-
-import java.util.List;
 
 public class MainShopController {
 
@@ -28,6 +24,11 @@ public class MainShopController {
     public TabPane tabPane;
     @FXML
     public Tab productsTab;
+    @FXML
+    public Tab myOrdersTab;
+
+    //@FXML
+    //public Tab orderTab;
 
     @FXML
     public Tab commentsTab;
@@ -45,9 +46,6 @@ public class MainShopController {
     private WarehouseTabController warehouseTabController;
 
     @FXML
-    private CartTabController cartTabController;
-
-    @FXML
     private CommentTabController commentTabController;
 
     @FXML
@@ -56,16 +54,27 @@ public class MainShopController {
     @FXML
     private UserTabController userTabController;
 
+    @FXML
+    private CartTabController cartTabController;
+
+    @FXML
+    private OrderTabController orderTabController;
+
+    @FXML
+    private SettingsTabController settingsTabController;
+
+    @FXML
+    private MyOrdersTabController myOrdersTabController;
+
     private EntityManagerFactory entityManagerFactory;
     private User currentUser;
     private CustomHib customHib;
 
-    private List<Product> productCart;
+    private ShoppingCart cart = new ShoppingCart();
 
     public void setData(EntityManagerFactory entityManagerFactory, User user) {
         this.entityManagerFactory = entityManagerFactory;
         this.currentUser = user;
-        this.cart = new Cart();
         limitAccess();
         loadData();
     }
@@ -92,53 +101,49 @@ public class MainShopController {
             authorField.setText(selectedProduct.getAuthor());
             if (selectedProduct instanceof BoardGame) {
                 BoardGame boardGame = (BoardGame) selectedProduct;
-                descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Players number: "+(boardGame.getPlayersQuantity())+ "\r\n"+"Game duration: "+(boardGame.getGameDuration()));
+                descriptionField.setText("Type: Board game " + "\r\n" + "Description: " + (selectedProduct.getDescription()) + "\r\n" + "Players number: " + (boardGame.getPlayersQuantity()) + "\r\n" + "Game duration: " + (boardGame.getGameDuration()));
             } else if (selectedProduct instanceof Puzzle) {
                 Puzzle puzzle = (Puzzle) selectedProduct;
-                descriptionField.setText("Type: Puzzle "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Puzzle pieces quantity: "+(String.valueOf(puzzle.getPiecesQuantity())+ "\r\n"+"Puzzle material: "+(puzzle.getPuzzleMaterial())+ "\r\n"+"PuzzleSize: "+(puzzle.getPuzzleSize())));
+                descriptionField.setText("Type: Puzzle " + "\r\n" + "Description: " + (selectedProduct.getDescription()) + "\r\n" + "Puzzle pieces quantity: " + (String.valueOf(puzzle.getPiecesQuantity()) + "\r\n" + "Puzzle material: " + (puzzle.getPuzzleMaterial()) + "\r\n" + "PuzzleSize: " + (puzzle.getPuzzleSize())));
             } else {
                 Dice dice = (Dice) selectedProduct;
-                descriptionField.setText("Type: Board game "+ "\r\n"+ "Description: "+(selectedProduct.getDescription())+ "\r\n"+"Dice number: "+(String.valueOf(dice.getDiceNumber())));
+                descriptionField.setText("Type: Dice " + "\r\n" + "Description: " + (selectedProduct.getDescription()) + "\r\n" + "Dice number: " + (String.valueOf(dice.getDiceNumber())));
             }
         }
     }
 
     private void limitAccess() {
-        if(currentUser.getClass()== Manager.class){
-            Manager manager = (Manager) currentUser;
-        }else if(currentUser.getClass()== Customer.class){
-                tabPane.getTabs().remove(usersTab);
-                tabPane.getTabs().remove(warehousesTab);
-                tabPane.getTabs().remove(productsTab);
+        if (currentUser.getClass() == Manager.class) {
+            tabPane.getTabs().remove(usersTab);
+            tabPane.getTabs().remove(myOrdersTab);
+            tabPane.getTabs().remove(cartsTab);
+        } else if (currentUser.getClass() == Customer.class) {
+            tabPane.getTabs().remove(usersTab);
+            tabPane.getTabs().remove(warehousesTab);
+            tabPane.getTabs().remove(productsTab);
         }
     }
 
     public void loadTabValues() {
         if (primaryTab.isSelected()) {
             loadProductList();
-        }
-        else if (productsTab.isSelected()) {
+        } else if (productsTab.isSelected()) {
             productTabController.setData(customHib);
-        }else if( warehousesTab.isSelected()){
+        } else if (warehousesTab.isSelected()) {
             warehouseTabController.setData(customHib);
-        }else if( usersTab.isSelected()){
+        } else if (usersTab.isSelected()) {
             userTabController.setData(customHib);
-        }else if( commentsTab.isSelected()){
+        } else if (commentsTab.isSelected()) {
             commentTabController.setData(customHib, currentUser);
-        }
-        else if(cartsTab.isSelected()) {
-            cartTabController.setData(customHib);
+        } else if (cartsTab.isSelected()) {
+            cartTabController.setData(customHib, cart);
         }
     }
 
-    private Cart cart = new Cart();
-    public void addProductToCart() {
+    public void addProductToCart(ActionEvent actionEvent) {
         Product selectedProduct = productList.getSelectionModel().getSelectedItem();
-        if (selectedProduct != null && !cart.hasProduct(selectedProduct)) {
-            cart.addProduct(selectedProduct); // Pridėti produktą į krepšelį, jei jo dar nėra
-            cartTabController.setCart(cart); // Perduoti Cart objektą į CartTabController
-            cartTabController.updateCartView(); // Atnaujinti krepšelio vaizdą
-        }
+        CartItem item = new CartItem(selectedProduct.getId(), selectedProduct.getTitle(), selectedProduct.getPrice());
+        // Might need to make ShoppingCart static or else the products will keep getting wiped
+        cart.addItem(item);
     }
-
 }

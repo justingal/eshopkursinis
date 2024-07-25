@@ -111,26 +111,20 @@ public class CustomHib extends GenericHib{
         }
     }
 
-    public User getUserByCredentials(String login, String password) {
+    public User getUserByLogin(String login) {
         EntityManager entityManager = getEntityManager();
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<User> query = cb.createQuery(User.class);
             Root<User> root = query.from(User.class);
-            query.select(root).where(cb.and(cb.like(root.get("login"), login), cb.like(root.get("password"), password)));
-            Query q;
-
-            q = entityManager.createQuery(query);
+            query.select(root).where(cb.equal(root.get("login"), login));
+            Query q = entityManager.createQuery(query);
             return (User) q.getSingleResult();
         } catch (NoResultException e) {
-            JavaFxCustomsUtils.generateAlert(
-                    javafx.scene.control.Alert.AlertType.ERROR,
-                    "Error",
-                    "Error",
-                    "Error while getting user by credentials");
             return null;
         } finally {
             if (entityManager != null) entityManager.close();
         }
     }
+
 }

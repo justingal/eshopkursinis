@@ -1,60 +1,37 @@
 package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
-import com.coursework.eshop.model.*;
+import com.coursework.eshop.model.ShoppingCart;
+import com.coursework.eshop.model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.AnchorPane;
-import lombok.Getter;
-
-import java.util.List;
 
 public class CartTabController {
 
-
     @FXML
-    public ListView <Product> cartList;
+    public ListView cartItemList;
     @FXML
     public Label priceLabel;
-    private CustomHib customHib;
-
-    private Cart cart;
-    public List<Product> productCart;
-    public void setData(CustomHib customHib) {
-        this.customHib = customHib;
-    }
-    public void updateCartView() {
-        if (cart != null) {
-            cartList.getItems().clear();
-            cartList.getItems().addAll(cart.getProducts()); // Atnaujinti produktų sąrašą
-            priceLabel.setText(String.valueOf(cart.getTotalPrice())); // Atnaujinti bendrą kainą
-        }
-    }
+    private ShoppingCart cart;
 
 
-    public void setCart(Cart cart) {
-            this.cart = cart;
+
+    public void moveCartToOrder(ActionEvent actionEvent) {
 
     }
 
-    public void removeFromCart() {
-            Product selectedProduct = cartList.getSelectionModel().getSelectedItem();
-            if (selectedProduct != null && cart != null) {
-                cart.removeProduct(selectedProduct);
-                updateCartView();
-            }
+    public void removeFromCart(ActionEvent actionEvent) {
     }
 
+    public void setData(CustomHib customHib, ShoppingCart cart) {
+        this.cart = cart;
+        loadCartItemList();
+    }
 
-    public void moveCartToOrder() {
-        if (cart != null) {
-            List<Product> productsInCart = cart.getProducts();
-
-            cart.clearCart();
-            updateCartView();
-        }
+    private void loadCartItemList() {
+        cartItemList.getItems().clear();
+        cartItemList.getItems().addAll(cart.getItems());
     }
 }
-

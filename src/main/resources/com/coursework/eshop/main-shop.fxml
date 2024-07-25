@@ -13,7 +13,7 @@
     <children>
         <TabPane fx:id="tabPane" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
-                <Tab fx:id="primaryTab" onSelectionChanged="#loadTabValues" text="Products">
+                <Tab fx:id="primaryTab" onSelectionChanged="#loadTabValues" text="Product">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
@@ -27,7 +27,6 @@
                         <TextField fx:id="priceField" layoutX="463.0" layoutY="257.0" prefHeight="26.0" prefWidth="45.0" />
                         <Text layoutX="473.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price" />
                         <Button layoutX="435.0" layoutY="318.0" mnemonicParsing="false" onAction="#addProductToCart" text="Add to cart" />
-                        <Text layoutX="263.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Product left" />
                             </children>
                         </AnchorPane>
                     </content>
@@ -46,6 +45,15 @@
                 </Tab>
                 <Tab fx:id="commentsTab" onSelectionChanged="#loadTabValues" text="Comment">
                     <fx:include fx:id="commentTab" source="commentTab.fxml" />
+                </Tab>
+                <Tab fx:id="ordersTab" onSelectionChanged="#loadTabValues" text="Orders">
+                    <fx:include fx:id="orderTab" source="orderTab.fxml" />
+                </Tab>
+                <Tab fx:id="myOrdersTab" onSelectionChanged="#loadTabValues" text="My orders">
+                    <fx:include fx:id="myOrderTab" source="orderTab.fxml" />
+                </Tab>
+                <Tab fx:id="settingsTab" onSelectionChanged="#loadTabValues" text="Settings">
+                    <fx:include fx:id="settingTab" source="orderTab.fxml" />
                 </Tab>
             </tabs>
         </TabPane>

@@ -21,8 +21,8 @@ public class Customer extends User {
     private String address;
     private String cardNo;
     @OneToOne
-    @JoinColumn(name = "myCart_id")
-    Cart myCart;
+    @JoinColumn(name = "user_order_id")
+    Order userOrder;
 
     public Customer(String login, String password, LocalDate birthDate, String name, String surname, String address, String cardNo) {
         super(login, password, birthDate, name, surname);

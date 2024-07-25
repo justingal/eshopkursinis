@@ -30,6 +30,5 @@
         <TextField fx:id="employeeIdField" layoutX="226.0" layoutY="117.0" prefHeight="26.0" prefWidth="175.0" promptText="Enter unique ID:" />
         <TextField fx:id="medCertificateField" layoutX="226.0" layoutY="164.0" prefHeight="26.0" prefWidth="175.0" promptText="Enter medical certificate ID:" />
         <DatePicker fx:id="employmentDateField" layoutX="227.0" layoutY="251.0" promptText="Employemnt date:" />
-        <CheckBox fx:id="isAdminCheck" layoutX="227.0" layoutY="216.0" mnemonicParsing="false" text="is Administrator" />
     </children>
 </AnchorPane>

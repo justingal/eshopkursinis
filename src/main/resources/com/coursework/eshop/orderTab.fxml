@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.OrderTabController" >
+    <children>
+        <ListView fx:id="orderList" layoutX="32.0" layoutY="33.0" prefHeight="110.0" prefWidth="542.0" AnchorPane.bottomAnchor="223.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="28.0" AnchorPane.topAnchor="33.0" />
+        <ListView fx:id="orderProductsList" layoutX="32.0" layoutY="33.0" prefHeight="110.0" prefWidth="542.0" AnchorPane.bottomAnchor="223.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="28.0" AnchorPane.topAnchor="33.0" />
+
+    </children>
+</AnchorPane>

@@ -148,7 +148,7 @@ public class UserTabController implements Initializable {
                 {
                     deleteButton.setOnAction(event -> {
                         ManagerTableParameters row = getTableView().getItems().get(getIndex());
-                        customHib.delete(Customer.class, row.getId());
+                        customHib.delete(Manager.class, row.getId());
                         managerTable.getItems().clear();
                         loadUserTables();
                     });

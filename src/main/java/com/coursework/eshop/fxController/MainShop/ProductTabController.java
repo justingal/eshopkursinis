@@ -1,13 +1,11 @@
 package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
+import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import lombok.Getter;
 
@@ -65,40 +63,92 @@ public class ProductTabController {
     }
 
     public void addNewProduct() {
-        if(productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME){
-            customHib.create(new BoardGame(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Double.parseDouble(priceField.getText()), playersQuantityField.getText(), gameDurationFIeld.getText()));
+        if (productTitleField.getText().trim().isEmpty() ||
+                descriptionField.getText().trim().isEmpty() ||
+                authorField.getText().trim().isEmpty() ||
+                warehouseComboBox.getSelectionModel().getSelectedItem() == null ||
+                priceField.getText().trim().isEmpty()) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Missing Information", "Please fill all required fields correctly.");
+            return;
         }
-        else if( productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE){
-            customHib.create(new Puzzle(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()),Double.parseDouble(priceField.getText()),  Integer.parseInt(piecesQuantityField.getText()) , puzzleMaterialField.getText(), puzzleSizeField.getText()));
-        }
-        else if( productType.getSelectionModel().getSelectedItem() == ProductType.DICE){
-            customHib.create(new Dice(productTitleField.getText(), descriptionField.getText(), authorField.getText(), customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()), Double.parseDouble(priceField.getText()),  Integer.parseInt(diceNumberField.getText())));
-        }
-        loadProductListManager();
-        //MainShopController.showProductInfo();
-    }
+        try {
+            double price = Double.parseDouble(priceField.getText().trim());
+            Warehouse selectedWarehouse = customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId());
 
+            if (productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME) {
+                if (playersQuantityField.getText().trim().isEmpty() || gameDurationFIeld.getText().trim().isEmpty()) {
+                    throw new IllegalArgumentException("Board game specific fields are empty.");
+                }
+                customHib.create(new BoardGame(productTitleField.getText().trim(), descriptionField.getText().trim(), authorField.getText().trim(), selectedWarehouse, price, playersQuantityField.getText().trim(), gameDurationFIeld.getText().trim()));
+            }
+            else if (productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE) {
+                int piecesQuantity = Integer.parseInt(piecesQuantityField.getText().trim());
+                if (puzzleMaterialField.getText().trim().isEmpty() || puzzleSizeField.getText().trim().isEmpty()) {
+                    throw new IllegalArgumentException("Puzzle specific fields are empty.");
+                }
+                customHib.create(new Puzzle(productTitleField.getText().trim(), descriptionField.getText().trim(), authorField.getText().trim(), selectedWarehouse, price, piecesQuantity, puzzleMaterialField.getText().trim(), puzzleSizeField.getText().trim()));
+            }
+            else if (productType.getSelectionModel().getSelectedItem() == ProductType.DICE) {
+                int diceNumber = Integer.parseInt(diceNumberField.getText().trim());
+                customHib.create(new Dice(productTitleField.getText().trim(), descriptionField.getText().trim(), authorField.getText().trim(), selectedWarehouse, price, diceNumber));
+            }
+
+            loadProductListManager();
+        } catch (NumberFormatException e) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Invalid Format", "Please enter valid numbers for price, quantities or other numeric fields.");
+        } catch (IllegalArgumentException e) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", e.getMessage(), "Please complete all fields properly.");
+        }
+    }
     public void updateProduct() {
         Product selectedProduct = productListManager.getSelectionModel().getSelectedItem();
-        Product product = customHib.getEntityById(selectedProduct.getClass(), selectedProduct.getId());
-
-        product.setTitle(productTitleField.getText());
-        product.setDescription(descriptionField.getText());
-        product.setAuthor(authorField.getText());
-        product.setWarehouse(customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId()));
-
-        if (productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME) {
-            BoardGame boardGame = (BoardGame) product;
-            boardGame.setPlayersQuantity(playersQuantityField.getText());
-            boardGame.setGameDuration(gameDurationFIeld.getText());
-        } else if (productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE) {
-            Puzzle puzzle = (Puzzle) product;
-            puzzle.setPiecesQuantity(Integer.parseInt(piecesQuantityField.getText()));
-            puzzle.setPuzzleMaterial(puzzleMaterialField.getText());
-            puzzle.setPuzzleSize(puzzleSizeField.getText());
+        if (selectedProduct == null) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "No Selection", "No product selected", "Please select a product to update.");
+            return;
         }
-        customHib.update(product);
-        loadProductListManager();
+
+        String title = productTitleField.getText().trim();
+        String description = descriptionField.getText().trim();
+        String author = authorField.getText().trim();
+        Warehouse selectedWarehouse = warehouseComboBox.getSelectionModel().getSelectedItem();
+
+        if (title.isEmpty() || description.isEmpty() || author.isEmpty() || selectedWarehouse == null) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error","Missing Information", "Please fill all required fields.");
+            return;
+        }
+
+        Product product = customHib.getEntityById(selectedProduct.getClass(), selectedProduct.getId());
+        product.setTitle(title);
+        product.setDescription(description);
+        product.setAuthor(author);
+        product.setWarehouse(customHib.getEntityById(Warehouse.class, selectedWarehouse.getId()));
+
+        try {
+            if (productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME) {
+                BoardGame boardGame = (BoardGame) product;
+                boardGame.setPlayersQuantity(playersQuantityField.getText());
+                boardGame.setGameDuration(gameDurationFIeld.getText());
+            } else if (productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE) {
+                int piecesQuantity = Integer.parseInt(piecesQuantityField.getText().trim());
+                String puzzleMaterial = puzzleMaterialField.getText().trim();
+                String puzzleSize = puzzleSizeField.getText().trim();
+
+                if (puzzleMaterial.isEmpty() || puzzleSize.isEmpty()) {
+                    throw new IllegalArgumentException("Puzzle specific fields cannot be empty.");
+                }
+
+                Puzzle puzzle = (Puzzle) product;
+                puzzle.setPiecesQuantity(piecesQuantity);
+                puzzle.setPuzzleMaterial(puzzleMaterial);
+                puzzle.setPuzzleSize(puzzleSize);
+            }
+            customHib.update(product);
+            loadProductListManager();
+        } catch (NumberFormatException e) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error","Invalid Input", "Please enter valid numbers for numeric fields.");
+        } catch (IllegalArgumentException e) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error","Error",e.getMessage());
+        }
     }
 
     public void deleteProduct() {
@@ -117,6 +167,7 @@ public class ProductTabController {
             descriptionField.setText(selectedProduct.getDescription());
             authorField.setText(selectedProduct.getAuthor());
             warehouseComboBox.getSelectionModel().select(selectedProduct.getWarehouse());
+            priceField.setText(String.valueOf(selectedProduct.getPrice()));
 
             if (selectedProduct instanceof BoardGame) {
                 BoardGame boardGame = (BoardGame) selectedProduct;

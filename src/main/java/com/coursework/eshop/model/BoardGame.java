@@ -1,10 +1,14 @@
 package com.coursework.eshop.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,6 +19,9 @@ public class BoardGame extends Product {
 
     private String playersQuantity;
     private String gameDuration;
+
+    @OneToMany(mappedBy = "boardGame", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 
     public BoardGame(int id, String title, String description, String author, int price,  String playersQuantity, String gameDuration) {
         super(id, title, description, author, price);

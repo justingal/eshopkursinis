@@ -2,18 +2,41 @@ package com.coursework.eshop.HibernateControllers;
 
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.*;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.Query;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+
+import java.util.List;
 
 public class CustomHib extends GenericHib{
     public CustomHib(EntityManagerFactory entityManagerFactory) {
         super(entityManagerFactory);
     };
+
+    public List<Comment> readAllRootComments() {
+        EntityManager entityManager = getEntityManager();
+        try {
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Comment> query = cb.createQuery(Comment.class);
+            Root<Comment> root = query.from(Comment.class);
+
+            query.select(root).where(cb.isNull(root.get("parentComment")));
+
+            TypedQuery<Comment> typedQuery = entityManager.createQuery(query);
+            return typedQuery.getResultList();
+        } catch (NoResultException e) {
+            JavaFxCustomsUtils JavaFxCustomUtils = new JavaFxCustomsUtils();
+            JavaFxCustomUtils.generateAlert(
+                    javafx.scene.control.Alert.AlertType.ERROR,
+                    "Error",
+                    "Error",
+                    "Error while getting root comments");
+            return null;
+        } finally {
+            if (entityManager != null) entityManager.close();
+        }
+    }
 
     public void deleteProduct(int id, ProductType productType) {
         EntityManager entityManager = getEntityManager();

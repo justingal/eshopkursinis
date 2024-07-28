@@ -2,11 +2,18 @@ package com.coursework.eshop.fxController.MainShop;
 
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
+import com.coursework.eshop.StartGui;
 import com.coursework.eshop.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class MainShopController {
 
@@ -131,13 +138,28 @@ public class MainShopController {
             productTabController.setData(customHib);
         } else if (warehousesTab.isSelected()) {
             warehouseTabController.setData(customHib);
-        } else if (usersTab.isSelected()) {
-            userTabController.setData(customHib);
         } else if (commentsTab.isSelected()) {
             commentTabController.setData(customHib, currentUser);
+        } else if (usersTab.isSelected()) {
+            userTabController.setData(customHib);
         } else if (cartsTab.isSelected()) {
             cartTabController.setData(customHib, cart);
         }
+    }
+
+    public void leaveReview() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("commentTree.fxml"));
+        Parent parent = fxmlLoader.load();
+        CommentTreeController commentTree = fxmlLoader.getController();
+        commentTree.setData(customHib, currentUser);
+        var stage = new Stage();
+        if (primaryTab.isSelected()) {
+            stage = (Stage) productList.getScene().getWindow();
+        }
+        Scene scene = new Scene(parent);
+        stage.setTitle("Shop");
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void addProductToCart(ActionEvent actionEvent) {

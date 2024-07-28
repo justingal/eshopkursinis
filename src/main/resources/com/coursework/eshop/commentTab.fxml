@@ -8,11 +8,11 @@
 
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.CommentTabController" >
     <children>
-        <TextField fx:id="commentTitleField" layoutX="42.0" layoutY="29.0" prefHeight="26.0" prefWidth="200.0" promptText="Title" />
-        <TextArea fx:id="commentTextArea" layoutX="42.0" layoutY="72.0" prefHeight="200.0" prefWidth="200.0" promptText="Insert text:" />
-        <ListView fx:id="commentListView" layoutX="330.0" layoutY="29.0" prefHeight="240.0" prefWidth="200.0" />
-        <Button layoutX="42.0" layoutY="311.0" mnemonicParsing="false" onAction="#addNewComment" prefHeight="26.0" prefWidth="58.0" text="Add" />
-        <Button layoutX="116.0" layoutY="311.0" mnemonicParsing="false" onAction="#updateComment" text="Update" />
-        <Button layoutX="182.0" layoutY="311.0" mnemonicParsing="false" onAction="#deleteComment" prefHeight="26.0" prefWidth="58.0" text="Delete" />
+        <TextField fx:id="commentTitleField" layoutX="29.0" layoutY="22.0" prefHeight="25.0" prefWidth="200.0" promptText="Title" />
+        <TextArea fx:id="commentBodyField" layoutX="29.0" layoutY="70.0" prefHeight="200.0" prefWidth="200.0" promptText="Comment" />
+        <Button layoutX="43.0" layoutY="306.0" mnemonicParsing="false" onAction="#addNewComment" prefHeight="25.0" prefWidth="74.0" text="Add" />
+        <Button layoutX="241.0" layoutY="306.0" mnemonicParsing="false" onAction="#updateExistingComment" prefHeight="25.0" prefWidth="69.0" text="Update" />
+        <Button layoutX="472.0" layoutY="306.0" mnemonicParsing="false" onAction="#deleteExistingComment" prefHeight="25.0" prefWidth="64.0" text="Delete" />
+        <TreeView fx:id="commentTreeView" layoutX="241.0" layoutY="22.0" onMouseClicked="#showCommentInfo" prefHeight="249.0" prefWidth="318.0" />
     </children>
 </AnchorPane>

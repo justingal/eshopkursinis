@@ -25,7 +25,7 @@
                         <Text layoutX="258.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author" />
                         <Text layoutX="257.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Other info" />
                         <TextField fx:id="priceField" layoutX="463.0" layoutY="257.0" prefHeight="26.0" prefWidth="45.0" />
-                        <Text layoutX="473.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price" />
+                                <Button layoutX="333.0" layoutY="286.0" mnemonicParsing="false" onAction="#leaveReview" prefHeight="48.0" prefWidth="121.0" text="Write a review" AnchorPane.bottomAnchor="29.0" AnchorPane.leftAnchor="333.0" AnchorPane.rightAnchor="137.0" AnchorPane.topAnchor="286.0" />
                         <Button layoutX="435.0" layoutY="318.0" mnemonicParsing="false" onAction="#addProductToCart" text="Add to cart" />
                             </children>
                         </AnchorPane>

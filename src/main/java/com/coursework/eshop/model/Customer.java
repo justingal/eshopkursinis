@@ -5,11 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 @Getter
@@ -22,7 +19,7 @@ public class Customer extends User {
     private String cardNo;
     @OneToOne
     @JoinColumn(name = "user_order_id")
-    Order userOrder;
+    CustomerOrder userCustomerOrder;
 
     public Customer(String login, String password, LocalDate birthDate, String name, String surname, String address, String cardNo) {
         super(login, password, birthDate, name, surname);

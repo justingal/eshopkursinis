@@ -36,7 +36,6 @@ public class Warehouse implements Serializable {
     public Warehouse(String title, String address) {
         this.title = title;
         this.address = address;
-        this.inStockPuzzles = new ArrayList<>();
     }
 
     @Override

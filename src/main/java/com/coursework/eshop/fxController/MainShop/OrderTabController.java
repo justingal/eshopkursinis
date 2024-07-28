@@ -5,4 +5,10 @@ import javafx.scene.control.ListView;
 
 public class OrderTabController {
 
+    @FXML
+    public ListView orderList;
+    @FXML
+    public ListView orderItemList;
+
+
 }

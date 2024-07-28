@@ -20,8 +20,13 @@ public class ShoppingCart {
     private List<CartItem> items = new ArrayList<>();
     private double totalPrice;
 
-    public void addItem(CartItem item) {
-        items.add(item);
+    public void addItem(CartItem newItem) {
+        for (CartItem item : items) {
+            if (item.getProductId() == newItem.getProductId()) {
+                return;
+        }
+        }
+        items.add(newItem);
         recalculateTotal();
     }
 

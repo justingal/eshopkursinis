@@ -28,7 +28,6 @@ public class CustomerOrder {
     private Customer customer;
 
     @Enumerated(EnumType.STRING)
-
     private OrderStatus orderStatus;
 
     @Embedded

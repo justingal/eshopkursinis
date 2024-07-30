@@ -50,10 +50,10 @@
                     <fx:include fx:id="orderTab" source="orderTab.fxml" />
                 </Tab>
                 <Tab fx:id="myOrdersTab" onSelectionChanged="#loadTabValues" text="My orders">
-                    <fx:include fx:id="myOrderTab" source="orderTab.fxml" />
+                    <fx:include fx:id="myOrderTab" source="myOrderTab.fxml" />
                 </Tab>
                 <Tab fx:id="settingsTab" onSelectionChanged="#loadTabValues" text="Settings">
-                    <fx:include fx:id="settingTab" source="orderTab.fxml" />
+                    <fx:include fx:id="settingTab" source="settingsTab.fxml" />
                 </Tab>
             </tabs>
         </TabPane>

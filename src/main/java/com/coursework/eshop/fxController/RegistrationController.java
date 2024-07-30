@@ -120,10 +120,20 @@ public class RegistrationController {
         stage.show();
     }
     public void initialize() {
-        managerCheckbox.setVisible(false);
-        employeeIdField.setVisible(false);
-        medCertificateField.setVisible(false);
-        employmentDateField.setVisible(false);
+        // Initially hide manager-specific fields
+        updateFieldVisibility();
 
+        // Add a listener to the userType toggle group
+        userType.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            updateFieldVisibility();
+        });
+    }
+
+    private void updateFieldVisibility() {
+        boolean isManager = managerCheckbox.isSelected();
+        managerCheckbox.setVisible(isManager);
+        employeeIdField.setVisible(isManager);
+        medCertificateField.setVisible(isManager);
+        employmentDateField.setVisible(isManager);
     }
 }

@@ -3,6 +3,7 @@ package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.StartGui;
+import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
@@ -33,20 +34,21 @@ public class MainShopController {
     public Tab productsTab;
     @FXML
     public Tab myOrdersTab;
-
-    //@FXML
-    //public Tab orderTab;
-
+    @FXML
+    public Tab ordersTab;
     @FXML
     public Tab commentsTab;
     @FXML
     public Tab cartsTab;
+    @FXML
+    public Tab settingsTab;
     public TextField titleField;
     public TextField authorField;
     public TextArea descriptionField;
     public TextField typeField;
     public TextField priceField;
     public TextField quantityField;
+
 
 
     @FXML
@@ -164,8 +166,13 @@ public class MainShopController {
 
     public void addProductToCart(ActionEvent actionEvent) {
         Product selectedProduct = productList.getSelectionModel().getSelectedItem();
+        if (selectedProduct == null) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.WARNING, "No Selection", "No product selected", "Please select a product to add to the cart.");
+            return;
+        }
         CartItem item = new CartItem(selectedProduct.getId(), selectedProduct.getTitle(), selectedProduct.getPrice());
         // Might need to make ShoppingCart static or else the products will keep getting wiped
         cart.addItem(item);
+
     }
 }

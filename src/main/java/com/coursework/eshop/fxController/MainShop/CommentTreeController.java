@@ -40,8 +40,9 @@ public class CommentTreeController implements Initializable {
         if (productListReview.getItems() != null) {
             productListReview.getItems().clear();
         }
-        productListReview.getItems().addAll(customHibernate.getAllRecords(Product.class));
-
+        productListReview.getItems().addAll(customHibernate.getAllRecords(BoardGame.class));
+        productListReview.getItems().addAll(customHibernate.getAllRecords(Puzzle.class));
+        productListReview.getItems().addAll(customHibernate.getAllRecords(Dice.class));
     }
 
     public void deleteComment() {
@@ -88,7 +89,8 @@ public class CommentTreeController implements Initializable {
     }
 
     public void loadComments() {
-        Product selectedProduct = customHibernate.getEntityById(Product.class, productListReview.getSelectionModel().getSelectedItem().getId());
+        //Product selectedProduct = customHibernate.getEntityById(Product.class, productListReview.getSelectionModel().getSelectedItem().getId());
+        Product selectedProduct = productListReview.getSelectionModel().getSelectedItem();
         commentsTree.setRoot(new TreeItem<>());
         commentsTree.setShowRoot(false);
         commentsTree.getRoot().setExpanded(true);

@@ -2,6 +2,7 @@ package com.coursework.eshop.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class BoardGame extends Product {
     private String playersQuantity;
     private String gameDuration;
 
-    @OneToMany(mappedBy = "boardGame", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "boardGame", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Review> reviews;
 
     public BoardGame(int id, String title, String description, String author, int price,  String playersQuantity, String gameDuration) {

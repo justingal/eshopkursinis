@@ -2,6 +2,7 @@ package com.coursework.eshop.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import java.util.List;
 public class Dice extends Product {
     int diceNumber;
 
-    @OneToMany(mappedBy = "dice", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dice", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Review> reviews;
 
     public Dice(String title, String description, String author, Warehouse warehouse,double price, int diceNumber) {

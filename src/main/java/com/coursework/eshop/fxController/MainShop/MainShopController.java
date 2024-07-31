@@ -2,8 +2,10 @@ package com.coursework.eshop.fxController.MainShop;
 
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
+import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
+import com.coursework.eshop.fxController.RegistrationController;
 import com.coursework.eshop.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
@@ -12,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -74,22 +77,23 @@ public class MainShopController {
 
     @FXML
     private MyOrdersTabController myOrdersTabController;
+    @FXML
+    private RegistrationController RegistrationTab;
 
-    private EntityManagerFactory entityManagerFactory;
+    private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
     private User currentUser;
     private CustomHib customHib;
 
     private ShoppingCart cart = new ShoppingCart();
 
-    public void setData(EntityManagerFactory entityManagerFactory, User user) {
-        this.entityManagerFactory = entityManagerFactory;
+    public void setData(User user) {
         this.currentUser = user;
         limitAccess();
         loadData();
     }
 
     private void loadData() {
-        customHib = new CustomHib(entityManagerFactory);
+        customHib = new CustomHib();
         loadProductList();
     }
 
@@ -132,6 +136,16 @@ public class MainShopController {
             tabPane.getTabs().remove(productsTab);
         }
     }
+    private void limitAccessBasedOnRole() {
+        // Here you control what is visible and what is not based on user roles
+        if (currentUser instanceof Admin) {
+            // Show admin specific controls
+            // E.g., making certain tabs or buttons visible
+        } else {
+            // Hide or disable admin specific controls
+        }
+        // Call any other methods necessary to update the UI
+    }
 
     public void loadTabValues() {
         if (primaryTab.isSelected()) {
@@ -163,6 +177,10 @@ public class MainShopController {
         stage.setScene(scene);
         stage.show();
     }
+    public void setUser(User user) {
+        this.currentUser = user;
+        limitAccessBasedOnRole();
+    }
 
     public void addProductToCart(ActionEvent actionEvent) {
         Product selectedProduct = productList.getSelectionModel().getSelectedItem();
@@ -175,4 +193,9 @@ public class MainShopController {
         cart.addItem(item);
 
     }
+    public void initialize() {
+        // Assuming StartGui.currentUser is already set
+        setUser(StartGui.currentUser); // Call this in initialize or right after FXMLLoader.load() in your login process.
+    }
+
 }

@@ -135,7 +135,7 @@ public class CommentTreeController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("main-shop.fxml"));
         Parent parent = fxmlLoader.load();
         MainShopController mainShopController = fxmlLoader.getController();
-        mainShopController.setData(EntityManagerFactorySingleton.getEntityManagerFactory(), currentUser);
+        mainShopController.setData(currentUser);
         Scene scene = new Scene(parent);
         Stage stage = (Stage) productListReview.getScene().getWindow();
         stage.setTitle("Shop");

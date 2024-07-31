@@ -2,8 +2,12 @@ package com.coursework.eshop.fxController;
 
 //import com.coursework.eshop.HibernateControllers.UserHib;
 import com.coursework.eshop.HibernateControllers.CustomHib;
+import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
+import com.coursework.eshop.model.Admin;
 import com.coursework.eshop.model.Customer;
+import com.coursework.eshop.model.Manager;
+import com.coursework.eshop.model.User;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -53,6 +57,8 @@ public class RegistrationController {
 
     private EntityManagerFactory entityManagerFactory;
 
+    private User currentUser;
+
     private CustomHib userHib;
     public void setData(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
@@ -98,8 +104,12 @@ public class RegistrationController {
                 birthDateField.getValue() != null) {
 
             String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
-            userHib.create(new Customer(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
+            if (customerCheckbox.isSelected()) {
+                userHib.create(new Customer(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
+            } else if (managerCheckbox.isSelected()) {
+                userHib.create( new Manager(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(),employeeIdField.getText(), medCertificateField.getText(), employmentDateField.getValue()));
+                // Papildomi manager specifiniai laukai gali būti pridėti čia
+            }         JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
             try {
                 returnToLogin();
             } catch (IOException e) {
@@ -119,21 +129,5 @@ public class RegistrationController {
         stage.setScene(scene);
         stage.show();
     }
-    public void initialize() {
-        // Initially hide manager-specific fields
-        updateFieldVisibility();
 
-        // Add a listener to the userType toggle group
-        userType.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            updateFieldVisibility();
-        });
-    }
-
-    private void updateFieldVisibility() {
-        boolean isManager = managerCheckbox.isSelected();
-        managerCheckbox.setVisible(isManager);
-        employeeIdField.setVisible(isManager);
-        medCertificateField.setVisible(isManager);
-        employmentDateField.setVisible(isManager);
-    }
 }

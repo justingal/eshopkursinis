@@ -1,6 +1,12 @@
 package com.coursework.eshop.fxController.MainShop;
 
+import com.coursework.eshop.HibernateControllers.CustomHib;
+import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
+import com.coursework.eshop.fxController.RegistrationController;
+import com.coursework.eshop.model.ShoppingCart;
+import com.coursework.eshop.model.User;
+import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,16 +50,14 @@ public class SettingsTabController {
 
     public void openManagerRegistrationField(ActionEvent actionEvent) {
         try {
-            // Correctly reference the FXML file relative to the classpath
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/coursework/eshop/registration.fxml"));
-            if (loader.getLocation() == null) {
-                throw new IllegalStateException("FXML file not found");
-            }
             Parent root = loader.load();
+            RegistrationController registrationController = loader.getController();
+            registrationController.setData(currentUser, customHib); // Set data right after loading
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("Manager Registration");  // Optionally set a title for the window
-            stage.initModality(Modality.APPLICATION_MODAL); // Block other windows if necessary
+            stage.setTitle("Registration");
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();  // Handle possible IOException more gracefully here

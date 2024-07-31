@@ -1,5 +1,6 @@
 package com.coursework.eshop.model;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 
 @Entity
+@DiscriminatorValue("Admin")
 public class Admin extends Manager {
 
 

@@ -10,8 +10,9 @@ import jakarta.persistence.criteria.Root;
 import java.util.List;
 
 public class CustomHib extends GenericHib{
-    public CustomHib(EntityManagerFactory entityManagerFactory) {
-        super(entityManagerFactory);
+    private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
+    public CustomHib() {
+
     };
 
     public List<Comment> readAllRootComments() {

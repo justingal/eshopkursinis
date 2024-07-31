@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GenericHib {
-    private EntityManagerFactory entityManagerFactory;
+    private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
     private EntityManager em;
 
-    public GenericHib(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
+    public GenericHib() {
+
     }
 
     EntityManager getEntityManager() {

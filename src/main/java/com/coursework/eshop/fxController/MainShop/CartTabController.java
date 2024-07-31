@@ -42,7 +42,7 @@ public class CartTabController {
             loadCartItemList();
 
             // Update the total price label
-            priceLabel.setText(String.format("%.2f", cart.getTotalPrice()));
+            priceLabel.setText(String.format("%.2f €", cart.getTotalPrice()));
         }
 
 
@@ -54,5 +54,6 @@ public class CartTabController {
     private void loadCartItemList() {
         cartItemList.getItems().clear();
         cartItemList.getItems().addAll(cart.getItems());
+        priceLabel.setText(String.format("%.2f €", cart.getTotalPrice()));
     }
 }

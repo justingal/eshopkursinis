@@ -21,15 +21,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+
+
 public class LoginController implements Initializable {
 
     @FXML
     public TextField loginField;
     @FXML
     public PasswordField passwordField;
-
-    private EntityManagerFactory entityManagerFactory;
-
+    private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
     public void registerNewUser() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("registration.fxml"));
         Parent parent = fxmlLoader.load();
@@ -43,7 +43,7 @@ public class LoginController implements Initializable {
     }
 
     public void validateAndConnect() throws IOException {
-        CustomHib userHib = new CustomHib(entityManagerFactory);
+        CustomHib userHib = new CustomHib();
         User user = userHib.getUserByLogin(loginField.getText());
 
         if (user != null) {
@@ -52,13 +52,33 @@ public class LoginController implements Initializable {
                 FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("main-shop.fxml"));
                 Parent parent = fxmlLoader.load();
                 MainShopController mainShopController = fxmlLoader.getController();
-                mainShopController.setData(entityManagerFactory, user);
+                mainShopController.setData(user);  // Pass user data to the main shop controller
+
+                // Assuming mainShopController or another controller can access RegistrationController:
+                //RegistrationController registrationController = mainShopController.getRegistrationController();
+                //registrationController.setCurrentUser(user);
+
                 Scene scene = new Scene(parent);
                 Stage stage = (Stage) loginField.getScene().getWindow();
                 stage.setTitle("Shop");
                 stage.setScene(scene);
                 stage.show();
-            } else {
+                StartGui.currentUser = user;  // This sets the currently logged-in user globally.
+            }
+            /*if (user != null && BCrypt.verifyer().verify(passwordField.getText().toCharArray(), user.getPassword()).verified) {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/coursework/eshop/main-shop.fxml"));
+                Parent parent = fxmlLoader.load();
+
+                //MainShopController mainShopController = fxmlLoader.getController();
+                //mainShopController.setUser(user);  // Assuming MainShopController has a setUser method
+
+                Scene scene = new Scene(parent);
+                Stage stage = (Stage) loginField.getScene().getWindow();
+                stage.setTitle("Shop");
+                stage.setScene(scene);
+                stage.show();
+            }*/
+            else {
                 JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Login INFO", "Wrong data", "Please check credentials, incorrect password");
             }
         } else {

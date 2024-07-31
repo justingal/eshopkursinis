@@ -55,15 +55,11 @@ public class RegistrationController {
     @FXML
     public DatePicker employmentDateField;
 
-    private EntityManagerFactory entityManagerFactory;
+    private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
 
     private User currentUser;
 
-    private CustomHib userHib;
-    public void setData(EntityManagerFactory entityManagerFactory) {
-        this.entityManagerFactory = entityManagerFactory;
-        userHib = new CustomHib(entityManagerFactory);
-    }
+    private CustomHib userHib = new CustomHib();
 
     public void createUser() {
         if (loginField.getText().isEmpty()){
@@ -130,4 +126,7 @@ public class RegistrationController {
         stage.show();
     }
 
+    public void setData(User currentUser) {
+        this.currentUser = currentUser;
+    }
 }

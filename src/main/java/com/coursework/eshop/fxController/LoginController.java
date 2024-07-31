@@ -34,7 +34,7 @@ public class LoginController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("registration.fxml"));
         Parent parent = fxmlLoader.load();
         RegistrationController registrationController = fxmlLoader.getController();
-        registrationController.setData(entityManagerFactory);
+        registrationController.setData(null);
         Scene scene = new Scene(parent);
         Stage stage = (Stage) loginField.getScene().getWindow();
         stage.setTitle("Shop");

@@ -26,6 +26,8 @@ public class SettingsTabController {
     public Button exitButton;
     public Button managerRegistrationButton;
 
+    private User currentUser;
+    private CustomHib customHib;
     public void logOut(ActionEvent actionEvent) {
         try {
             // Load the login screen
@@ -53,7 +55,7 @@ public class SettingsTabController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/coursework/eshop/registration.fxml"));
             Parent root = loader.load();
             RegistrationController registrationController = loader.getController();
-            registrationController.setData(currentUser, customHib); // Set data right after loading
+            registrationController.setData(currentUser); // Set data right after loading
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Registration");

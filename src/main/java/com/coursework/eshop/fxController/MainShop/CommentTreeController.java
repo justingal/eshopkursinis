@@ -29,11 +29,10 @@ public class CommentTreeController implements Initializable {
     public ListView<Product> productListReview;
 
     private CustomHib customHibernate;
-    private User currentUser;
+    private User currentUser = StartGui.currentUser;
 
-    public void setData(CustomHib customHibernate, User currentUser) {
+    public void setData(CustomHib customHibernate) {
         this.customHibernate = customHibernate;
-        this.currentUser = currentUser;
         loadProducts();
     }
 
@@ -78,7 +77,7 @@ public class CommentTreeController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("commentForm.fxml"));
         Parent parent = fxmlLoader.load();
         CommentFormController commentForm = fxmlLoader.getController();
-        commentForm.setData(customHibernate, 0, commentTreeItem.getValue().getId(), currentUser);
+        commentForm.setData(customHibernate, 0, commentTreeItem.getValue().getId());
         Stage stage = new Stage();
         Scene scene = new Scene(parent);
         stage.setTitle("E-Shop");
@@ -115,7 +114,7 @@ public class CommentTreeController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("commentForm.fxml"));
         Parent parent = fxmlLoader.load();
         CommentFormController commentForm = fxmlLoader.getController();
-        commentForm.setData(customHibernate, productListReview.getSelectionModel().getSelectedItem().getId(), 0, currentUser);
+        commentForm.setData(customHibernate, productListReview.getSelectionModel().getSelectedItem().getId(), 0);
         Stage stage = new Stage();
         Scene scene = new Scene(parent);
         stage.setTitle("Shop");
@@ -135,7 +134,7 @@ public class CommentTreeController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("main-shop.fxml"));
         Parent parent = fxmlLoader.load();
         MainShopController mainShopController = fxmlLoader.getController();
-        mainShopController.setData(currentUser);
+        mainShopController.setData();
         Scene scene = new Scene(parent);
         Stage stage = (Stage) productListReview.getScene().getWindow();
         stage.setTitle("Shop");

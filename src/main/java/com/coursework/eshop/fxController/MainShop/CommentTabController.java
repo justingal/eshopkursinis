@@ -1,6 +1,7 @@
 package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
+import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.Admin;
 import com.coursework.eshop.model.Comment;
@@ -32,14 +33,13 @@ public class CommentTabController {
     @FXML
     public TreeView commentTreeView;
     private CustomHib customHib;
-    private User currentUser;
+    private User currentUser = StartGui.currentUser;
     private JavaFxCustomsUtils JavaFxCustomUtils = new JavaFxCustomsUtils();
 
 
-    public void setData(CustomHib customHib, User currentUser) {
+    public void setData(CustomHib customHib) {
 
         this.customHib = customHib;
-        this.currentUser = currentUser;
         loadCommentTree();
     }
 

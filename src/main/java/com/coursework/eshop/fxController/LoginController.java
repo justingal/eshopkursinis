@@ -34,7 +34,6 @@ public class LoginController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("registration.fxml"));
         Parent parent = fxmlLoader.load();
         RegistrationController registrationController = fxmlLoader.getController();
-        registrationController.setData(null);
         Scene scene = new Scene(parent);
         Stage stage = (Stage) loginField.getScene().getWindow();
         stage.setTitle("Shop");
@@ -49,35 +48,19 @@ public class LoginController implements Initializable {
         if (user != null) {
             BCrypt.Result result = BCrypt.verifyer().verify(passwordField.getText().toCharArray(), user.getPassword());
             if (result.verified) {
+                StartGui.currentUser = user;
                 FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("main-shop.fxml"));
                 Parent parent = fxmlLoader.load();
                 MainShopController mainShopController = fxmlLoader.getController();
-                mainShopController.setData(user);  // Pass user data to the main shop controller
-
-                // Assuming mainShopController or another controller can access RegistrationController:
-                //RegistrationController registrationController = mainShopController.getRegistrationController();
-                //registrationController.setCurrentUser(user);
-
+                mainShopController.setData();
                 Scene scene = new Scene(parent);
                 Stage stage = (Stage) loginField.getScene().getWindow();
                 stage.setTitle("Shop");
                 stage.setScene(scene);
                 stage.show();
-                StartGui.currentUser = user;  // This sets the currently logged-in user globally.
+                // This sets the currently logged-in user globally.
             }
-            /*if (user != null && BCrypt.verifyer().verify(passwordField.getText().toCharArray(), user.getPassword()).verified) {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/coursework/eshop/main-shop.fxml"));
-                Parent parent = fxmlLoader.load();
 
-                //MainShopController mainShopController = fxmlLoader.getController();
-                //mainShopController.setUser(user);  // Assuming MainShopController has a setUser method
-
-                Scene scene = new Scene(parent);
-                Stage stage = (Stage) loginField.getScene().getWindow();
-                stage.setTitle("Shop");
-                stage.setScene(scene);
-                stage.show();
-            }*/
             else {
                 JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Login INFO", "Wrong data", "Please check credentials, incorrect password");
             }

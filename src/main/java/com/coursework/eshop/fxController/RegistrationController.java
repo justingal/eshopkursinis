@@ -57,7 +57,7 @@ public class RegistrationController {
 
     private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
 
-    private User currentUser;
+    private User currentUser = StartGui.currentUser;
 
     private CustomHib userHib = new CustomHib();
 
@@ -126,7 +126,4 @@ public class RegistrationController {
         stage.show();
     }
 
-    public void setData(User currentUser) {
-        this.currentUser = currentUser;
-    }
 }

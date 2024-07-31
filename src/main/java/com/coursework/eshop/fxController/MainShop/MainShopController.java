@@ -81,13 +81,12 @@ public class MainShopController {
     private RegistrationController RegistrationTab;
 
     private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
-    private User currentUser;
+    private User currentUser = StartGui.currentUser;
     private CustomHib customHib;
 
     private ShoppingCart cart = new ShoppingCart();
 
-    public void setData(User user) {
-        this.currentUser = user;
+    public void setData() {
         limitAccess();
         loadData();
     }
@@ -155,7 +154,7 @@ public class MainShopController {
         } else if (warehousesTab.isSelected()) {
             warehouseTabController.setData(customHib);
         } else if (commentsTab.isSelected()) {
-            commentTabController.setData(customHib, currentUser);
+            commentTabController.setData(customHib);
         } else if (usersTab.isSelected()) {
             userTabController.setData(customHib);
         } else if (cartsTab.isSelected()) {
@@ -167,7 +166,7 @@ public class MainShopController {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("commentTree.fxml"));
         Parent parent = fxmlLoader.load();
         CommentTreeController commentTree = fxmlLoader.getController();
-        commentTree.setData(customHib, currentUser);
+        commentTree.setData(customHib);
         var stage = new Stage();
         if (primaryTab.isSelected()) {
             stage = (Stage) productList.getScene().getWindow();

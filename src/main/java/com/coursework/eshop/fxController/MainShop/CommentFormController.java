@@ -1,6 +1,7 @@
 package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.GenericHib;
+import com.coursework.eshop.StartGui;
 import com.coursework.eshop.model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -21,14 +22,13 @@ public class CommentFormController {
     private int productId = 0;
     private int commentId = 0;
     private GenericHib genericHib;
-    private User currentUser;
+    private User currentUser = StartGui.currentUser;
 
 
-    public void setData(GenericHib genericHib, int productId, int commentId, User currentUser) {
+    public void setData(GenericHib genericHib, int productId, int commentId) {
         this.genericHib = genericHib;
         this.productId = productId;
         this.commentId = commentId;
-        this.currentUser = currentUser;
     }
 
     public void saveData() {

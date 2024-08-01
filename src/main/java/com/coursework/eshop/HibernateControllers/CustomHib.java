@@ -90,11 +90,11 @@ public class CustomHib extends GenericHib{
         }
     }
 
-        public void deleteComment(int id){
+        public void deleteComment(int commentId){
             EntityManager entityManager = getEntityManager();
             try {
                 entityManager.getTransaction().begin();
-                var comment = entityManager.find(Comment.class, id);
+                var comment = entityManager.find(Comment.class, commentId);
 
                 User user = comment.getUser();
                 if (user != null) {
@@ -110,6 +110,47 @@ public class CustomHib extends GenericHib{
                         "Error",
                         "Error",
                         "Error while deleting Comment");
+            } finally {
+                if (entityManager != null) entityManager.close();
+            }
+        }
+
+        public void deleteReview( int id){
+            EntityManager entityManager = getEntityManager();
+            try {
+                entityManager.getTransaction().begin();
+                var comment = entityManager.find(Comment.class, id);
+
+                User user = comment.getUser();
+                if (user != null) {
+                    user.getMyComments().remove(comment);
+                    entityManager.merge(user);
+                }
+                if (comment instanceof Review review) {
+                    if (review.getBoardGame() != null) {
+                        BoardGame boardGame = review.getBoardGame();
+                        boardGame.getReviews().remove(review);
+                        entityManager.merge(boardGame);
+                    } else if (review.getDice() != null) {
+                        Dice dice = review.getDice();
+                        dice.getReviews().remove(review);
+                        entityManager.merge(dice);
+                    } else if (review.getPuzzle() != null) {
+                        Puzzle puzzle = review.getPuzzle();
+                        puzzle.getReviews().remove(review);
+                        entityManager.merge(puzzle);
+                    }
+                    entityManager.remove(review);
+                    entityManager.getTransaction().commit();
+                }
+
+
+            } catch (Exception e) {
+                JavaFxCustomsUtils.generateAlert(
+                        javafx.scene.control.Alert.AlertType.ERROR,
+                        "Error",
+                        "Error",
+                        "Error while deleting review");
             } finally {
                 if (entityManager != null) entityManager.close();
             }

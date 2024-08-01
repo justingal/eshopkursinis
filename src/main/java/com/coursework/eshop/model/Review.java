@@ -30,9 +30,21 @@ public class Review extends Comment {
     @ManyToOne
     @LazyCollection(LazyCollectionOption.FALSE)
     private Dice dice;
-    public Review(String commentTitle, String commentBody, User user, double rating) {
+    public Review(String commentTitle, String commentBody, User user, double rating, BoardGame boardGame) {
         super(commentTitle, commentBody, user);
         this.rating = rating;
+        this.boardGame = boardGame;
+    }
+
+    public Review(String commentTitle, String commentBody, User user, double rating, Dice dice) {
+        super(commentTitle, commentBody, user);
+        this.rating = rating;
+        this.dice = dice;
+    }
+    public Review(String commentTitle, String commentBody, User user, double rating, Puzzle puzzle) {
+        super(commentTitle, commentBody, user);
+        this.rating = rating;
+        this.puzzle = puzzle;
     }
 
     @Override

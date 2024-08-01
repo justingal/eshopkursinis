@@ -20,11 +20,12 @@ public class CommentFormController {
     public Label ratingLabel;
 
     private Product product;
+    //ISTRINTI comment id
     private int commentId = 0;
     private GenericHib genericHib;
     private User currentUser = StartGui.currentUser;
 
-
+    // su commentID kazkaip reikes padaryt
     public void setData(GenericHib genericHib, Product product, int commentId) {
         this.genericHib = genericHib;
         this.product = product;
@@ -32,17 +33,18 @@ public class CommentFormController {
     }
 
     public void saveData() {
-
         if (product != null) {
-            Review review = new Review(commentTitleField.getText(), commentBodyField.getText(), currentUser, ratingField.getValue());
             if (product instanceof BoardGame) {
                 BoardGame boardGame = (BoardGame) product;
+                Review review = new Review(commentTitleField.getText(), commentBodyField.getText(), currentUser, ratingField.getValue(), boardGame);
                 boardGame.getReviews().add(review);
             } else if (product instanceof Dice) {
                 Dice dice = (Dice) product;
+                Review review = new Review(commentTitleField.getText(), commentBodyField.getText(), currentUser, ratingField.getValue(), dice);
                 dice.getReviews().add(review);
             } else if (product instanceof Puzzle) {
                 Puzzle puzzle = (Puzzle) product;
+                Review review = new Review(commentTitleField.getText(), commentBodyField.getText(), currentUser, ratingField.getValue(), puzzle);
                 puzzle.getReviews().add(review);
             }
 

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,9 +28,12 @@ public class Comment {
     private LocalDate dateCreated;
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Comment> replies;
+    private List<Comment> replies = new ArrayList<>();
+
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Comment parentComment;
+
     @ManyToOne
     private User user;
 

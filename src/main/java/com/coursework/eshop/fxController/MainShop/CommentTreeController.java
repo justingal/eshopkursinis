@@ -29,7 +29,6 @@ public class CommentTreeController implements Initializable {
     public ListView<Product> productListReview;
 
     private CustomHib customHibernate;
-    private int productid;
     private User currentUser = StartGui.currentUser;
 
     public void setData(CustomHib customHibernate) {
@@ -50,14 +49,19 @@ public class CommentTreeController implements Initializable {
         TreeItem<Comment> commentTreeItem = commentsTree.getSelectionModel().getSelectedItem();
         if (commentTreeItem != null) {
             Comment comment = commentTreeItem.getValue();
-
             if (canModifyComment(comment, currentUser)) {
-                customHibernate.deleteComment(comment.getId());
+
+                customHibernate.deleteReview(comment.getId());
+
             } else {
                 JavaFxCustomsUtils JavaFxCustomUtils = new JavaFxCustomsUtils();
                 JavaFxCustomUtils.generateAlert(Alert.AlertType.ERROR, "Error", "You cannot delete this comment", "You are not the owner of this comment");
             }
         }
+        else {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "NullPtr", "No comment selected blet", "You need to kill yourself");
+        }
+        loadProducts();
         loadComments();
     }
 
@@ -79,7 +83,6 @@ public class CommentTreeController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("commentForm.fxml"));
         Parent parent = fxmlLoader.load();
         CommentFormController commentForm = fxmlLoader.getController();
-        // product should not be null!!!!
         commentForm.setData(customHibernate, null, commentTreeItem.getValue().getId());
         Stage stage = new Stage();
         Scene scene = new Scene(parent);
@@ -87,11 +90,11 @@ public class CommentTreeController implements Initializable {
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
+        loadProducts();
         loadComments();
     }
 
     public void loadComments() {
-        //Product selectedProduct = customHibernate.getEntityById(Product.class, productListReview.getSelectionModel().getSelectedItem().getId());
         Product selectedProduct = productListReview.getSelectionModel().getSelectedItem();
         commentsTree.setRoot(new TreeItem<>());
         commentsTree.setShowRoot(false);
@@ -128,6 +131,7 @@ public class CommentTreeController implements Initializable {
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
+        loadProducts();
         loadComments();
     }
 

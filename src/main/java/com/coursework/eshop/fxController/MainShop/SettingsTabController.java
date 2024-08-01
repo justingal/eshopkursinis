@@ -4,6 +4,7 @@ import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.RegistrationController;
+import com.coursework.eshop.model.Admin;
 import com.coursework.eshop.model.ShoppingCart;
 import com.coursework.eshop.model.User;
 import jakarta.persistence.EntityManagerFactory;
@@ -28,6 +29,20 @@ public class SettingsTabController {
 
     private User currentUser = StartGui.currentUser;
     private CustomHib customHib;
+
+    @FXML
+    public void initialize() {
+        updateUIBasedOnUserRole();
+    }
+
+    private void updateUIBasedOnUserRole() {
+        if ( !(currentUser instanceof Admin) && currentUser != null ){
+            managerRegistrationButton.setVisible(false);
+        }else{
+            managerRegistrationButton.setVisible(true);
+        }
+    }
+
     public void logOut(ActionEvent actionEvent) {
         try {
             // Load the login screen
@@ -67,4 +82,5 @@ public class SettingsTabController {
             e.printStackTrace();  // Handle if the FXML file wasn't found or other state issues
         }
     }
+
 }

@@ -19,22 +19,21 @@ public class CommentFormController {
     @FXML
     public Label ratingLabel;
 
-    private int productId = 0;
+    private Product product;
     private int commentId = 0;
     private GenericHib genericHib;
     private User currentUser = StartGui.currentUser;
 
 
-    public void setData(GenericHib genericHib, int productId, int commentId) {
+    public void setData(GenericHib genericHib, Product product, int commentId) {
         this.genericHib = genericHib;
-        this.productId = productId;
+        this.product = product;
         this.commentId = commentId;
     }
 
     public void saveData() {
 
-        if (productId != 0) {
-            Product product = genericHib.getEntityById(Product.class, productId);
+        if (product != null) {
             Review review = new Review(commentTitleField.getText(), commentBodyField.getText(), currentUser, ratingField.getValue());
             if (product instanceof BoardGame) {
                 BoardGame boardGame = (BoardGame) product;

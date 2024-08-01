@@ -15,6 +15,9 @@ import java.util.List;
 @Setter
 @Entity
 public class Puzzle extends Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_gen")
+    private int id;
 
     private int piecesQuantity;
     private String puzzleSize;

@@ -18,7 +18,7 @@ import java.util.List;
 @MappedSuperclass
 public class Product implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_gen")
     int id;
     String title;
     String description;

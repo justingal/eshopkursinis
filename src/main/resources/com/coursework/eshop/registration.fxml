@@ -22,8 +22,8 @@
             </toggleGroup>
         </RadioButton>
         <RadioButton fx:id="managerCheckbox" layoutX="122.0" layoutY="287.0" mnemonicParsing="false" text="Manager" toggleGroup="$userType" />
-        <Button layoutX="324.0" layoutY="332.0" mnemonicParsing="false" onAction="#createUser" text="Create User" />
-        <Button  layoutX="33.0" layoutY="332.0" mnemonicParsing="false" onAction="#returnToLogin" text="Return" />
+        <Button fx:id="createUserButton" layoutX="324.0" layoutY="332.0" mnemonicParsing="false" onAction="#createUser" text="Create User" />
+        <Button  fx:id="returnButton" layoutX="33.0" layoutY="332.0" mnemonicParsing="false" onAction="#returnToLogin" text="Return" />
         <TextField fx:id="addressField" layoutX="226.0" layoutY="28.0" prefHeight="26.0" prefWidth="175.0" promptText="Enter home address:" />
         <TextField fx:id="cardNoField" layoutX="227.0" layoutY="71.0" prefHeight="26.0" prefWidth="175.0" promptText="Enter card No:" />
         <DatePicker fx:id="birthDateField" layoutX="27.0" layoutY="251.0" promptText="Enter birth date:" />

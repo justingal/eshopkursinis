@@ -1,9 +1,6 @@
 package com.coursework.eshop.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +14,9 @@ import java.util.List;
 @Setter
 @Entity
 public class Dice extends Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_gen")
+    private int id;
     int diceNumber;
 
     @OneToMany(mappedBy = "dice", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)

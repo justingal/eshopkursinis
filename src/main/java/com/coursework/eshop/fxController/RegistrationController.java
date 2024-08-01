@@ -9,8 +9,10 @@ import com.coursework.eshop.model.Customer;
 import com.coursework.eshop.model.Manager;
 import com.coursework.eshop.model.User;
 import jakarta.persistence.EntityManagerFactory;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -54,6 +56,10 @@ public class RegistrationController {
     public TextField medCertificateField;
     @FXML
     public DatePicker employmentDateField;
+    @FXML
+    public Button returnButton;
+    @FXML
+    public Button createUserButton;
 
     private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
 
@@ -61,6 +67,39 @@ public class RegistrationController {
 
     private CustomHib userHib = new CustomHib();
 
+    @FXML
+    public void initialize() {
+        updateUIBasedOnUserRole();
+        updateVisibility();
+        userType.selectedToggleProperty().addListener((observable, oldVal, newVal) -> {
+            updateVisibility();
+        });
+    }
+
+    private void updateUIBasedOnUserRole() {
+        if ( currentUser instanceof Admin){
+            managerCheckbox.setVisible(true);
+        }else {
+            managerCheckbox.setVisible(false);
+        }
+        if ( currentUser != null ){
+            returnButton.setVisible(false);
+        }else{
+            returnButton.setVisible(true);
+        }
+        // if selected button then visibilitie bet ne sitoje funkcijoje.
+    }
+    @FXML
+    private void updateVisibility() {
+        boolean isManager = managerCheckbox.isSelected();
+        employeeIdField.setVisible(isManager);
+        medCertificateField.setVisible(isManager);
+        employmentDateField.setVisible(isManager);
+
+        boolean isCustomer = customerCheckbox.isSelected();
+        addressField.setVisible(isCustomer);
+        cardNoField.setVisible(isCustomer);
+    }
     public void createUser() {
         if (loginField.getText().isEmpty()){
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no login");
@@ -80,16 +119,17 @@ public class RegistrationController {
         if (surnameField.getText().isEmpty()){
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no surname");
         }
-        if (addressField.getText().isEmpty()){
+        if (addressField.getText().isEmpty() && customerCheckbox.isSelected()){
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no address");
         }
-        if (cardNoField.getText().isEmpty()){
+        if (cardNoField.getText().isEmpty() && customerCheckbox.isSelected()){
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no card number");
         }
         if (birthDateField.getValue() == null){
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no birth date");
         }
-        if (!loginField.getText().isEmpty() &&
+        if (customerCheckbox.isSelected() &&
+                !loginField.getText().isEmpty() &&
                 !passwordField.getText().isEmpty() &&
                 repeatPasswordField.getText().equals(passwordField.getText()) &&
                 !repeatPasswordField.getText().isEmpty() &&
@@ -102,12 +142,32 @@ public class RegistrationController {
             String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
             if (customerCheckbox.isSelected()) {
                 userHib.create(new Customer(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
-            } else if (managerCheckbox.isSelected()) {
+            } }
+        else if (managerCheckbox.isSelected() &&
+                !loginField.getText().isEmpty() &&
+                !passwordField.getText().isEmpty() &&
+                repeatPasswordField.getText().equals(passwordField.getText()) &&
+                !repeatPasswordField.getText().isEmpty() &&
+                !nameField.getText().isEmpty() &&
+                !employeeIdField.getText().isEmpty() &&
+                employmentDateField.getValue() != null &&
+                !medCertificateField.getText().isEmpty() &&
+                birthDateField.getValue() != null) {
+
+            String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
+            if (managerCheckbox.isSelected()) {
                 userHib.create( new Manager(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(),employeeIdField.getText(), medCertificateField.getText(), employmentDateField.getValue()));
                 // Papildomi manager specifiniai laukai gali būti pridėti čia
             }         JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
             try {
-                returnToLogin();
+                if (currentUser == null) {
+                    returnToLogin();
+                }
+                if (currentUser != null) {
+                    Stage stage = (Stage) surnameField.getScene().getWindow();
+                    stage.close();
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

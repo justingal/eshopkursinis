@@ -29,6 +29,7 @@ public class CommentTreeController implements Initializable {
     public ListView<Product> productListReview;
 
     private CustomHib customHibernate;
+    private int productid;
     private User currentUser = StartGui.currentUser;
 
     public void setData(CustomHib customHibernate) {
@@ -78,7 +79,8 @@ public class CommentTreeController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("commentForm.fxml"));
         Parent parent = fxmlLoader.load();
         CommentFormController commentForm = fxmlLoader.getController();
-        commentForm.setData(customHibernate, 0, commentTreeItem.getValue().getId());
+        // product should not be null!!!!
+        commentForm.setData(customHibernate, null, commentTreeItem.getValue().getId());
         Stage stage = new Stage();
         Scene scene = new Scene(parent);
         stage.setTitle("E-Shop");
@@ -116,7 +118,10 @@ public class CommentTreeController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("commentForm.fxml"));
         Parent parent = fxmlLoader.load();
         CommentFormController commentForm = fxmlLoader.getController();
-        commentForm.setData(customHibernate, productListReview.getSelectionModel().getSelectedItem().getId(), 0);
+        //-------
+        Product selectedProduct = productListReview.getSelectionModel().getSelectedItem();
+
+        commentForm.setData(customHibernate, selectedProduct, 0);
         Stage stage = new Stage();
         Scene scene = new Scene(parent);
         stage.setTitle("Shop");

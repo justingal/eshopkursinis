@@ -18,7 +18,6 @@ import java.util.List;
 public class ShoppingCart {
     @ElementCollection
     private List<CartItem> items = new ArrayList<>();
-    private double totalPrice;
 
     public void addItem(CartItem newItem) {
         for (CartItem item : items) {
@@ -27,21 +26,11 @@ public class ShoppingCart {
         }
         }
         items.add(newItem);
-        recalculateTotal();
     }
 
     public void removeItem(int productId) {
         items.removeIf(item -> item.getProductId() == productId);
-        recalculateTotal();
     }
 
-    private void recalculateTotal() {
-        totalPrice = items.stream()
-                .mapToDouble(CartItem::getPrice)
-                .sum();
-    }
 
-    public double getTotalPrice() {
-        return totalPrice;
-    }
 }

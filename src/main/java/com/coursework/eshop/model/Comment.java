@@ -26,7 +26,7 @@ public class Comment {
     private String commentTitle;
     private String commentBody;
     private LocalDate dateCreated;
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parentComment", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Comment> replies = new ArrayList<>();
 

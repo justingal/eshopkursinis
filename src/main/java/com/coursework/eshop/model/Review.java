@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -23,12 +25,17 @@ public class Review extends Comment {
 
     @ManyToOne
     @LazyCollection(LazyCollectionOption.FALSE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Puzzle puzzle;
+
     @ManyToOne
     @LazyCollection(LazyCollectionOption.FALSE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private BoardGame boardGame;
+
     @ManyToOne
     @LazyCollection(LazyCollectionOption.FALSE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Dice dice;
     public Review(String commentTitle, String commentBody, User user, double rating, BoardGame boardGame) {
         super(commentTitle, commentBody, user);

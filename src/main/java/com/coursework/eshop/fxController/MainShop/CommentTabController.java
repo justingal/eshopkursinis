@@ -38,7 +38,6 @@ public class CommentTabController {
 
 
     public void setData(CustomHib customHib) {
-
         this.customHib = customHib;
         loadCommentTree();
     }
@@ -96,13 +95,20 @@ public class CommentTabController {
 
     public void deleteExistingComment() {
         TreeItem<Comment> selectedComment = (TreeItem<Comment>) commentTreeView.getSelectionModel().getSelectedItem();
-        Comment comment = customHib.getEntityById(Comment.class, selectedComment.getValue().getId());
-
-        if (canModifyComment(comment, currentUser)) {
-            customHib.deleteComment(selectedComment.getValue().getId());
-            loadCommentTree();
+        if (selectedComment != null) {
+            Comment comment = selectedComment.getValue();
+            if (canModifyComment(comment, currentUser)) {
+                if (comment instanceof Review) {
+                    customHib.deleteReview(comment.getId());
+                } else {
+                    customHib.deleteCommentAndChildren(comment.getId());
+                }
+                loadCommentTree();
+            } else {
+                JavaFxCustomUtils.generateAlert(Alert.AlertType.ERROR, "Access denied", "You have no access to this comment", "Please, contact your administrator");
+            }
         } else {
-            JavaFxCustomUtils.generateAlert(Alert.AlertType.ERROR, "Access denied", "You have no access to this comment", "Please, contact your administrator");
+            JavaFxCustomUtils.generateAlert(Alert.AlertType.ERROR, "NullPtr", "No comment selected", "You need to select a comment to delete");
         }
     }
 

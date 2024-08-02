@@ -23,6 +23,7 @@ public class CustomerOrder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private LocalDate dateCreated;
+    private double totalPrice;
 
     @ManyToOne
     private Customer customer;

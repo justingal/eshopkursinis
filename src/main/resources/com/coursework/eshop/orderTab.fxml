@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.OrderTabController">
     <children>
-        <ListView fx:id="orderList" layoutX="32.0" layoutY="42.0" prefHeight="110.0" prefWidth="542.0" AnchorPane.bottomAnchor="214.0" AnchorPane.leftAnchor="32.0" AnchorPane.rightAnchor="28.0" AnchorPane.topAnchor="42.0" />
-      <ListView fx:id="orderItemList" layoutX="32.0" layoutY="199.0" prefHeight="110.0" prefWidth="542.0" />
-      <Label layoutX="32.0" layoutY="24.0" text="My Orders" />
-      <Label layoutX="32.0" layoutY="183.0" text="Items" />
+      <Label layoutX="47.0" layoutY="24.0" text="Crucial orders" />
+      <Label layoutX="47.0" layoutY="174.0" prefHeight="18.0" prefWidth="41.0" text="Orders" />
 
     </children>
 </AnchorPane>

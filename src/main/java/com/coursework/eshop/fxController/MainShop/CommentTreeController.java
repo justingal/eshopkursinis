@@ -50,19 +50,29 @@ public class CommentTreeController implements Initializable {
         if (commentTreeItem != null) {
             Comment comment = commentTreeItem.getValue();
             if (canModifyComment(comment, currentUser)) {
-
-                customHibernate.deleteReview(comment.getId());
-
+                if (comment instanceof Review) {
+                    customHibernate.deleteReview(comment.getId());
+                } else {
+                    customHibernate.deleteCommentAndChildren(comment.getId());
+                }
+                loadProducts();
+                loadComments();
             } else {
-                JavaFxCustomsUtils JavaFxCustomUtils = new JavaFxCustomsUtils();
-                JavaFxCustomUtils.generateAlert(Alert.AlertType.ERROR, "Error", "You cannot delete this comment", "You are not the owner of this comment");
+                JavaFxCustomsUtils.generateAlert(
+                        Alert.AlertType.ERROR,
+                        "Error",
+                        "You cannot delete this comment",
+                        "You are not the owner of this comment"
+                );
             }
+        } else {
+            JavaFxCustomsUtils.generateAlert(
+                    Alert.AlertType.ERROR,
+                    "NullPtr",
+                    "No comment selected",
+                    "You need to select a comment to delete"
+            );
         }
-        else {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "NullPtr", "No comment selected blet", "You need to kill yourself");
-        }
-        loadProducts();
-        loadComments();
     }
 
 

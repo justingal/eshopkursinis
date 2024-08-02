@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import javafx.scene.control.Alert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomHib extends GenericHib{
@@ -90,71 +92,127 @@ public class CustomHib extends GenericHib{
         }
     }
 
-        public void deleteComment(int commentId){
-            EntityManager entityManager = getEntityManager();
-            try {
-                entityManager.getTransaction().begin();
-                var comment = entityManager.find(Comment.class, commentId);
 
-                User user = comment.getUser();
-                if (user != null) {
-                    user.getMyComments().remove(comment);
-                    entityManager.merge(user);
+    public void deleteReview(int id) {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+            Review review = entityManager.find(Review.class, id);
+            if (review != null) {
+                review = entityManager.merge(review);  // Ensure the review is attached
+
+                // Remove the review from the associated product
+                if (review.getBoardGame() != null) {
+                    BoardGame boardGame = review.getBoardGame();
+                    boardGame.getReviews().remove(review);
+                    review.setBoardGame(null);
+                } else if (review.getDice() != null) {
+                    Dice dice = review.getDice();
+                    dice.getReviews().remove(review);
+                    review.setDice(null);
+                } else if (review.getPuzzle() != null) {
+                    Puzzle puzzle = review.getPuzzle();
+                    puzzle.getReviews().remove(review);
+                    review.setPuzzle(null);
                 }
 
-                entityManager.remove(comment);
-                entityManager.getTransaction().commit();
-            } catch (Exception e) {
-                JavaFxCustomsUtils.generateAlert(
-                        javafx.scene.control.Alert.AlertType.ERROR,
-                        "Error",
-                        "Error",
-                        "Error while deleting Comment");
-            } finally {
-                if (entityManager != null) entityManager.close();
+                // Clear other relationships
+                clearRelationships(review, entityManager);
+
+                // Delete child comments
+                for (Comment reply : new ArrayList<>(review.getReplies())) {
+                    entityManager.remove(reply);
+                }
+                review.getReplies().clear();
+
+                // Remove the review
+                entityManager.remove(review);
+
+                transaction.commit();
             }
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            JavaFxCustomsUtils.generateAlert(
+                    Alert.AlertType.ERROR,
+                    "Error",
+                    "Error while deleting review",
+                    e.getMessage()
+            );
+        } finally {
+            if (entityManager != null) entityManager.close();
+        }
+    }
+
+    public void deleteCommentAndChildren(int commentId) {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction transaction = entityManager.getTransaction();
+        try {
+            transaction.begin();
+
+            // Delete child comments
+            Query deleteChildrenQuery = entityManager.createQuery("DELETE FROM Comment c WHERE c.parentComment.id = :parentId");
+            deleteChildrenQuery.setParameter("parentId", commentId);
+            deleteChildrenQuery.executeUpdate();
+
+            // Delete the parent comment
+            Query deleteParentQuery = entityManager.createQuery("DELETE FROM Comment c WHERE c.id = :id");
+            deleteParentQuery.setParameter("id", commentId);
+            deleteParentQuery.executeUpdate();
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Deletion Error", "Error during comment deletion", e.getMessage());
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    private void clearRelationships(Comment comment, EntityManager em) {
+        if (comment.getParentComment() != null) {
+            Comment parent = comment.getParentComment();
+            parent.getReplies().remove(comment);
+            comment.setParentComment(null);
         }
 
-        public void deleteReview( int id){
-            EntityManager entityManager = getEntityManager();
-            try {
-                entityManager.getTransaction().begin();
-                var comment = entityManager.find(Comment.class, id);
+        if (comment.getUser() != null) {
+            User user = comment.getUser();
+            user.getMyComments().remove(comment);
+            comment.setUser(null);
+        }
 
-                User user = comment.getUser();
-                if (user != null) {
-                    user.getMyComments().remove(comment);
-                    entityManager.merge(user);
-                }
-                if (comment instanceof Review review) {
-                    if (review.getBoardGame() != null) {
-                        BoardGame boardGame = review.getBoardGame();
-                        boardGame.getReviews().remove(review);
-                        entityManager.merge(boardGame);
-                    } else if (review.getDice() != null) {
-                        Dice dice = review.getDice();
-                        dice.getReviews().remove(review);
-                        entityManager.merge(dice);
-                    } else if (review.getPuzzle() != null) {
-                        Puzzle puzzle = review.getPuzzle();
-                        puzzle.getReviews().remove(review);
-                        entityManager.merge(puzzle);
-                    }
-                    entityManager.remove(review);
-                    entityManager.getTransaction().commit();
-                }
-
-
-            } catch (Exception e) {
-                JavaFxCustomsUtils.generateAlert(
-                        javafx.scene.control.Alert.AlertType.ERROR,
-                        "Error",
-                        "Error",
-                        "Error while deleting review");
-            } finally {
-                if (entityManager != null) entityManager.close();
+        if (comment instanceof Review review) {
+            if (review.getBoardGame() != null) {
+                BoardGame boardGame = review.getBoardGame();
+                boardGame.getReviews().remove(review);
+                review.setBoardGame(null);
+            }
+            if (review.getDice() != null) {
+                Dice dice = review.getDice();
+                dice.getReviews().remove(review);
+                review.setDice(null);
+            }
+            if (review.getPuzzle() != null) {
+                Puzzle puzzle = review.getPuzzle();
+                puzzle.getReviews().remove(review);
+                review.setPuzzle(null);
             }
         }
+    }
+
+    private void deleteCommentRecursive(Comment comment, EntityManager em) {
+        comment = em.merge(comment);  // Reattach the comment to the persistence context
+        for (Comment reply : new ArrayList<>(comment.getReplies())) {
+            deleteCommentRecursive(reply, em);
+        }
+        clearRelationships(comment,em);
+        em.remove(comment);
+    }
 
 
     public void deleteManager(int id) {

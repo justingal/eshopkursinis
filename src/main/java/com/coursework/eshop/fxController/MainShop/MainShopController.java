@@ -7,6 +7,7 @@ import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.fxController.RegistrationController;
 import com.coursework.eshop.model.*;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MainShopController {
 
@@ -93,7 +95,7 @@ public class MainShopController {
 
     private void loadData() {
         customHib = new CustomHib();
-        loadProductList();
+        loadMainShopProductList();
     }
 
     private void loadProductList() {
@@ -102,6 +104,46 @@ public class MainShopController {
         productList.getItems().addAll(customHib.getAllRecords(Puzzle.class));
         productList.getItems().addAll(customHib.getAllRecords(Dice.class));
     }
+
+    private void loadMainShopProductList() {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            String boardGameQuery = "SELECT bg FROM BoardGame bg WHERE bg.id NOT IN " +
+                    "(SELECT bg.id FROM CustomerOrder co JOIN co.inOrderBoardGames bg)";
+
+            // JPQL query to get Puzzles not in orders
+            String puzzleQuery = "SELECT p FROM Puzzle p WHERE p.id NOT IN " +
+                    "(SELECT p.id FROM CustomerOrder co JOIN co.inOrderPuzzles p)";
+
+
+            // JPQL query to get Dices not in orders
+            String diceQuery = "SELECT d FROM Dice d WHERE d.id NOT IN " +
+                    "(SELECT d.id FROM CustomerOrder co JOIN co.inOrderDices d)";
+
+            List<BoardGame> availableBoardGames = entityManager.createQuery(boardGameQuery, BoardGame.class).getResultList();
+            List<Puzzle> availablePuzzles = entityManager.createQuery(puzzleQuery, Puzzle.class).getResultList();
+            List<Dice> availableDices = entityManager.createQuery(diceQuery, Dice.class).getResultList();
+
+            // Clear the existing items in the productList
+            productList.getItems().clear();
+
+            // Add all available products to the productList
+            productList.getItems().addAll(availableBoardGames);
+            productList.getItems().addAll(availablePuzzles);
+            productList.getItems().addAll(availableDices);
+
+        } catch (Exception e) {
+            JavaFxCustomsUtils.generateAlert(
+                    Alert.AlertType.ERROR,
+                    "Error",
+                    "Failed to load products",
+                    "An error occurred while loading the product list: " + e.getMessage()
+            );
+        } finally {
+            entityManager.close();
+        }
+    }
+
 
 
     public void loadProductFields() {
@@ -148,7 +190,7 @@ public class MainShopController {
 
     public void loadTabValues() {
         if (primaryTab.isSelected()) {
-            loadProductList();
+            loadMainShopProductList();
         } else if (productsTab.isSelected()) {
             productTabController.setData(customHib);
         } else if (warehousesTab.isSelected()) {

@@ -167,10 +167,9 @@ public class MainShopController {
     }
 
     private void limitAccess() {
-        if (currentUser.getClass() == Manager.class) {
+        if (currentUser.getClass() == Admin.class) {
+        } else if (currentUser.getClass() == Manager.class) {
             tabPane.getTabs().remove(usersTab);
-            tabPane.getTabs().remove(myOrdersTab);
-            tabPane.getTabs().remove(cartsTab);
         } else if (currentUser.getClass() == Customer.class) {
             tabPane.getTabs().remove(usersTab);
             tabPane.getTabs().remove(warehousesTab);

@@ -110,7 +110,7 @@ public class ProductTabController {
         String description = descriptionField.getText().trim();
         String author = authorField.getText().trim();
         Warehouse selectedWarehouse = warehouseComboBox.getSelectionModel().getSelectedItem();
-
+        double price = Double.parseDouble(priceField.getText().trim());
         if (title.isEmpty() || description.isEmpty() || author.isEmpty() || selectedWarehouse == null) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error","Missing Information", "Please fill all required fields.");
             return;
@@ -120,6 +120,7 @@ public class ProductTabController {
         product.setTitle(title);
         product.setDescription(description);
         product.setAuthor(author);
+        product.setPrice(price);
         product.setWarehouse(customHib.getEntityById(Warehouse.class, selectedWarehouse.getId()));
 
         try {

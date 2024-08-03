@@ -3,10 +3,7 @@ package com.coursework.eshop.fxController.MainShop;
 import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
-import com.coursework.eshop.model.Admin;
-import com.coursework.eshop.model.Comment;
-import com.coursework.eshop.model.Review;
-import com.coursework.eshop.model.User;
+import com.coursework.eshop.model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -16,6 +13,8 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.util.List;
+
+import static java.sql.Types.NULL;
 
 public class CommentTabController {
 
@@ -32,13 +31,87 @@ public class CommentTabController {
     @FXML
     public TreeView commentTreeView;
     private CustomHib customHib;
+    private int orderId = 0;
     private User currentUser = StartGui.currentUser;
     private JavaFxCustomsUtils JavaFxCustomUtils = new JavaFxCustomsUtils();
 
 
     public void setData(CustomHib customHib) {
         this.customHib = customHib;
-        loadCommentTree();
+        loadComments();
+    }
+
+    public void setData(CustomHib customHib, int orderId) {
+        this.customHib = customHib;
+        this.orderId = orderId;
+        loadComments();
+    }
+
+    private void loadComments(){
+        if( orderId != 0 ){
+            loadOrderCommentsTree();
+        } else {
+            loadCommentTree();
+        }
+    }
+
+    @FXML
+    private void createComments(){
+        if( orderId != 0 ){
+            addNewOrderComment();
+        } else {
+            addNewComment();
+        }
+    }
+
+    private void addNewOrderComment() {
+        if (commentTitleField.getText().isEmpty() || commentBodyField.getText().isEmpty()) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Cannot add comment", "Both title and body must be filled out.");
+            return;
+        }
+
+        Comment newComment;
+        TreeItem<Comment> selectedComment = (TreeItem<Comment>) commentTreeView.getSelectionModel().getSelectedItem();
+        if (selectedComment == null) {
+            newComment = new Comment(commentTitleField.getText(), commentBodyField.getText(), this.currentUser);
+        } else {
+            newComment = new Comment(commentTitleField.getText(), commentBodyField.getText(), selectedComment.getValue(), this.currentUser);
+        }
+
+        if (orderId != 0) {
+            CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, orderId);
+            newComment.setCustomerOrder(customerOrder);
+        }
+
+        customHib.create(newComment);
+        loadComments();
+    }
+
+    private void updateComments(){
+        if( orderId != 0 ){
+            loadOrderCommentsTree();
+        } else {
+            loadCommentTree();
+        }
+    }
+
+    private void deleteComments(){
+        if( orderId != 0 ){
+            loadOrderCommentsTree();
+        } else {
+            loadCommentTree();
+        }
+    }
+
+
+    private void loadOrderCommentsTree() {
+        List<Comment> comments = customHib.readAllRootComments();
+        commentTreeView.setRoot(new TreeItem<>());
+        commentTreeView.setShowRoot(false);
+        commentTreeView.getRoot().setExpanded(true);
+        comments.stream()
+                .filter(comment -> comment.getCustomerOrder() != null && comment.getCustomerOrder().getId() == orderId)
+                .forEach(comment -> addTreeItem(comment, commentTreeView.getRoot()));
     }
 
     private void loadCommentTree() {
@@ -47,7 +120,7 @@ public class CommentTabController {
         commentTreeView.setShowRoot(false);
         commentTreeView.getRoot().setExpanded(true);
         comments.stream()
-                .filter(comment -> !(comment instanceof Review))
+                .filter(comment -> comment.getCustomerOrder() == null)
                 .forEach(comment -> addTreeItem(comment, commentTreeView.getRoot()));
     }
 
@@ -70,7 +143,7 @@ public class CommentTabController {
             customHib.create(new Comment(commentTitleField.getText(), commentBodyField.getText(), this.currentUser));
         else
             customHib.create(new Comment(commentTitleField.getText(), commentBodyField.getText(), selectedComment.getValue(), this.currentUser));
-        loadCommentTree();
+        loadComments();
     }
 
     public void updateExistingComment() {
@@ -85,7 +158,7 @@ public class CommentTabController {
             comment.setCommentTitle(commentTitleField.getText());
             comment.setCommentBody(commentBodyField.getText());
             customHib.update(comment);
-            loadCommentTree();
+            loadComments();
         } else {
 
             JavaFxCustomUtils.generateAlert(Alert.AlertType.ERROR, "Access denied", "You have no access to this comment", "Please, contact your administrator");
@@ -102,7 +175,7 @@ public class CommentTabController {
                 } else {
                     customHib.deleteCommentAndChildren(comment.getId());
                 }
-                loadCommentTree();
+                loadComments();
             } else {
                 JavaFxCustomUtils.generateAlert(Alert.AlertType.ERROR, "Access denied", "You have no access to this comment", "Please, contact your administrator");
             }

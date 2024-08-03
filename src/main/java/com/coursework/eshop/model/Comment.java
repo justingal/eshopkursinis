@@ -124,4 +124,13 @@ public class Comment {
     public String toString() {
         return user.getName() + " " + user.getSurname() + ":" + commentTitle + ":" + dateCreated;
     }
+
+
+    public CustomerOrder getCustomerOrder() {
+        return customerOrder;
+    }
+
+    public void setCustomerOrder(CustomerOrder customerOrder) {
+        this.customerOrder = customerOrder;
+    }
 }

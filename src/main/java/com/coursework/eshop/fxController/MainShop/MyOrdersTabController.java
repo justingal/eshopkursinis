@@ -6,9 +6,7 @@ import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.fxController.tableviews.MyOrderTableParameters;
 import com.coursework.eshop.model.CustomerOrder;
 import com.coursework.eshop.model.OrderStatus;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import com.coursework.eshop.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -30,6 +28,10 @@ import java.util.ResourceBundle;
 
 public class MyOrdersTabController implements Initializable {
     @FXML
+    public TableColumn<MyOrderTableParameters, Void> commentColumn;
+    @FXML
+    public TableColumn dummyManagerCol;
+    @FXML
     private TableView<MyOrderTableParameters> myOrdersTableView;
     @FXML
     private TableColumn<MyOrderTableParameters, Integer> orderIdColumn;
@@ -40,22 +42,15 @@ public class MyOrdersTabController implements Initializable {
     @FXML
     private TableColumn orderStatusColumn;
     @FXML
-    public TableColumn< MyOrderTableParameters, Void> commentColumn;
-
-    @FXML
     private ListView myItemsListView;
-
     private ObservableList<MyOrderTableParameters> ordersData;
-
-    @FXML
-    public TableColumn dummyManagerCol;
+    private CustomHib customHib = new CustomHib();
 
     public void setData(CustomHib customHib) {
         this.customHib = customHib;
         loadOrderData();
     }
 
-    private CustomHib customHib = new CustomHib();
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Initialize the TableView columns
@@ -75,7 +70,8 @@ public class MyOrdersTabController implements Initializable {
 
                     {
                         btn.setOnAction(event -> {
-                            openOrderChatWindow();
+                            MyOrderTableParameters row = getTableView().getItems().get(getIndex());
+                            openOrderChatWindow(row.getId());
                         });
                     }
 
@@ -103,17 +99,22 @@ public class MyOrdersTabController implements Initializable {
 
     private void loadOrderData() {
         // Fetch data from database
+        User currentUser = StartGui.currentUser;
         List<CustomerOrder> allOrders = customHib.getAllRecords(CustomerOrder.class);
         ordersData = FXCollections.observableArrayList();
 
         for (CustomerOrder order : allOrders) {
-            ordersData.add(new MyOrderTableParameters(
+            if (order.getCustomer().getId() == currentUser.getId()) {
+                ordersData.add(new MyOrderTableParameters(
+
                     order.getId(),
                     order.getDateCreated(),
                     order.getCustomer().getName(),
                     order.getOrderStatus()
-            ));
+                ));
+            }
         }
+
 
         myOrdersTableView.setItems(ordersData);
 
@@ -124,6 +125,7 @@ public class MyOrdersTabController implements Initializable {
             }
         });
     }
+
     private void loadItems(MyOrderTableParameters order) {
         ObservableList<String> items = FXCollections.observableArrayList();
         CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, order.getId());
@@ -131,12 +133,12 @@ public class MyOrdersTabController implements Initializable {
         myItemsListView.setItems(items);
     }
 
-    private void openOrderChatWindow() {
+    private void openOrderChatWindow(int orderId) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("commentTab.fxml"));
             Parent parent = fxmlLoader.load();
             CommentTabController commentTab = fxmlLoader.getController();
-            commentTab.setData(customHib); //! Overloading set data funkcija gaidy
+            commentTab.setData(customHib, orderId); //! Overloading set data funkcija gaidy
             Stage stage = new Stage();
             Scene scene = new Scene(parent);
             stage.setTitle("Order chat window"); //

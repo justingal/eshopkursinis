@@ -55,55 +55,6 @@ public class CommentTabController {
         }
     }
 
-    @FXML
-    private void createComments(){
-        if( orderId != 0 ){
-            addNewOrderComment();
-        } else {
-            addNewComment();
-        }
-    }
-
-    private void addNewOrderComment() {
-        if (commentTitleField.getText().isEmpty() || commentBodyField.getText().isEmpty()) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Cannot add comment", "Both title and body must be filled out.");
-            return;
-        }
-
-        Comment newComment;
-        TreeItem<Comment> selectedComment = (TreeItem<Comment>) commentTreeView.getSelectionModel().getSelectedItem();
-        if (selectedComment == null) {
-            newComment = new Comment(commentTitleField.getText(), commentBodyField.getText(), this.currentUser);
-        } else {
-            newComment = new Comment(commentTitleField.getText(), commentBodyField.getText(), selectedComment.getValue(), this.currentUser);
-        }
-
-        if (orderId != 0) {
-            CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, orderId);
-            newComment.setCustomerOrder(customerOrder);
-        }
-
-        customHib.create(newComment);
-        loadComments();
-    }
-
-    private void updateComments(){
-        if( orderId != 0 ){
-            loadOrderCommentsTree();
-        } else {
-            loadCommentTree();
-        }
-    }
-
-    private void deleteComments(){
-        if( orderId != 0 ){
-            loadOrderCommentsTree();
-        } else {
-            loadCommentTree();
-        }
-    }
-
-
     private void loadOrderCommentsTree() {
         List<Comment> comments = customHib.readAllRootComments();
         commentTreeView.setRoot(new TreeItem<>());
@@ -134,15 +85,24 @@ public class CommentTabController {
 
     public void addNewComment() {
         if (commentTitleField.getText().isEmpty() || commentBodyField.getText().isEmpty()) {
-            JavaFxCustomUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Cannot add comment", "Both title and body must be filled out.");
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Cannot add comment", "Both title and body must be filled out.");
             return;
         }
 
+        Comment newComment;
         TreeItem<Comment> selectedComment = (TreeItem<Comment>) commentTreeView.getSelectionModel().getSelectedItem();
-        if (selectedComment == null)
-            customHib.create(new Comment(commentTitleField.getText(), commentBodyField.getText(), this.currentUser));
-        else
-            customHib.create(new Comment(commentTitleField.getText(), commentBodyField.getText(), selectedComment.getValue(), this.currentUser));
+        if (selectedComment == null) {
+            newComment = new Comment(commentTitleField.getText(), commentBodyField.getText(), this.currentUser);
+        } else {
+            newComment = new Comment(commentTitleField.getText(), commentBodyField.getText(), selectedComment.getValue(), this.currentUser);
+        }
+
+        if (orderId != 0) {
+            CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, orderId);
+            newComment.setCustomerOrder(customerOrder);
+        }
+
+        customHib.create(newComment);
         loadComments();
     }
 
@@ -185,7 +145,11 @@ public class CommentTabController {
     }
 
     private boolean canModifyComment(Comment comment, User currentUser) {
-        if (comment.getUser().equals(currentUser)) {
+        if (comment == null || currentUser == null) {
+            return false;
+        }
+
+        if (comment.getUser().getId() == currentUser.getId()) {
             return true;
         }
 

@@ -16,6 +16,7 @@
                 <TableColumn fx:id="dateCreatedColumn" prefWidth="125.0" text="Date Created" />
                 <TableColumn fx:id="customerNameColumn" prefWidth="150.0" text="Customer Name" />
                 <TableColumn fx:id="orderStatusColumn" prefWidth="100.0" text="Order Status" />
+                <TableColumn fx:id="commentColumn" prefWidth="75.0" text="Chat" />
             </columns>
         </TableView>
         <ListView fx:id="myItemsListView" layoutX="52.0" layoutY="225.0" prefHeight="106.0" prefWidth="498.0" />

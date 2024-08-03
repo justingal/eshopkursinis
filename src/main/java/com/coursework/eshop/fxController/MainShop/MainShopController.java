@@ -15,7 +15,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -55,7 +54,6 @@ public class MainShopController {
     public TextField quantityField;
 
 
-
     @FXML
     private WarehouseTabController warehouseTabController;
 
@@ -87,6 +85,9 @@ public class MainShopController {
     private CustomHib customHib;
 
     private ShoppingCart cart = new ShoppingCart();
+
+    private Parent myOrdersTabContent;
+    private boolean myOrdersTabLoaded = false;
 
     public void setData() {
         limitAccess();
@@ -145,7 +146,6 @@ public class MainShopController {
     }
 
 
-
     public void loadProductFields() {
         Product selectedProduct = productList.getSelectionModel().getSelectedItem();
 
@@ -177,6 +177,7 @@ public class MainShopController {
             tabPane.getTabs().remove(productsTab);
         }
     }
+
     private void limitAccessBasedOnRole() {
         // Here you control what is visible and what is not based on user roles
         if (currentUser instanceof Admin) {
@@ -188,7 +189,7 @@ public class MainShopController {
         // Call any other methods necessary to update the UI
     }
 
-    public void loadTabValues() {
+    public void loadTabValues() throws IOException {
         if (primaryTab.isSelected()) {
             loadMainShopProductList();
         } else if (productsTab.isSelected()) {
@@ -201,7 +202,21 @@ public class MainShopController {
             userTabController.setData(customHib);
         } else if (cartsTab.isSelected()) {
             cartTabController.setData(customHib, cart);
+        } else if (myOrdersTab.isSelected()) {
+            if (!myOrdersTabLoaded) {
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("myOrderTab.fxml"));
+                    myOrdersTabContent = fxmlLoader.load();
+                    myOrdersTabController = fxmlLoader.getController();
+                    myOrdersTab.setContent(myOrdersTabContent);
+                    myOrdersTabLoaded = true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            myOrdersTabController.setData(customHib);
         }
+
     }
 
     public void leaveReview() throws IOException {
@@ -218,6 +233,7 @@ public class MainShopController {
         stage.setScene(scene);
         stage.show();
     }
+
     public void setUser(User user) {
         this.currentUser = user;
         limitAccessBasedOnRole();
@@ -234,9 +250,17 @@ public class MainShopController {
         cart.addItem(item);
 
     }
+
     public void initialize() {
         // Assuming StartGui.currentUser is already set
         setUser(StartGui.currentUser); // Call this in initialize or right after FXMLLoader.load() in your login process.
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                loadTabValues();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
 }

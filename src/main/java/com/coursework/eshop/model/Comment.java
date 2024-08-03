@@ -99,6 +99,10 @@ public class Comment {
     @ManyToOne
     private User user;
 
+    @ManyToOne
+    private CustomerOrder customerOrder;
+
+
     public Comment(String commentTitle, String commentBody, User user) {
         this.commentTitle = commentTitle;
         this.commentBody = commentBody;

@@ -111,6 +111,10 @@ public class CustomerOrder {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Dice> inOrderDices;
 
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Comment> orderChat;
+
+
     public ShoppingCart getCart() {
         return cart;
     }

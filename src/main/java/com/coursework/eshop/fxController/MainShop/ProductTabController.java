@@ -7,7 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import lombok.Getter;
+
 
 import java.util.List;
 
@@ -36,7 +36,6 @@ public class ProductTabController {
     public TextField puzzleSizeField;
     @FXML
     public TextField diceNumberField;
-    @Getter
     @FXML
     public AnchorPane productTabAnchor;
     public TextField priceField;

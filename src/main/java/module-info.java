@@ -1,7 +1,7 @@
 module com.coursework.eshop {
     requires javafx.controls;
     requires javafx.fxml;
-    requires lombok;
+    //requires lombok;
     requires java.sql;
     requires org.hibernate.orm.core;
     requires jakarta.persistence;

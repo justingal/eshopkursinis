@@ -1,20 +1,73 @@
 package com.coursework.eshop.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 import java.time.LocalDate;
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
+
 @Entity
 public class Puzzle extends Product {
+    public Puzzle() {
+
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getPiecesQuantity() {
+        return piecesQuantity;
+    }
+
+    public void setPiecesQuantity(int piecesQuantity) {
+        this.piecesQuantity = piecesQuantity;
+    }
+
+    public String getPuzzleSize() {
+        return puzzleSize;
+    }
+
+    public void setPuzzleSize(String puzzleSize) {
+        this.puzzleSize = puzzleSize;
+    }
+
+    public String getPuzzleMaterial() {
+        return puzzleMaterial;
+    }
+
+    public void setPuzzleMaterial(String puzzleMaterial) {
+        this.puzzleMaterial = puzzleMaterial;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public Puzzle(String title, String description, String author, Warehouse warehouse, double price) {
+        super(title, description, author, warehouse, price);
+    }
+
+    public Puzzle(String title, String description, String author, Warehouse warehouse, double price, int id, int piecesQuantity, String puzzleSize, String puzzleMaterial, List<Review> reviews) {
+        super(title, description, author, warehouse, price);
+        this.id = id;
+        this.piecesQuantity = piecesQuantity;
+        this.puzzleSize = puzzleSize;
+        this.puzzleMaterial = puzzleMaterial;
+        this.reviews = reviews;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_gen")
     private int id;

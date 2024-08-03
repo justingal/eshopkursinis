@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import lombok.Getter;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +25,6 @@ public class CommentTabController {
     public TextArea commentTextArea;
     @FXML
     public ListView<Comment> commentListView;
-    @Getter
     @FXML
     public AnchorPane commentTabAnchor;
     @FXML

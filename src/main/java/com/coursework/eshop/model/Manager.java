@@ -2,21 +2,52 @@ package com.coursework.eshop.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 import java.time.LocalDate;
 import java.util.List;
 
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
 public class Manager extends User {
+    public Manager() {
+
+    }
+
+    public String getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getMedCertificate() {
+        return medCertificate;
+    }
+
+    public void setMedCertificate(String medCertificate) {
+        this.medCertificate = medCertificate;
+    }
+
+    public LocalDate getEmploymentDate() {
+        return employmentDate;
+    }
+
+    public void setEmploymentDate(LocalDate employmentDate) {
+        this.employmentDate = employmentDate;
+    }
+
+    public Manager(String login, String password, LocalDate birthDate, String name, String surname) {
+        super(login, password, birthDate, name, surname);
+    }
+
+    public Manager(String employeeId, String medCertificate, LocalDate employmentDate) {
+        this.employeeId = employeeId;
+        this.medCertificate = medCertificate;
+        this.employmentDate = employmentDate;
+    }
 
     private String employeeId;
     private String medCertificate;

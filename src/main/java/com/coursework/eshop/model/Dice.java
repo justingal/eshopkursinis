@@ -1,19 +1,52 @@
 package com.coursework.eshop.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+
 @Entity
 public class Dice extends Product {
+    public Dice(String title, String description, String author, Warehouse warehouse, double price) {
+        super(title, description, author, warehouse, price);
+    }
+
+    public Dice(String title, String description, String author, Warehouse warehouse, double price, int id, int diceNumber, List<Review> reviews) {
+        super(title, description, author, warehouse, price);
+        this.id = id;
+        this.diceNumber = diceNumber;
+        this.reviews = reviews;
+    }
+
+    public Dice() {
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getDiceNumber() {
+        return diceNumber;
+    }
+
+    public void setDiceNumber(int diceNumber) {
+        this.diceNumber = diceNumber;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_gen")
     private int id;

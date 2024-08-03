@@ -12,7 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import lombok.Getter;
+
 
 public class WarehouseTabController {
     @FXML
@@ -21,7 +21,6 @@ public class WarehouseTabController {
     public TextField addressWarehouseField;
     @FXML
     public TextField titleWarehouseField;
-    @Getter
     @FXML
     public AnchorPane warehouseTabAnchor;
 

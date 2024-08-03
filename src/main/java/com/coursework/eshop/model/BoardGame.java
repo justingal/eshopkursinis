@@ -1,19 +1,61 @@
 package com.coursework.eshop.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Entity
 public class BoardGame extends Product {
+    public BoardGame(String title, String description, String author, Warehouse warehouse, double price) {
+        super(title, description, author, warehouse, price);
+    }
+
+    public BoardGame() {
+
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPlayersQuantity(String playersQuantity) {
+        this.playersQuantity = playersQuantity;
+    }
+
+    public void setGameDuration(String gameDuration) {
+        this.gameDuration = gameDuration;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getPlayersQuantity() {
+        return playersQuantity;
+    }
+
+    public String getGameDuration() {
+        return gameDuration;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public BoardGame(String title, String description, String author, Warehouse warehouse, double price, String playersQuantity, int id, String gameDuration, List<Review> reviews) {
+        super(title, description, author, warehouse, price);
+        this.playersQuantity = playersQuantity;
+        this.id = id;
+        this.gameDuration = gameDuration;
+        this.reviews = reviews;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_gen")
     private int id;

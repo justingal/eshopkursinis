@@ -47,15 +47,8 @@ public class MyOrdersTabController implements Initializable {
         orderStatusColumn.setCellValueFactory(new PropertyValueFactory<>("orderStatus"));
 
         orderStatusColumn.setCellFactory(ComboBoxTableCell.forTableColumn(OrderStatus.values()));
-/*        orderStatusColumn.setOnEditCommit(event -> {
-            MyOrderTableParameters order = event.getRowValue();
-            order.setOrderStatus(event.getNewValue());
 
-            // Update the order status in the database
-            CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, order.getId());
-            customerOrder.setOrderStatus(event.getNewValue());
-            customHib.update(customerOrder);
-        });*/
+
 
         // Enable editing in the TableView
         myOrdersTableView.setEditable(true);

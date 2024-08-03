@@ -4,10 +4,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.OnDelete;
@@ -16,11 +12,55 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class Review extends Comment {
+    public Review() {
+
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public Puzzle getPuzzle() {
+        return puzzle;
+    }
+
+    public void setPuzzle(Puzzle puzzle) {
+        this.puzzle = puzzle;
+    }
+
+    public BoardGame getBoardGame() {
+        return boardGame;
+    }
+
+    public void setBoardGame(BoardGame boardGame) {
+        this.boardGame = boardGame;
+    }
+
+    public Dice getDice() {
+        return dice;
+    }
+
+    public void setDice(Dice dice) {
+        this.dice = dice;
+    }
+
+    public Review(String commentTitle, String commentBody, Comment parentComment, User user) {
+        super(commentTitle, commentBody, parentComment, user);
+    }
+
+    public Review(String commentTitle, String commentBody, Comment parentComment, User user, double rating, Puzzle puzzle, BoardGame boardGame, Dice dice) {
+        super(commentTitle, commentBody, parentComment, user);
+        this.rating = rating;
+        this.puzzle = puzzle;
+        this.boardGame = boardGame;
+        this.dice = dice;
+    }
+
     private double rating;
 
     @ManyToOne

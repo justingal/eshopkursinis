@@ -1,18 +1,39 @@
 package com.coursework.eshop.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-
+import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;
 import java.util.List;
 
 
-
 @Entity
 public class Manager extends User {
+    @OneToMany
+    private List<CustomerOrder> customerOrders;
+    private String employeeId;
+    private String medCertificate;
+    private LocalDate employmentDate;
+
     public Manager() {
 
+    }
+
+    public Manager(String login, String password, LocalDate birthDate, String name, String surname) {
+        super(login, password, birthDate, name, surname);
+    }
+
+    public Manager(String employeeId, String medCertificate, LocalDate employmentDate) {
+        this.employeeId = employeeId;
+        this.medCertificate = medCertificate;
+        this.employmentDate = employmentDate;
+    }
+
+    public Manager(String login, String password, LocalDate birthDate, String name, String surname, String employeeId, String medCertificate, LocalDate employmentDate) {
+        super(login, password, birthDate, name, surname);
+        this.employeeId = employeeId;
+        this.medCertificate = medCertificate;
+        this.employmentDate = employmentDate;
     }
 
     public String getEmployeeId() {
@@ -36,27 +57,6 @@ public class Manager extends User {
     }
 
     public void setEmploymentDate(LocalDate employmentDate) {
-        this.employmentDate = employmentDate;
-    }
-
-    public Manager(String login, String password, LocalDate birthDate, String name, String surname) {
-        super(login, password, birthDate, name, surname);
-    }
-
-    public Manager(String employeeId, String medCertificate, LocalDate employmentDate) {
-        this.employeeId = employeeId;
-        this.medCertificate = medCertificate;
-        this.employmentDate = employmentDate;
-    }
-
-    private String employeeId;
-    private String medCertificate;
-    private LocalDate employmentDate;
-
-    public Manager(String login, String password, LocalDate birthDate, String name, String surname, String employeeId, String medCertificate, LocalDate employmentDate) {
-        super(login, password, birthDate, name, surname);
-        this.employeeId = employeeId;
-        this.medCertificate = medCertificate;
         this.employmentDate = employmentDate;
     }
 

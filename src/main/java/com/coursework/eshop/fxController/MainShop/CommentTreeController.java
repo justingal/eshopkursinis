@@ -1,10 +1,9 @@
 package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
-import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
-import com.coursework.eshop.model.*;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
+import com.coursework.eshop.model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;

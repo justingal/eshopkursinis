@@ -99,12 +99,6 @@ public class MainShopController {
         loadMainShopProductList();
     }
 
-    private void loadProductList() {
-        productList.getItems().clear();
-        productList.getItems().addAll(customHib.getAllRecords(BoardGame.class));
-        productList.getItems().addAll(customHib.getAllRecords(Puzzle.class));
-        productList.getItems().addAll(customHib.getAllRecords(Dice.class));
-    }
 
     private void loadMainShopProductList() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -112,12 +106,10 @@ public class MainShopController {
             String boardGameQuery = "SELECT bg FROM BoardGame bg WHERE bg.id NOT IN " +
                     "(SELECT bg.id FROM CustomerOrder co JOIN co.inOrderBoardGames bg)";
 
-            // JPQL query to get Puzzles not in orders
             String puzzleQuery = "SELECT p FROM Puzzle p WHERE p.id NOT IN " +
                     "(SELECT p.id FROM CustomerOrder co JOIN co.inOrderPuzzles p)";
 
 
-            // JPQL query to get Dices not in orders
             String diceQuery = "SELECT d FROM Dice d WHERE d.id NOT IN " +
                     "(SELECT d.id FROM CustomerOrder co JOIN co.inOrderDices d)";
 
@@ -125,10 +117,8 @@ public class MainShopController {
             List<Puzzle> availablePuzzles = entityManager.createQuery(puzzleQuery, Puzzle.class).getResultList();
             List<Dice> availableDices = entityManager.createQuery(diceQuery, Dice.class).getResultList();
 
-            // Clear the existing items in the productList
             productList.getItems().clear();
 
-            // Add all available products to the productList
             productList.getItems().addAll(availableBoardGames);
             productList.getItems().addAll(availablePuzzles);
             productList.getItems().addAll(availableDices);
@@ -175,17 +165,6 @@ public class MainShopController {
             tabPane.getTabs().remove(warehousesTab);
             tabPane.getTabs().remove(productsTab);
         }
-    }
-
-    private void limitAccessBasedOnRole() {
-        // Here you control what is visible and what is not based on user roles
-        if (currentUser instanceof Admin) {
-            // Show admin specific controls
-            // E.g., making certain tabs or buttons visible
-        } else {
-            // Hide or disable admin specific controls
-        }
-        // Call any other methods necessary to update the UI
     }
 
     public void loadTabValues() throws IOException {
@@ -235,7 +214,6 @@ public class MainShopController {
 
     public void setUser(User user) {
         this.currentUser = user;
-        limitAccessBasedOnRole();
     }
 
     public void addProductToCart(ActionEvent actionEvent) {
@@ -245,14 +223,12 @@ public class MainShopController {
             return;
         }
         CartItem item = new CartItem(selectedProduct.getId(), selectedProduct.getTitle(), selectedProduct.getPrice());
-        // Might need to make ShoppingCart static or else the products will keep getting wiped
         cart.addItem(item);
 
     }
 
     public void initialize() {
-        // Assuming StartGui.currentUser is already set
-        setUser(StartGui.currentUser); // Call this in initialize or right after FXMLLoader.load() in your login process.
+        setUser(StartGui.currentUser);
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 loadTabValues();

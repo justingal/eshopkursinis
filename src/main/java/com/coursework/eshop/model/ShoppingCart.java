@@ -1,8 +1,7 @@
 package com.coursework.eshop.model;
 
-import jakarta.persistence.*;
-
-
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embeddable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +9,10 @@ import java.util.List;
 @Embeddable
 
 public class ShoppingCart {
-    public List<CartItem> getItems() {
-        return items;
-    }
 
-    public void setItems(List<CartItem> items) {
-        this.items = items;
-    }
+    @ElementCollection
+    private List<CartItem> items = new ArrayList<>();
+
 
     public ShoppingCart() {
     }
@@ -25,14 +21,19 @@ public class ShoppingCart {
         this.items = items;
     }
 
-    @ElementCollection
-    private List<CartItem> items = new ArrayList<>();
+    public List<CartItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<CartItem> items) {
+        this.items = items;
+    }
 
     public void addItem(CartItem newItem) {
         for (CartItem item : items) {
             if (item.getProductId() == newItem.getProductId()) {
                 return;
-        }
+            }
         }
         items.add(newItem);
     }

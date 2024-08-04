@@ -2,13 +2,8 @@ package com.coursework.eshop.model;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-
 
 import java.time.LocalDate;
-import java.util.List;
-
-
 
 
 @Entity

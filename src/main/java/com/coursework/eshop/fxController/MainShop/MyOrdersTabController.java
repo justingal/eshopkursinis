@@ -53,7 +53,6 @@ public class MyOrdersTabController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialize the TableView columns
         orderIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         dateCreatedColumn.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
@@ -89,8 +88,6 @@ public class MyOrdersTabController implements Initializable {
             }
         });
 
-
-        // Enable editing in the TableView
         myOrdersTableView.setEditable(true);
 
 
@@ -98,7 +95,6 @@ public class MyOrdersTabController implements Initializable {
     }
 
     private void loadOrderData() {
-        // Fetch data from database
         User currentUser = StartGui.currentUser;
         List<CustomerOrder> allOrders = customHib.getAllRecords(CustomerOrder.class);
         ordersData = FXCollections.observableArrayList();
@@ -107,10 +103,10 @@ public class MyOrdersTabController implements Initializable {
             if (order.getCustomer().getId() == currentUser.getId()) {
                 ordersData.add(new MyOrderTableParameters(
 
-                    order.getId(),
-                    order.getDateCreated(),
-                    order.getCustomer().getName(),
-                    order.getOrderStatus()
+                        order.getId(),
+                        order.getDateCreated(),
+                        order.getCustomer().getName(),
+                        order.getOrderStatus()
                 ));
             }
         }
@@ -118,7 +114,6 @@ public class MyOrdersTabController implements Initializable {
 
         myOrdersTableView.setItems(ordersData);
 
-        // Handle row selection to display items in ListView
         myOrdersTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 loadItems(newValue);
@@ -138,10 +133,10 @@ public class MyOrdersTabController implements Initializable {
             FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("commentTab.fxml"));
             Parent parent = fxmlLoader.load();
             CommentTabController commentTab = fxmlLoader.getController();
-            commentTab.setData(customHib, orderId); //! Overloading set data funkcija gaidy
+            commentTab.setData(customHib, orderId);
             Stage stage = new Stage();
             Scene scene = new Scene(parent);
-            stage.setTitle("Order chat window"); //
+            stage.setTitle("Order chat window");
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();

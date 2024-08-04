@@ -19,11 +19,11 @@ public class CustomerTableParameters extends UserTableParameters {
         return address.get();
     }
 
-    public SimpleStringProperty addressProperty() {
-        return address;
-    }
-
     public void setAddress(String address) {
         this.address.set(address);
+    }
+
+    public SimpleStringProperty addressProperty() {
+        return address;
     }
 }

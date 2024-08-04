@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="366.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coursework.eshop.fxController.MainShop.OrderTabController">
     <children>
-      <Label layoutX="47.0" layoutY="24.0" text="Crucial orders" />
-      <Label layoutX="47.0" layoutY="174.0" prefHeight="18.0" prefWidth="41.0" text="Orders" />
-
+        <Label layoutX="60.0" layoutY="31.0" prefHeight="18.0" prefWidth="59.0" text="My orders" />
+        <Label layoutX="60.0" layoutY="207.0" text="My Items" />
+        <TableView fx:id="myOrdersTableView" layoutX="52.0" layoutY="50.0" prefHeight="139.0" prefWidth="498.0">
+            <columns>
+                <TableColumn fx:id="orderIdColumn" prefWidth="40.000003814697266" text="Order ID" />
+                <TableColumn fx:id="dateCreatedColumn" prefWidth="62.4000244140625" text="Date Created" />
+                <TableColumn fx:id="customerNameColumn" prefWidth="88.0" text="Customer Name" />
+                <TableColumn fx:id="orderStatusColumn" prefWidth="95.19999694824219" text="Order Status" />
+                <TableColumn fx:id="managerNameColumn" prefWidth="117.5999755859375" text="Manager Name" />
+                <TableColumn fx:id="commentColumn" prefWidth="89.60003662109375" text="Chat" />
+            </columns>
+        </TableView>
+        <ListView fx:id="myItemsListView" layoutX="52.0" layoutY="225.0" prefHeight="106.0" prefWidth="498.0" />
     </children>
 </AnchorPane>

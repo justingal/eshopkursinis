@@ -1,10 +1,7 @@
 package com.coursework.eshop.HibernateControllers;
 
-import com.coursework.eshop.fxController.JavaFxCustomsUtils;
-import com.coursework.eshop.model.Warehouse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaQuery;
 
 import java.util.ArrayList;
@@ -22,7 +19,6 @@ public class GenericHib {
         return entityManagerFactory.createEntityManager();
     }
 
-    //<T> yra generic
     public <T> void create(T entity) {
         try {
             em = getEntityManager();
@@ -65,7 +61,6 @@ public class GenericHib {
     }
 
 
-    // READ
     public <T> T getEntityById(Class<T> entityClass, int id) {
         T result = null;
         try {
@@ -80,7 +75,7 @@ public class GenericHib {
     }
 
 
-    public <T> List<T> getAllRecords(Class <T> entityClass) {
+    public <T> List<T> getAllRecords(Class<T> entityClass) {
         List<T> result = new ArrayList<T>();
         try {
             em = getEntityManager();

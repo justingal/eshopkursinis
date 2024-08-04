@@ -12,6 +12,11 @@ class CartItem {
     public int getProductId() {
         return productId;
     }
+    public CartItem(int productId, String name, double price) {
+        this.productId = productId;
+        this.name = name;
+        this.price = price;
+    }
 
     public void setProductId(int productId) {
         this.productId = productId;
@@ -32,11 +37,6 @@ class CartItem {
     public CartItem() {
     }
 
-    public CartItem(int productId, String name, double price) {
-        this.productId = productId;
-        this.name = name;
-        this.price = price;
-    }
 
     @Override
     public String toString() {

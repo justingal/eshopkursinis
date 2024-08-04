@@ -13,10 +13,10 @@
         <TableView fx:id="myOrdersTableView" layoutX="52.0" layoutY="50.0" prefHeight="139.0" prefWidth="498.0">
             <columns>
                 <TableColumn fx:id="orderIdColumn" prefWidth="75.0" text="Order ID" />
-                <TableColumn fx:id="dateCreatedColumn" prefWidth="125.0" text="Date Created" />
-                <TableColumn fx:id="customerNameColumn" prefWidth="150.0" text="Customer Name" />
-                <TableColumn fx:id="orderStatusColumn" prefWidth="100.0" text="Order Status" />
-                <TableColumn fx:id="commentColumn" prefWidth="75.0" text="Chat" />
+                <TableColumn fx:id="dateCreatedColumn" prefWidth="75.19996643066406" text="Date Created" />
+                <TableColumn fx:id="customerNameColumn" prefWidth="116.79991149902344" text="Customer Name" />
+                <TableColumn fx:id="orderStatusColumn" prefWidth="172.800048828125" text="Order Status" />
+                <TableColumn fx:id="commentColumn" prefWidth="89.60003662109375" text="Chat" />
             </columns>
         </TableView>
         <ListView fx:id="myItemsListView" layoutX="52.0" layoutY="225.0" prefHeight="106.0" prefWidth="498.0" />

@@ -11,11 +11,14 @@ import javafx.scene.control.Alert;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomHib extends GenericHib{
+public class CustomHib extends GenericHib {
     private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
+
     public CustomHib() {
 
-    };
+    }
+
+    ;
 
     public List<Comment> readAllRootComments() {
         EntityManager entityManager = getEntityManager();
@@ -100,9 +103,8 @@ public class CustomHib extends GenericHib{
             transaction.begin();
             Review review = entityManager.find(Review.class, id);
             if (review != null) {
-                review = entityManager.merge(review);  // Ensure the review is attached
+                review = entityManager.merge(review);
 
-                // Remove the review from the associated product
                 if (review.getBoardGame() != null) {
                     BoardGame boardGame = review.getBoardGame();
                     boardGame.getReviews().remove(review);
@@ -117,16 +119,16 @@ public class CustomHib extends GenericHib{
                     review.setPuzzle(null);
                 }
 
-                // Clear other relationships
+
                 clearRelationships(review, entityManager);
 
-                // Delete child comments
+
                 for (Comment reply : new ArrayList<>(review.getReplies())) {
                     entityManager.remove(reply);
                 }
                 review.getReplies().clear();
 
-                // Remove the review
+
                 entityManager.remove(review);
 
                 transaction.commit();
@@ -152,12 +154,12 @@ public class CustomHib extends GenericHib{
         try {
             transaction.begin();
 
-            // Delete child comments
+
             Query deleteChildrenQuery = entityManager.createQuery("DELETE FROM Comment c WHERE c.parentComment.id = :parentId");
             deleteChildrenQuery.setParameter("parentId", commentId);
             deleteChildrenQuery.executeUpdate();
 
-            // Delete the parent comment
+
             Query deleteParentQuery = entityManager.createQuery("DELETE FROM Comment c WHERE c.id = :id");
             deleteParentQuery.setParameter("id", commentId);
             deleteParentQuery.executeUpdate();
@@ -206,11 +208,11 @@ public class CustomHib extends GenericHib{
     }
 
     private void deleteCommentRecursive(Comment comment, EntityManager em) {
-        comment = em.merge(comment);  // Reattach the comment to the persistence context
+        comment = em.merge(comment);
         for (Comment reply : new ArrayList<>(comment.getReplies())) {
             deleteCommentRecursive(reply, em);
         }
-        clearRelationships(comment,em);
+        clearRelationships(comment, em);
         em.remove(comment);
     }
 

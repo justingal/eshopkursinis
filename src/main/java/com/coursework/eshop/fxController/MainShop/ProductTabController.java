@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
-
 import java.util.List;
 
 public class ProductTabController {
@@ -23,7 +22,7 @@ public class ProductTabController {
     @FXML
     public ComboBox<ProductType> productType;
     @FXML
-    public ComboBox <Warehouse>  warehouseComboBox;
+    public ComboBox<Warehouse> warehouseComboBox;
     @FXML
     public TextField gameDurationFIeld;
     @FXML
@@ -79,15 +78,13 @@ public class ProductTabController {
                     throw new IllegalArgumentException("Board game specific fields are empty.");
                 }
                 customHib.create(new BoardGame(productTitleField.getText().trim(), descriptionField.getText().trim(), authorField.getText().trim(), selectedWarehouse, price, playersQuantityField.getText().trim(), gameDurationFIeld.getText().trim()));
-            }
-            else if (productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE) {
+            } else if (productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE) {
                 int piecesQuantity = Integer.parseInt(piecesQuantityField.getText().trim());
                 if (puzzleMaterialField.getText().trim().isEmpty() || puzzleSizeField.getText().trim().isEmpty()) {
                     throw new IllegalArgumentException("Puzzle specific fields are empty.");
                 }
                 customHib.create(new Puzzle(productTitleField.getText().trim(), descriptionField.getText().trim(), authorField.getText().trim(), selectedWarehouse, price, piecesQuantity, puzzleMaterialField.getText().trim(), puzzleSizeField.getText().trim()));
-            }
-            else if (productType.getSelectionModel().getSelectedItem() == ProductType.DICE) {
+            } else if (productType.getSelectionModel().getSelectedItem() == ProductType.DICE) {
                 int diceNumber = Integer.parseInt(diceNumberField.getText().trim());
                 customHib.create(new Dice(productTitleField.getText().trim(), descriptionField.getText().trim(), authorField.getText().trim(), selectedWarehouse, price, diceNumber));
             }
@@ -99,6 +96,7 @@ public class ProductTabController {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", e.getMessage(), "Please complete all fields properly.");
         }
     }
+
     public void updateProduct() {
         Product selectedProduct = productListManager.getSelectionModel().getSelectedItem();
         if (selectedProduct == null) {
@@ -112,7 +110,7 @@ public class ProductTabController {
         Warehouse selectedWarehouse = warehouseComboBox.getSelectionModel().getSelectedItem();
         double price = Double.parseDouble(priceField.getText().trim());
         if (title.isEmpty() || description.isEmpty() || author.isEmpty() || selectedWarehouse == null) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error","Missing Information", "Please fill all required fields.");
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Missing Information", "Please fill all required fields.");
             return;
         }
 
@@ -145,9 +143,9 @@ public class ProductTabController {
             customHib.update(product);
             loadProductListManager();
         } catch (NumberFormatException e) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error","Invalid Input", "Please enter valid numbers for numeric fields.");
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Invalid Input", "Please enter valid numbers for numeric fields.");
         } catch (IllegalArgumentException e) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error","Error",e.getMessage());
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Error", e.getMessage());
         }
     }
 
@@ -194,23 +192,21 @@ public class ProductTabController {
     }
 
     public void enableProductField(ActionEvent actionEvent) {
-        if(productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME){
+        if (productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME) {
             gameDurationFIeld.setDisable(false);
             playersQuantityField.setDisable(false);
             piecesQuantityField.setDisable(true);
             puzzleMaterialField.setDisable(true);
             puzzleSizeField.setDisable(true);
             diceNumberField.setDisable(true);
-        }
-        else if(productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE){
+        } else if (productType.getSelectionModel().getSelectedItem() == ProductType.PUZZLE) {
             gameDurationFIeld.setDisable(true);
             playersQuantityField.setDisable(true);
             piecesQuantityField.setDisable(false);
             puzzleMaterialField.setDisable(false);
             puzzleSizeField.setDisable(false);
             diceNumberField.setDisable(true);
-        }
-        else if(productType.getSelectionModel().getSelectedItem() == ProductType.DICE){
+        } else if (productType.getSelectionModel().getSelectedItem() == ProductType.DICE) {
             gameDurationFIeld.setDisable(true);
             playersQuantityField.setDisable(true);
             piecesQuantityField.setDisable(true);

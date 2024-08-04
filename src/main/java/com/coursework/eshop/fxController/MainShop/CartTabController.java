@@ -23,7 +23,6 @@ public class CartTabController {
     private CustomHib customHib;
 
 
-
     @FXML
     public void moveCartToOrder(ActionEvent actionEvent) {
         User user = StartGui.currentUser;
@@ -89,24 +88,16 @@ public class CartTabController {
     }
 
     public void removeFromCart(ActionEvent actionEvent) {
-                    // Assuming 'cartItemList' is a ListView of CartItem and 'cart' is your ShoppingCart object
-            CartItem selectedItem = cartItemList.getSelectionModel().getSelectedItem();
+        CartItem selectedItem = cartItemList.getSelectionModel().getSelectedItem();
 
-            if (selectedItem == null) {
-                // Show an alert or some indication that no item is selected
-                JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "No Selection", "No item selected", "Please select an item to remove.");
-                return;
-            }
-
-            // Remove the selected item from the cart
-            cart.removeItem(selectedItem.getProductId());
-
-            // Update the ListView display
-            loadCartItemList();
-
-            // Update the total price label
-            priceLabel.setText(String.format("%.2f €", 0.0));
+        if (selectedItem == null) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "No Selection", "No item selected", "Please select an item to remove.");
+            return;
         }
+        cart.removeItem(selectedItem.getProductId());
+        loadCartItemList();
+        priceLabel.setText(String.format("%.2f €", 0.0));
+    }
 
 
     public void setData(CustomHib customHib, ShoppingCart cart) {

@@ -1,6 +1,8 @@
 package com.coursework.eshop.fxController;
 
 //import com.coursework.eshop.HibernateControllers.UserHib;
+
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
@@ -9,22 +11,15 @@ import com.coursework.eshop.model.Customer;
 import com.coursework.eshop.model.Manager;
 import com.coursework.eshop.model.User;
 import jakarta.persistence.EntityManagerFactory;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import java.io.IOException;
-//import utils.DatabaseUtils;
-//
-//import java.sql.Connection;
-//import java.sql.Date;
-//import java.sql.PreparedStatement;
+
 
 public class RegistrationController {
 
@@ -77,18 +72,19 @@ public class RegistrationController {
     }
 
     private void updateUIBasedOnUserRole() {
-        if ( currentUser instanceof Admin){
+        if (currentUser instanceof Admin) {
             managerCheckbox.setVisible(true);
-        }else {
+        } else {
             managerCheckbox.setVisible(false);
         }
-        if ( currentUser != null ){
+        if (currentUser != null) {
             returnButton.setVisible(false);
-        }else{
+        } else {
             returnButton.setVisible(true);
         }
         // if selected button then visibilitie bet ne sitoje funkcijoje.
     }
+
     @FXML
     private void updateVisibility() {
         boolean isManager = managerCheckbox.isSelected();
@@ -100,32 +96,33 @@ public class RegistrationController {
         addressField.setVisible(isCustomer);
         cardNoField.setVisible(isCustomer);
     }
+
     public void createUser() {
-        if (loginField.getText().isEmpty()){
+        if (loginField.getText().isEmpty()) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no login");
         }
-        if (passwordField.getText().isEmpty()){
+        if (passwordField.getText().isEmpty()) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no password");
         }
-        if (repeatPasswordField.getText().isEmpty()){
+        if (repeatPasswordField.getText().isEmpty()) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no repeated password");
         }
-        if (!repeatPasswordField.getText().equals(passwordField.getText())){
+        if (!repeatPasswordField.getText().equals(passwordField.getText())) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Passwords do not match");
         }
-        if (nameField.getText().isEmpty()){
+        if (nameField.getText().isEmpty()) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no name");
         }
-        if (surnameField.getText().isEmpty()){
+        if (surnameField.getText().isEmpty()) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no surname");
         }
-        if (addressField.getText().isEmpty() && customerCheckbox.isSelected()){
+        if (addressField.getText().isEmpty() && customerCheckbox.isSelected()) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no address");
         }
-        if (cardNoField.getText().isEmpty() && customerCheckbox.isSelected()){
+        if (cardNoField.getText().isEmpty() && customerCheckbox.isSelected()) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no card number");
         }
-        if (birthDateField.getValue() == null){
+        if (birthDateField.getValue() == null) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no birth date");
         }
         if (customerCheckbox.isSelected() &&
@@ -142,8 +139,8 @@ public class RegistrationController {
             String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
             if (customerCheckbox.isSelected()) {
                 userHib.create(new Customer(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
-            } }
-        else if (managerCheckbox.isSelected() &&
+            }
+        } else if (managerCheckbox.isSelected() &&
                 !loginField.getText().isEmpty() &&
                 !passwordField.getText().isEmpty() &&
                 repeatPasswordField.getText().equals(passwordField.getText()) &&
@@ -156,9 +153,10 @@ public class RegistrationController {
 
             String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
             if (managerCheckbox.isSelected()) {
-                userHib.create( new Manager(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(),employeeIdField.getText(), medCertificateField.getText(), employmentDateField.getValue()));
+                userHib.create(new Manager(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), employeeIdField.getText(), medCertificateField.getText(), employmentDateField.getValue()));
                 // Papildomi manager specifiniai laukai gali būti pridėti čia
-            }         JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
+            }
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
             try {
                 if (currentUser == null) {
                     returnToLogin();

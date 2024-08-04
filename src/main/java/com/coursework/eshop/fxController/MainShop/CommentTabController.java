@@ -4,17 +4,11 @@ import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-
-import java.io.IOException;
 import java.util.List;
-
-import static java.sql.Types.NULL;
 
 public class CommentTabController {
 
@@ -47,8 +41,8 @@ public class CommentTabController {
         loadComments();
     }
 
-    private void loadComments(){
-        if( orderId != 0 ){
+    private void loadComments() {
+        if (orderId != 0) {
             loadOrderCommentsTree();
         } else {
             loadCommentTree();

@@ -1,16 +1,13 @@
 package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
-import com.coursework.eshop.HibernateControllers.GenericHib;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.Warehouse;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 
@@ -61,7 +58,7 @@ public class WarehouseTabController {
         String address = addressWarehouseField.getText().trim();
 
         if (title.isEmpty() || address.isEmpty()) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "ERROR","Missing Information", "Both title and address must be filled out.");
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "ERROR", "Missing Information", "Both title and address must be filled out.");
             return; // Stop the method execution if fields are empty
         }
 
@@ -78,8 +75,7 @@ public class WarehouseTabController {
         loadWarehouseList();
     }
 
-    public void setData(CustomHib customHib)
-    {
+    public void setData(CustomHib customHib) {
         this.customHib = customHib;
         loadWarehouseList();
         warehouseList.getSelectionModel().select(0);

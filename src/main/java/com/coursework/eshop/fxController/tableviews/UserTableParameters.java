@@ -1,4 +1,5 @@
 package com.coursework.eshop.fxController.tableviews;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -20,35 +21,35 @@ public class UserTableParameters {
         return id.get();
     }
 
-    public SimpleIntegerProperty idProperty() {
-        return id;
-    }
-
     public void setId(int id) {
         this.id.set(id);
+    }
+
+    public SimpleIntegerProperty idProperty() {
+        return id;
     }
 
     public String getLogin() {
         return login.get();
     }
 
-    public SimpleStringProperty loginProperty() {
-        return login;
-    }
-
     public void setLogin(String login) {
         this.login.set(login);
+    }
+
+    public SimpleStringProperty loginProperty() {
+        return login;
     }
 
     public String getPassword() {
         return password.get();
     }
 
-    public SimpleStringProperty passwordProperty() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password.set(password);
+    }
+
+    public SimpleStringProperty passwordProperty() {
+        return password;
     }
 }

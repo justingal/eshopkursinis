@@ -18,7 +18,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -39,15 +38,15 @@ public class UserTabController implements Initializable {
     @FXML
     public TableColumn<CustomerTableParameters, String> addressTableCol;
     @FXML
-    public TableColumn< CustomerTableParameters, Void> dummyCol;
+    public TableColumn<CustomerTableParameters, Void> dummyCol;
     @FXML
     public TableColumn<ManagerTableParameters, Integer> idManagerTableCol;
     @FXML
-    public TableColumn<ManagerTableParameters,String> loginManagerTableCol;
+    public TableColumn<ManagerTableParameters, String> loginManagerTableCol;
     @FXML
-    public TableColumn <ManagerTableParameters,String> passwordManagerTableCol;
+    public TableColumn<ManagerTableParameters, String> passwordManagerTableCol;
     @FXML
-    public TableColumn <ManagerTableParameters,String> employeeIdManagerTableCol;
+    public TableColumn<ManagerTableParameters, String> employeeIdManagerTableCol;
     @FXML
     public TableColumn dummyManagerCol;
     @FXML
@@ -56,13 +55,14 @@ public class UserTabController implements Initializable {
     private ObservableList<ManagerTableParameters> dataManager = FXCollections.observableArrayList();
     private ObservableList<CustomerTableParameters> data = FXCollections.observableArrayList();
     private CustomHib customHib;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         customerTable.setEditable(true);
         idTableCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         loginTableCol.setCellValueFactory(new PropertyValueFactory<>("login"));
         loginTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        loginTableCol.setOnEditCommit( event -> {
+        loginTableCol.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setLogin(event.getNewValue());
             Customer customer = customHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
             customer.setLogin(event.getNewValue());
@@ -70,7 +70,7 @@ public class UserTabController implements Initializable {
         });
         passwordTableCol.setCellValueFactory(new PropertyValueFactory<>("password"));
         passwordTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        passwordTableCol.setOnEditCommit( event -> {
+        passwordTableCol.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setPassword(event.getNewValue());
             Customer customer = customHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
             customer.setPassword(event.getNewValue());
@@ -78,7 +78,7 @@ public class UserTabController implements Initializable {
         });
         addressTableCol.setCellValueFactory(new PropertyValueFactory<>("address"));
         addressTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        addressTableCol.setOnEditCommit( event -> {
+        addressTableCol.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setAddress(event.getNewValue());
             Customer customer = customHib.getEntityById(Customer.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
             customer.setAddress(event.getNewValue());
@@ -97,6 +97,7 @@ public class UserTabController implements Initializable {
                         loadUserTables();
                     });
                 }
+
                 @Override
                 protected void updateItem(Void item, boolean empty) {
                     super.updateItem(item, empty);
@@ -117,7 +118,7 @@ public class UserTabController implements Initializable {
         idManagerTableCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         loginManagerTableCol.setCellValueFactory(new PropertyValueFactory<>("login"));
         loginManagerTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        loginManagerTableCol.setOnEditCommit( event -> {
+        loginManagerTableCol.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setLogin(event.getNewValue());
             Manager manager = customHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
             manager.setLogin(event.getNewValue());
@@ -125,7 +126,7 @@ public class UserTabController implements Initializable {
         });
         passwordManagerTableCol.setCellValueFactory(new PropertyValueFactory<>("password"));
         passwordManagerTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        passwordManagerTableCol.setOnEditCommit( event -> {
+        passwordManagerTableCol.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setPassword(event.getNewValue());
             Manager manager = customHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
             manager.setPassword(event.getNewValue());
@@ -133,7 +134,7 @@ public class UserTabController implements Initializable {
         });
         employeeIdManagerTableCol.setCellValueFactory(new PropertyValueFactory<>("employeeId"));
         employeeIdManagerTableCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        employeeIdManagerTableCol.setOnEditCommit( event -> {
+        employeeIdManagerTableCol.setOnEditCommit(event -> {
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setEmployeeId(event.getNewValue());
             Manager manager = customHib.getEntityById(Manager.class, event.getTableView().getItems().get(event.getTablePosition().getRow()).getId());
             manager.setEmployeeId(event.getNewValue());
@@ -152,6 +153,7 @@ public class UserTabController implements Initializable {
                         loadUserTables();
                     });
                 }
+
                 @Override
                 protected void updateItem(Void item, boolean empty) {
                     super.updateItem(item, empty);
@@ -187,7 +189,7 @@ public class UserTabController implements Initializable {
         customerTable.setItems(data);
 
         managerTable.getItems().clear();
-        List <Manager> managerList = customHib.getAllRecords(Manager.class);
+        List<Manager> managerList = customHib.getAllRecords(Manager.class);
         for (Manager m : managerList) {
             ManagerTableParameters managerTableParameters = new ManagerTableParameters();
             managerTableParameters.setId(m.getId());

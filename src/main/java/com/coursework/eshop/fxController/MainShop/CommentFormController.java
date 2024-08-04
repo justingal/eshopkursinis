@@ -20,12 +20,10 @@ public class CommentFormController {
     public Label ratingLabel;
 
     private Product product;
-    //ISTRINTI comment id
     private int commentId = 0;
     private GenericHib genericHib;
     private User currentUser = StartGui.currentUser;
 
-    // su commentID kazkaip reikes padaryt
     public void setData(GenericHib genericHib, Product product, int commentId) {
         this.genericHib = genericHib;
         this.product = product;

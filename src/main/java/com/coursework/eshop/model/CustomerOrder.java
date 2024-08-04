@@ -11,6 +11,36 @@ import java.util.List;
 @Entity
 @Table(name = "customer_order")
 public class CustomerOrder {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    private LocalDate dateCreated;
+    private double totalPrice;
+
+    @ManyToOne
+    private Customer customer;
+    @ManyToOne
+    private Manager manager;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
+
+    @Embedded
+    private ShoppingCart cart = new ShoppingCart();
+
+    @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<BoardGame> inOrderBoardGames;
+    @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Puzzle> inOrderPuzzles;
+    @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Dice> inOrderDices;
+
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Comment> orderChat;
+
     public CustomerOrder() {
     }
 
@@ -50,10 +80,6 @@ public class CustomerOrder {
         this.totalPrice = totalPrice;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
     public OrderStatus getOrderStatus() {
         return orderStatus;
     }
@@ -86,35 +112,6 @@ public class CustomerOrder {
         this.inOrderDices = inOrderDices;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private LocalDate dateCreated;
-    private double totalPrice;
-
-    @ManyToOne
-    private Customer customer;
-
-    @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
-
-    @Embedded
-    private ShoppingCart cart = new ShoppingCart();
-
-    @OneToMany
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<BoardGame> inOrderBoardGames;
-    @OneToMany
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Puzzle> inOrderPuzzles;
-    @OneToMany
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Dice> inOrderDices;
-
-    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Comment> orderChat;
-
-
     public ShoppingCart getCart() {
         return cart;
     }
@@ -130,7 +127,12 @@ public class CustomerOrder {
         if (inOrderDices != null) products.addAll(inOrderDices);
         return products;
     }
+
     public Customer getCustomer() {
         return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

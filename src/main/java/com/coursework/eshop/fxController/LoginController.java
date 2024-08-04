@@ -22,7 +22,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 
-
 public class LoginController implements Initializable {
 
     @FXML
@@ -30,6 +29,7 @@ public class LoginController implements Initializable {
     @FXML
     public PasswordField passwordField;
     private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
+
     public void registerNewUser() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("registration.fxml"));
         Parent parent = fxmlLoader.load();
@@ -59,9 +59,7 @@ public class LoginController implements Initializable {
                 stage.setScene(scene);
                 stage.show();
                 // This sets the currently logged-in user globally.
-            }
-
-            else {
+            } else {
                 JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Login INFO", "Wrong data", "Please check credentials, incorrect password");
             }
         } else {

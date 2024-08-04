@@ -88,6 +88,7 @@ public class MainShopController {
 
     private Parent myOrdersTabContent;
     private boolean myOrdersTabLoaded = false;
+    private boolean ordersTabLoaded = false;
 
     public void setData() {
         limitAccess();
@@ -160,10 +161,12 @@ public class MainShopController {
         if (currentUser.getClass() == Admin.class) {
         } else if (currentUser.getClass() == Manager.class) {
             tabPane.getTabs().remove(usersTab);
+            tabPane.getTabs().remove(myOrdersTab);
         } else if (currentUser.getClass() == Customer.class) {
             tabPane.getTabs().remove(usersTab);
             tabPane.getTabs().remove(warehousesTab);
             tabPane.getTabs().remove(productsTab);
+            tabPane.getTabs().remove(ordersTab);
         }
     }
 
@@ -193,9 +196,22 @@ public class MainShopController {
                 }
             }
             myOrdersTabController.setData(customHib);
+        } else if (ordersTab.isSelected()) {
+            if (!ordersTabLoaded) {
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("orderTab.fxml"));
+                    Parent parent = fxmlLoader.load();
+                    orderTabController = fxmlLoader.getController();
+                    ordersTab.setContent(parent);
+                    ordersTabLoaded = true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            orderTabController.setData(customHib);
+            }
         }
 
-    }
 
     public void leaveReview() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(StartGui.class.getResource("commentTree.fxml"));

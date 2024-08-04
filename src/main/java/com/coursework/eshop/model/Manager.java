@@ -9,8 +9,8 @@ import java.util.List;
 
 @Entity
 public class Manager extends User {
-    @OneToMany
-    private List<CustomerOrder> customerOrders;
+    @OneToMany(mappedBy = "responsibleManager")
+    private List<CustomerOrder> managedOrders;
     private String employeeId;
     private String medCertificate;
     private LocalDate employmentDate;
@@ -60,4 +60,7 @@ public class Manager extends User {
         this.employmentDate = employmentDate;
     }
 
+    public String toString() {
+        return getFullName();
+    }
 }

@@ -27,6 +27,7 @@ public abstract class User implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     List<Comment> myComments;
 
+
     public User() {
     }
 
@@ -89,6 +90,10 @@ public abstract class User implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public String getFullName() {
+        return name + " " + surname;
     }
 
     public void setName(String name) {

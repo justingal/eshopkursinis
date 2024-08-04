@@ -20,7 +20,8 @@ public class CustomerOrder {
     @ManyToOne
     private Customer customer;
     @ManyToOne
-    private Manager manager;
+    @JoinColumn(name = "manager_id")
+    private Manager responsibleManager;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -106,6 +107,22 @@ public class CustomerOrder {
 
     public List<Dice> getInOrderDices() {
         return inOrderDices;
+    }
+
+    public Manager getResponsibleManager() {
+        return responsibleManager;
+    }
+
+    public void setResponsibleManager(Manager responsibleManager) {
+        this.responsibleManager = responsibleManager;
+    }
+
+    public List<Comment> getOrderChat() {
+        return orderChat;
+    }
+
+    public void setOrderChat(List<Comment> orderChat) {
+        this.orderChat = orderChat;
     }
 
     public void setInOrderDices(List<Dice> inOrderDices) {

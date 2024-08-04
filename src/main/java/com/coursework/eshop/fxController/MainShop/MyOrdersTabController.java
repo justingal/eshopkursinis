@@ -6,6 +6,7 @@ import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.fxController.tableviews.MyOrderTableParameters;
 import com.coursework.eshop.model.CustomerOrder;
 import com.coursework.eshop.model.OrderStatus;
+import com.coursework.eshop.model.Product;
 import com.coursework.eshop.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +24,7 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -30,20 +32,17 @@ public class MyOrdersTabController implements Initializable {
     @FXML
     public TableColumn<MyOrderTableParameters, Void> commentColumn;
     @FXML
-    public TableColumn dummyManagerCol;
-    @FXML
     private TableView<MyOrderTableParameters> myOrdersTableView;
     @FXML
     private TableColumn<MyOrderTableParameters, Integer> orderIdColumn;
     @FXML
-    private TableColumn dateCreatedColumn;
+    private TableColumn<MyOrderTableParameters, LocalDate> dateCreatedColumn;
     @FXML
-    private TableColumn customerNameColumn;
+    private TableColumn<MyOrderTableParameters, String> customerNameColumn;
     @FXML
-    private TableColumn orderStatusColumn;
+    private TableColumn<MyOrderTableParameters, OrderStatus> orderStatusColumn;
     @FXML
-    private ListView myItemsListView;
-    private ObservableList<MyOrderTableParameters> ordersData;
+    private ListView<String> myItemsListView;
     private CustomHib customHib = new CustomHib();
 
     public void setData(CustomHib customHib) {
@@ -57,7 +56,6 @@ public class MyOrdersTabController implements Initializable {
         dateCreatedColumn.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         orderStatusColumn.setCellValueFactory(new PropertyValueFactory<>("orderStatus"));
-
         orderStatusColumn.setCellFactory(ComboBoxTableCell.forTableColumn(OrderStatus.values()));
 
 
@@ -97,7 +95,7 @@ public class MyOrdersTabController implements Initializable {
     private void loadOrderData() {
         User currentUser = StartGui.currentUser;
         List<CustomerOrder> allOrders = customHib.getAllRecords(CustomerOrder.class);
-        ordersData = FXCollections.observableArrayList();
+        ObservableList<MyOrderTableParameters> ordersData = FXCollections.observableArrayList();
 
         for (CustomerOrder order : allOrders) {
             if (order.getCustomer().getId() == currentUser.getId()) {

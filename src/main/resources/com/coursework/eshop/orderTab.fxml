@@ -10,7 +10,7 @@
     <children>
         <Label layoutX="60.0" layoutY="31.0" prefHeight="18.0" prefWidth="59.0" text="My orders" />
         <Label layoutX="60.0" layoutY="207.0" text="My Items" />
-        <TableView fx:id="myOrdersTableView" layoutX="52.0" layoutY="50.0" prefHeight="139.0" prefWidth="498.0">
+        <TableView fx:id="ordersTableView" layoutX="52.0" layoutY="50.0" prefHeight="139.0" prefWidth="498.0">
             <columns>
                 <TableColumn fx:id="orderIdColumn" prefWidth="40.000003814697266" text="Order ID" />
                 <TableColumn fx:id="dateCreatedColumn" prefWidth="62.4000244140625" text="Date Created" />

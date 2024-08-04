@@ -1,13 +1,13 @@
 module com.coursework.eshop {
     requires javafx.controls;
     requires javafx.fxml;
-    //requires lombok;
     requires java.sql;
     requires org.hibernate.orm.core;
     requires jakarta.persistence;
     requires bcrypt;
+    requires net.bytebuddy;
 
-
+    exports com.coursework.eshop.fxController.tableviews to javafx.base;
     opens com.coursework.eshop to javafx.fxml;
     exports com.coursework.eshop;
     opens com.coursework.eshop.model to javafx.fxml, org.hibernate.orm.core;

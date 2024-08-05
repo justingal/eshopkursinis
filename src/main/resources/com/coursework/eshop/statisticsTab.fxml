@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+    
+    <TableView fx:id="orderData" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="350.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="370.0" AnchorPane.topAnchor="10.0">
+        <columns>
+            <TableColumn fx:id="orderIdColumn" text="Order ID" />
+            <TableColumn fx:id="productIdColumn" text="Product ID" />
+            <TableColumn fx:id="buyerIdColumn" text="Buyer ID" />
+            <TableColumn fx:id="orderDateColumn" text="Order Date" />
+            <TableColumn fx:id="orderValueColumn" text="Order Value" />
+        </columns>
+    </TableView>
+    
+    <ListView fx:id="topProductsView" layoutX="370.0" layoutY="10.0" prefHeight="200.0" prefWidth="250.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="370.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+    
+    <TextField fx:id="minValueField" layoutX="10.0" layoutY="225.0" prefHeight="26.0" prefWidth="100.0" promptText="Min Value" AnchorPane.bottomAnchor="145.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="510.0" AnchorPane.topAnchor="225.0" />
+    <TextField fx:id="maxValueField" layoutX="120.0" layoutY="225.0" prefHeight="26.0" prefWidth="100.0" promptText="Max Value" AnchorPane.bottomAnchor="145.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="225.0" />
+    <TextField fx:id="buyerIdField" layoutX="230.0" layoutY="225.0" prefHeight="26.0" prefWidth="100.0" promptText="Buyer ID" AnchorPane.bottomAnchor="145.0" AnchorPane.leftAnchor="230.0" AnchorPane.rightAnchor="290.0" AnchorPane.topAnchor="225.0" />
+    <DatePicker fx:id="startDateField" layoutX="10.0" layoutY="267.0" prefWidth="200.0" promptText="Start Date" AnchorPane.bottomAnchor="103.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="510.0" AnchorPane.topAnchor="267.0" />
+    <DatePicker fx:id="endDateField" layoutX="220.0" layoutY="267.0" prefWidth="200.0" promptText="End Date" AnchorPane.bottomAnchor="103.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="267.0" />
+    
+    <PieChart fx:id="salesPieChart" layoutX="370.0" layoutY="225.0" prefHeight="200.0" prefWidth="250.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="370.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="225.0" />
+    
+    <Button layoutX="10.0" layoutY="309.0" onAction="#filterData" text="Filter" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="370.0" AnchorPane.topAnchor="309.0" />
+    
+</AnchorPane>

@@ -54,6 +54,9 @@
                 <Tab fx:id="myOrdersTab" onSelectionChanged="#loadTabValues" text="My orders">
                     <fx:include fx:id="myOrderTab" source="myOrderTab.fxml" />
                 </Tab>
+                <Tab fx:id="statisticTab" onSelectionChanged="#loadTabValues" text="Statistics">
+                    <fx:include fx:id="statisticsTab" source="statisticsTab.fxml" />
+                </Tab>
                 <Tab fx:id="settingsTab" onSelectionChanged="#loadTabValues" text="Settings">
                     <fx:include fx:id="settingTab" source="settingsTab.fxml" />
                 </Tab>

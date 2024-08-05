@@ -24,6 +24,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.time.temporal.ChronoUnit;
+
 
 public class OrderTabController implements Initializable {
 
@@ -73,10 +75,8 @@ public class OrderTabController implements Initializable {
             OrderTableParameters orderParam = event.getRowValue();
             Manager newManager = event.getNewValue();
 
-            // Update in-memory data
             orderParam.setManager(newManager);
 
-            // Update in database
             CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, orderParam.getId());
             customerOrder.setResponsibleManager(newManager);
             customHib.update(customerOrder);
@@ -86,10 +86,8 @@ public class OrderTabController implements Initializable {
             OrderTableParameters orderParam = event.getRowValue();
             OrderStatus newOrderStatus = event.getNewValue();
 
-            // Update in-memory data
             orderParam.setOrderStatus(newOrderStatus);
 
-            // Update in database
             CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, orderParam.getId());
             customerOrder.setOrderStatus(newOrderStatus);
             customHib.update(customerOrder);
@@ -136,19 +134,45 @@ public class OrderTabController implements Initializable {
 
         for (CustomerOrder order : allOrders) {
             if (order.getResponsibleManager() == null || order.getResponsibleManager().getId() == currentUser.getId() || currentUser instanceof Admin) {
+
+                long hours = ChronoUnit.HOURS.between(order.getDateCreated().atStartOfDay(), LocalDate.now().atStartOfDay());
+                if (hours >= 24 && order.getOrderStatus() != OrderStatus.Urgent && order.getResponsibleManager() == null) {
+                    order.setOrderStatus(OrderStatus.Urgent);
+                    customHib.update(order); 
+                }
+
                 ordersData.add(new OrderTableParameters(
                         order.getId(),
                         order.getDateCreated(),
                         order.getCustomer().getName(),
                         order.getOrderStatus(),
                         order.getResponsibleManager()
-                        //(order.getResponsibleManager() == null ) ? "" : order.getResponsibleManager().getFullName()
                 ));
             }
         }
 
-
+        ordersData.sort(Comparator.comparing((OrderTableParameters o) -> o.getOrderStatus() == OrderStatus.Urgent)
+        .reversed()
+        .thenComparing(OrderTableParameters::getDateCreated));
+        
         ordersTableView.setItems(ordersData);
+
+        ordersTableView.setRowFactory(tv -> new TableRow<>() {
+            @Override
+            protected void updateItem(OrderTableParameters item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("");
+                } else {
+                    long hours = ChronoUnit.HOURS.between(item.getDateCreated().atStartOfDay(), LocalDate.now().atStartOfDay());
+                    if (hours >= 24 && item.getManager() == null) {
+                        setStyle("-fx-background-color: yellow;");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        });
 
         ordersTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {

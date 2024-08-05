@@ -122,7 +122,7 @@ public class MyOrdersTabController implements Initializable {
     private void loadItems(MyOrderTableParameters order) {
         ObservableList<String> items = FXCollections.observableArrayList();
         CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, order.getId());
-        customerOrder.getAllProducts().forEach(product -> items.add(product.getTitle()));
+        customerOrder.getAllProducts().forEach(product -> items.add(product.getTitle()+"  "+product.getAuthor()+"   "+product.getPrice()+"€"));
         myItemsListView.setItems(items);
     }
 

@@ -46,12 +46,15 @@ public class MainShopController {
     public Tab cartsTab;
     @FXML
     public Tab settingsTab;
+    @FXML
+    public Tab statisticTab;
     public TextField titleField;
     public TextField authorField;
     public TextArea descriptionField;
     public TextField typeField;
     public TextField priceField;
     public TextField quantityField;
+
 
 
     @FXML
@@ -167,6 +170,7 @@ public class MainShopController {
             tabPane.getTabs().remove(warehousesTab);
             tabPane.getTabs().remove(productsTab);
             tabPane.getTabs().remove(ordersTab);
+            tabPane.getTabs().remove(statisticTab);
         }
     }
 

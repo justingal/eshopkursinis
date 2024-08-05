@@ -1,6 +1,7 @@
 package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
+import com.coursework.eshop.fxController.tableviews.OrderTableParameters;
 import com.coursework.eshop.fxController.tableviews.StatisticsTableParameters;
 import com.coursework.eshop.model.Customer;
 import com.coursework.eshop.model.CustomerOrder;
@@ -20,6 +21,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class StatisticsTabController implements Initializable {
     @FXML
@@ -54,6 +56,8 @@ public class StatisticsTabController implements Initializable {
     public ComboBox<Customer> customerComboBox;
     @FXML
     public ComboBox<Manager> managerComboBox;
+    @FXML
+    public ComboBox<String> statisticsComboBox;
 
 
     private ObservableList<Manager> managersData;
@@ -83,7 +87,20 @@ public class StatisticsTabController implements Initializable {
             customer = customerComboBox.getValue();
             manager = managerComboBox.getValue();
 
-            //List filteredData = CustomHib.filterData(minValue, maxValue, userId, managerId, startDate, endDate);
+            List<CustomerOrder> filteredData = customHib.filterData(minValue, maxValue, customer, manager, orderStatus, startDate, endDate);
+            ObservableList<StatisticsTableParameters> filteredStatisticsData = FXCollections.observableArrayList();
+
+            for (CustomerOrder order : filteredData) {
+                filteredStatisticsData.add(new StatisticsTableParameters(
+                        order.getId(),
+                        order.getResponsibleManager(),
+                        order.getCustomer(),
+                        order.getDateCreated(),
+                        order.getTotalPrice(),
+                        order.getOrderStatus()
+                ));
+            }
+            statisticsDataTableView.setItems(filteredStatisticsData);
 
         } catch (NumberFormatException e) {
 
@@ -103,10 +120,9 @@ public class StatisticsTabController implements Initializable {
         loadCustomers();
         loadManagers();
 
-        managerColumn.setCellFactory(ComboBoxTableCell.forTableColumn(managersData));
-        customerColumn.setCellFactory(ComboBoxTableCell.forTableColumn(customersData));
-        orderStatusColumn.setCellFactory(ComboBoxTableCell.forTableColumn(OrderStatus.values()));
 
+        loadStatisticsData();
+        statisticsComboBox.setItems(FXCollections.observableArrayList( "Price", "Manager", "OrderStatus"));
 
     }
     private void loadManagers() {
@@ -119,9 +135,76 @@ public class StatisticsTabController implements Initializable {
     }
 
     private void loadStatisticsData() {
+        ObservableList<OrderStatus> orderStatusList = FXCollections.observableArrayList();
+        orderStatusList.add(null);
+        orderStatusList.addAll(OrderStatus.values());
+        orderStatusComboBox.setItems(orderStatusList);
+
+        ObservableList<Customer> customerList = FXCollections.observableArrayList();
+        customerList.add(null);
+        customerList.addAll(customersData);
+        customerComboBox.setItems(customerList);
+
+        ObservableList<Manager> managerList = FXCollections.observableArrayList();
+        managerList.add(null);
+        managerList.addAll(managersData);
+        managerComboBox.setItems(managerList);
+
+
+        List<CustomerOrder> allOrders = customHib.getAllRecords(CustomerOrder.class);
+        ObservableList<StatisticsTableParameters> statisticsData = FXCollections.observableArrayList();
+
+        for (CustomerOrder order : allOrders) {
+            statisticsData.add(new StatisticsTableParameters(
+                    order.getId(),
+                    order.getResponsibleManager(),
+                    order.getCustomer(),
+                    order.getDateCreated(),
+                    order.getTotalPrice(),
+                    order.getOrderStatus()
+
+            ));
+        }
+        statisticsDataTableView.setItems(statisticsData);
+
+
+    }
+
+    @FXML
+    private void updatePieChart(ActionEvent event) {
+        String selectedStatistic = statisticsComboBox.getValue();
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 
         List<CustomerOrder> allOrders = customHib.getAllRecords(CustomerOrder.class);
 
+        switch (selectedStatistic) {
+            case "Price":
+                pieChartData = allOrders.stream()
+                        .collect(Collectors.groupingBy(CustomerOrder::getTotalPrice, Collectors.counting()))
+                        .entrySet().stream()
+                        .map(entry -> new PieChart.Data(entry.getKey().toString() + "€", entry.getValue()))
+                        .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                break;
+
+            case "Manager":
+                pieChartData = allOrders.stream()
+                        .collect(Collectors.groupingBy(order -> (order.getResponsibleManager() == null) ? "None" : order.getResponsibleManager().getName(), Collectors.counting()))
+                        .entrySet().stream()
+                        .map(entry -> new PieChart.Data(entry.getKey(), entry.getValue()))
+                        .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                break;
+
+            case "OrderStatus":
+                pieChartData = allOrders.stream()
+                        .collect(Collectors.groupingBy(CustomerOrder::getOrderStatus, Collectors.counting()))
+                        .entrySet().stream()
+                        .map(entry -> new PieChart.Data(entry.getKey().getLabel(), entry.getValue())) // Use name() method for enum
+                        .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                break;
+        }
+
+        salesPieChart.setData(pieChartData);
     }
+
 
 }

@@ -5,9 +5,11 @@ import com.coursework.eshop.model.*;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import javafx.scene.control.Alert;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -282,6 +284,44 @@ public class CustomHib extends GenericHib {
         }
     }
 
-    //public void filterData ()
+    public List<CustomerOrder> filterData (double minValue, double maxValue, Customer customer, Manager manager, OrderStatus orderStatus, LocalDate startDate, LocalDate finishDate) {
+        EntityManager em = getEntityManager();
+        List<CustomerOrder> result = new ArrayList<>();
+        try {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<CustomerOrder> cq = cb.createQuery(CustomerOrder.class);
+            Root<CustomerOrder> order = cq.from(CustomerOrder.class);
+
+            List<Predicate> predicates = new ArrayList<>();
+            if (minValue > 0) {
+                predicates.add(cb.ge(order.get("totalPrice"), minValue));
+            }
+            if (maxValue< Double.MAX_VALUE) {
+                predicates.add(cb.le(order.get("totalPrice"), maxValue));
+            }
+            if (customer != null) {
+                predicates.add(cb.equal(order.get("customer"), customer));
+            }
+            if (manager != null) {
+                predicates.add(cb.equal(order.get("responsibleManager"), manager));
+            }
+            if (orderStatus != null) {
+                predicates.add(cb.equal(order.get("orderStatus"), orderStatus));
+            }
+            if (startDate != null) {
+                predicates.add(cb.greaterThanOrEqualTo(order.get("dateCreated"), startDate));
+            }
+            if (finishDate != null) {
+                predicates.add(cb.lessThanOrEqualTo(order.get("dateCreated"), finishDate));
+            }
+            cq.where(predicates.toArray(new Predicate[0]));
+            result = em.createQuery(cq).getResultList();
+        }finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return result;
+    }
 
 }

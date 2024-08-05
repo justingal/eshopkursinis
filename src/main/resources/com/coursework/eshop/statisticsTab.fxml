@@ -17,8 +17,8 @@
             <TableColumn fx:id="managerColumn" prefWidth="118.40003204345703" text="Manager" />
             <TableColumn fx:id="customerColumn" prefWidth="121.5999755859375" text="Customer" />
             <TableColumn fx:id="orderDateColumn" prefWidth="99.199951171875" text="Order Date" />
-         <TableColumn fx:id="orderStatusColumn" prefWidth="109.59994506835938" text="Order Status" />
-            <TableColumn fx:id="orderValueColumn" prefWidth="75.20001220703125" text="Order Value" />
+            <TableColumn fx:id="orderStatusColumn" prefWidth="101.60003662109375" text="Order Status" />
+            <TableColumn fx:id="orderValueColumn" prefWidth="75.99990844726562" text="Order Value" />
         </columns>
     </TableView>
     
@@ -27,11 +27,12 @@
     <DatePicker fx:id="startDateField" layoutX="10.0" layoutY="267.0" prefHeight="26.0" prefWidth="168.0" promptText="Start Date" />
     <DatePicker fx:id="endDateField" layoutX="11.0" layoutY="309.0" prefHeight="26.0" prefWidth="168.0" promptText="End Date" />
     
-    <PieChart fx:id="salesPieChart" layoutX="349.0" layoutY="218.0" prefHeight="133.0" prefWidth="204.0" />
+    <PieChart fx:id="salesPieChart" layoutX="320.0" layoutY="219.0" prefHeight="139.0" prefWidth="200.0" />
     
-    <Button layoutX="94.0" layoutY="353.0" onAction="#filterData" prefHeight="26.0" prefWidth="130.0" text="Filter" />
+    <Button layoutX="14.0" layoutY="341.0" onAction="#filterData" prefHeight="26.0" prefWidth="130.0" text="Filter" />
    <ComboBox fx:id="orderStatusComboBox" layoutX="199.0" layoutY="309.0" prefHeight="26.0" prefWidth="111.0" promptText="Order Status" />
    <ComboBox fx:id="customerComboBox" layoutX="199.0" layoutY="226.0" prefHeight="26.0" prefWidth="111.0" promptText="Customer" />
    <ComboBox fx:id="managerComboBox" layoutX="199.0" layoutY="268.0" prefHeight="26.0" prefWidth="111.0" promptText="Manager" />
+   <ComboBox fx:id="statisticsComboBox" layoutX="474.0" layoutY="341.0" onAction="#updatePieChart" prefHeight="26.0" prefWidth="123.0" promptText="Pie Chart " />
     
 </AnchorPane>

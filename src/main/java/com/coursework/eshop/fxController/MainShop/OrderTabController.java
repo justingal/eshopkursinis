@@ -23,6 +23,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.time.temporal.ChronoUnit;
@@ -83,7 +84,9 @@ public class OrderTabController implements Initializable {
 
             CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, orderParam.getId());
             customerOrder.setResponsibleManager(newManager);
+            customerOrder.setOrderStatus(OrderStatus.PROCESSING);
             customHib.update(customerOrder);
+            loadOrderData();
         });
 
         orderStatusColumn.setOnEditCommit(event -> {
@@ -95,6 +98,7 @@ public class OrderTabController implements Initializable {
             CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, orderParam.getId());
             customerOrder.setOrderStatus(newOrderStatus);
             customHib.update(customerOrder);
+            loadOrderData();
         });
 
         commentColumn.setCellFactory(new Callback<>() {
@@ -134,6 +138,7 @@ public class OrderTabController implements Initializable {
                         btn.setOnAction(event -> {
                             OrderTableParameters row = getTableView().getItems().get(getIndex());
                             customHib.deleteOrder(row.getId());
+                            loadOrderData();
                         });
                     }
 
@@ -167,8 +172,8 @@ public class OrderTabController implements Initializable {
             if (order.getResponsibleManager() == null || order.getResponsibleManager().getId() == currentUser.getId() || currentUser instanceof Admin) {
 
                 long hours = ChronoUnit.HOURS.between(order.getDateCreated().atStartOfDay(), LocalDate.now().atStartOfDay());
-                if (hours >= 24 && order.getOrderStatus() != OrderStatus.Urgent && order.getResponsibleManager() == null) {
-                    order.setOrderStatus(OrderStatus.Urgent);
+                if (hours >= 24 && order.getOrderStatus() != OrderStatus.URGENT && order.getResponsibleManager() == null) {
+                    order.setOrderStatus(OrderStatus.URGENT);
                     customHib.update(order); 
                 }
 
@@ -182,7 +187,7 @@ public class OrderTabController implements Initializable {
             }
         }
 
-        ordersData.sort(Comparator.comparing((OrderTableParameters o) -> o.getOrderStatus() == OrderStatus.Urgent)
+        ordersData.sort(Comparator.comparing((OrderTableParameters o) -> o.getOrderStatus() == OrderStatus.URGENT)
         .reversed()
         .thenComparing(OrderTableParameters::getDateCreated));
         

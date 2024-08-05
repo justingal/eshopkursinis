@@ -65,7 +65,7 @@ public class CommentTabController {
         commentTreeView.setShowRoot(false);
         commentTreeView.getRoot().setExpanded(true);
         comments.stream()
-                .filter(comment -> comment.getCustomerOrder() == null)
+                .filter(comment -> comment.getCustomerOrder() == null && !(comment instanceof Review))
                 .forEach(comment -> addTreeItem(comment, commentTreeView.getRoot()));
     }
 

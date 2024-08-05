@@ -14,6 +14,8 @@ public class Dice extends Product {
     private int id;
     @OneToMany(mappedBy = "dice", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Review> reviews;
+    @ManyToOne
+    private CustomerOrder customerOrder;
 
 
     public Dice(String title, String description, String author, Warehouse warehouse, double price) {

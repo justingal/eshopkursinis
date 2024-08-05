@@ -236,6 +236,36 @@ public class CustomHib extends GenericHib {
         }
     }
 
+    public void deleteOrder(int orderId) {
+        EntityManager entityManager = getEntityManager();
+        try {
+            entityManager.getTransaction().begin();
+            CustomerOrder customerOrder = entityManager.find(CustomerOrder.class, orderId);
+            if (customerOrder.getCustomer() != null) {
+                Customer customer = customerOrder.getCustomer();
+                customer.getUserCustomerOrder().remove(customerOrder);
+                customerOrder.setCustomer(null);
+            }
+
+            if (customerOrder.getResponsibleManager() != null) {
+                Manager manager = customerOrder.getResponsibleManager();
+                manager.getManagedOrders().remove(customerOrder);
+                customerOrder.setResponsibleManager(null);
+            }
+
+            entityManager.remove(customerOrder);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            JavaFxCustomsUtils.generateAlert(
+                    javafx.scene.control.Alert.AlertType.ERROR,
+                    "Error",
+                    "Error",
+                    "Error while deleting order");
+        } finally {
+            if (entityManager != null) entityManager.close();
+        }
+    }
+
     public User getUserByLogin(String login) {
         EntityManager entityManager = getEntityManager();
         try {

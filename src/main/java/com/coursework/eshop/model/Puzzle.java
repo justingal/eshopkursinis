@@ -18,7 +18,8 @@ public class Puzzle extends Product {
 
     @OneToMany(mappedBy = "puzzle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Review> reviews;
-
+    @ManyToOne
+    private CustomerOrder customerOrder;
 
     public Puzzle() {
 

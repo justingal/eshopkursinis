@@ -39,7 +39,7 @@ public class CartTabController {
                 CustomerOrder customerOrder = new CustomerOrder();
                 customerOrder.setCustomer(customer);
                 customerOrder.setDateCreated(LocalDate.now());
-                customerOrder.setOrderStatus(OrderStatus.NEW);
+                customerOrder.setOrderStatus(OrderStatus.PENDING);
 
                 customerOrder.setInOrderBoardGames(new ArrayList<>());
                 customerOrder.setInOrderPuzzles(new ArrayList<>());

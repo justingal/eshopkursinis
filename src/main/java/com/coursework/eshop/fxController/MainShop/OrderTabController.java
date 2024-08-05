@@ -1,6 +1,7 @@
 package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
+import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.fxController.tableviews.OrderTableParameters;
@@ -30,6 +31,8 @@ public class OrderTabController implements Initializable {
     @FXML
     public TableColumn<OrderTableParameters, Void> commentColumn;
     @FXML
+    public TableColumn<OrderTableParameters, Void> deleteColumn;
+    @FXML
     public TableColumn<OrderTableParameters, OrderStatus> orderStatusColumn;
     @FXML
     public TableColumn<OrderTableParameters, String> customerNameColumn;
@@ -43,6 +46,7 @@ public class OrderTabController implements Initializable {
     public TableView<OrderTableParameters> ordersTableView;
     @FXML
     public ListView<String> myItemsListView;
+
 
 
     private ObservableList<Manager> managersData;
@@ -73,10 +77,8 @@ public class OrderTabController implements Initializable {
             OrderTableParameters orderParam = event.getRowValue();
             Manager newManager = event.getNewValue();
 
-            // Update in-memory data
             orderParam.setManager(newManager);
 
-            // Update in database
             CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, orderParam.getId());
             customerOrder.setResponsibleManager(newManager);
             customHib.update(customerOrder);
@@ -86,10 +88,8 @@ public class OrderTabController implements Initializable {
             OrderTableParameters orderParam = event.getRowValue();
             OrderStatus newOrderStatus = event.getNewValue();
 
-            // Update in-memory data
             orderParam.setOrderStatus(newOrderStatus);
 
-            // Update in database
             CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, orderParam.getId());
             customerOrder.setOrderStatus(newOrderStatus);
             customHib.update(customerOrder);
@@ -105,6 +105,33 @@ public class OrderTabController implements Initializable {
                         btn.setOnAction(event -> {
                             OrderTableParameters row = getTableView().getItems().get(getIndex());
                             openOrderChatWindow(row.getId());
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        });
+
+        deleteColumn.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<OrderTableParameters, Void> call(final TableColumn<OrderTableParameters, Void> param) {
+                final TableCell<OrderTableParameters, Void> cell = new TableCell<>() {
+                    private final Button btn = new Button("Delete");
+
+                    {
+                        btn.setOnAction(event -> {
+                            OrderTableParameters row = getTableView().getItems().get(getIndex());
+                            customHib.deleteOrder(row.getId());
                         });
                     }
 

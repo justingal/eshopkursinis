@@ -10,7 +10,8 @@ public class BoardGame extends Product {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_gen")
     private int id;
-
+    @ManyToOne
+    private CustomerOrder customerOrder;
 
     @OneToMany(mappedBy = "boardGame", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Review> reviews;

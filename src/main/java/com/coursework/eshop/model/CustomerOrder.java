@@ -18,6 +18,7 @@ public class CustomerOrder {
     private double totalPrice;
 
     @ManyToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
     @ManyToOne
     @JoinColumn(name = "manager_id")
@@ -31,15 +32,18 @@ public class CustomerOrder {
 
     @OneToMany
     @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinColumn(name = "order_id")
     private List<BoardGame> inOrderBoardGames;
     @OneToMany
     @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinColumn(name = "order_id")
     private List<Puzzle> inOrderPuzzles;
     @OneToMany
     @LazyCollection(LazyCollectionOption.FALSE)
+    @JoinColumn(name = "order_id")
     private List<Dice> inOrderDices;
 
-    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> orderChat;
 
     public CustomerOrder() {

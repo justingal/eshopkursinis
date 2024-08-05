@@ -60,6 +60,14 @@ public class Manager extends User {
         this.employmentDate = employmentDate;
     }
 
+    public List<CustomerOrder> getManagedOrders() {
+        return managedOrders;
+    }
+
+    public void setManagedOrders(List<CustomerOrder> managedOrders) {
+        this.managedOrders = managedOrders;
+    }
+
     public String toString() {
         return getFullName();
     }

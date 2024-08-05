@@ -12,12 +12,13 @@
         <Label layoutX="60.0" layoutY="207.0" text="My Items" />
         <TableView fx:id="ordersTableView" layoutX="52.0" layoutY="50.0" prefHeight="139.0" prefWidth="498.0">
             <columns>
-                <TableColumn fx:id="orderIdColumn" prefWidth="40.000003814697266" text="Order ID" />
-                <TableColumn fx:id="dateCreatedColumn" prefWidth="62.4000244140625" text="Date Created" />
-                <TableColumn fx:id="customerNameColumn" prefWidth="88.0" text="Customer Name" />
-                <TableColumn fx:id="orderStatusColumn" prefWidth="95.19999694824219" text="Order Status" />
-                <TableColumn fx:id="managerNameColumn" prefWidth="117.5999755859375" text="Manager Name" />
-                <TableColumn fx:id="commentColumn" prefWidth="89.60003662109375" text="Chat" />
+                <TableColumn fx:id="orderIdColumn" prefWidth="53.599979400634766" text="Order ID" />
+                <TableColumn fx:id="dateCreatedColumn" prefWidth="68.00006103515625" text="Date Created" />
+                <TableColumn fx:id="customerNameColumn" prefWidth="79.199951171875" text="Customer Name" />
+                <TableColumn fx:id="orderStatusColumn" minWidth="0.0" prefWidth="89.60002136230469" text="Order Status" />
+                <TableColumn fx:id="managerNameColumn" prefWidth="103.20001220703125" text="Manager Name" />
+                <TableColumn fx:id="commentColumn" prefWidth="52.79998779296875" text="Chat" />
+                <TableColumn fx:id="deleteColumn" prefWidth="48.80002441406248" text="Delete" />
             </columns>
         </TableView>
         <ListView fx:id="myItemsListView" layoutX="52.0" layoutY="225.0" prefHeight="106.0" prefWidth="498.0" />

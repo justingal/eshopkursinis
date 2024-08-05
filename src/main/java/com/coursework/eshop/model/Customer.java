@@ -1,18 +1,19 @@
 package com.coursework.eshop.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;
-
+import java.util.List;
 
 @Entity
 public class Customer extends User {
 
     private String address;
     private String cardNo;
-    @OneToOne
-    @JoinColumn(name = "user_order_id")
-    CustomerOrder userCustomerOrder;
+    @OneToMany(mappedBy = "customer")
+    private List<CustomerOrder> userCustomerOrder;
 
     public Customer() {
 
@@ -23,13 +24,12 @@ public class Customer extends User {
         super(login, password, birthDate, name, surname);
     }
 
-    public Customer(String login, String password, LocalDate birthDate, String name, String surname, String address, String cardNo, CustomerOrder userCustomerOrder) {
+    public Customer(String login, String password, LocalDate birthDate, String name, String surname, String address, String cardNo, List<CustomerOrder> userCustomerOrder) {
         super(login, password, birthDate, name, surname);
         this.address = address;
         this.cardNo = cardNo;
         this.userCustomerOrder = userCustomerOrder;
     }
-
 
 
     public Customer(String login, String password, LocalDate birthDate, String name, String surname, String address, String cardNo) {
@@ -54,11 +54,11 @@ public class Customer extends User {
         this.cardNo = cardNo;
     }
 
-    public CustomerOrder getUserCustomerOrder() {
+    public List<CustomerOrder> getUserCustomerOrder() {
         return userCustomerOrder;
     }
 
-    public void setUserCustomerOrder(CustomerOrder userCustomerOrder) {
+    public void setUserCustomerOrder(List<CustomerOrder> userCustomerOrder) {
         this.userCustomerOrder = userCustomerOrder;
     }
 

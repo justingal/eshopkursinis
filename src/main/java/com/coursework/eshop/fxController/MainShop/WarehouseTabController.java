@@ -51,7 +51,7 @@ public class WarehouseTabController {
         Warehouse selectedWarehouse = warehouseList.getSelectionModel().getSelectedItem();
         if (selectedWarehouse == null) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "No Selection", "No warehouse selected", "Please select a warehouse to update.");
-            return; // Stop the method if no warehouse is selected
+            return;
         }
 
         String title = titleWarehouseField.getText().trim();
@@ -59,7 +59,7 @@ public class WarehouseTabController {
 
         if (title.isEmpty() || address.isEmpty()) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "ERROR", "Missing Information", "Both title and address must be filled out.");
-            return; // Stop the method execution if fields are empty
+            return;
         }
 
         Warehouse warehouse = customHib.getEntityById(Warehouse.class, selectedWarehouse.getId());

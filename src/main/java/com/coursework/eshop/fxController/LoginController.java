@@ -58,7 +58,7 @@ public class LoginController implements Initializable {
                 stage.setTitle("Shop");
                 stage.setScene(scene);
                 stage.show();
-                // This sets the currently logged-in user globally.
+
             } else {
                 JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Login INFO", "Wrong data", "Please check credentials, incorrect password");
             }

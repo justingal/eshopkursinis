@@ -1,7 +1,6 @@
 package com.coursework.eshop.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;

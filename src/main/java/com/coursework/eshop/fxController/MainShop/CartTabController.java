@@ -27,7 +27,7 @@ public class CartTabController {
     public void moveCartToOrder(ActionEvent actionEvent) {
         User user = StartGui.currentUser;
 
-        if (user instanceof Customer) {
+        if (user instanceof Customer || user instanceof Admin) {
             Customer customer = (Customer) user;
 
             if (cart == null) {
@@ -76,6 +76,7 @@ public class CartTabController {
                 customHib.create(customerOrder);
 
                 cart.getItems().clear();
+                updatePriceLabel(); // Atnaujiname krepšelio kainą po užsakymo
 
                 JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Success", "Order Created", "Your order has been successfully created.");
 
@@ -96,9 +97,7 @@ public class CartTabController {
         }
         cart.removeItem(selectedItem.getProductId());
         loadCartItemList();
-        priceLabel.setText(String.format("%.2f €", 0.0));
     }
-
 
     public void setData(CustomHib customHib, ShoppingCart cart) {
         this.customHib = customHib;
@@ -109,6 +108,12 @@ public class CartTabController {
     private void loadCartItemList() {
         cartItemList.getItems().clear();
         cartItemList.getItems().addAll(cart.getItems());
-        priceLabel.setText(String.format("%.2f €", 0.0));
+        updatePriceLabel();
+    }
+
+
+    private void updatePriceLabel() {
+        double totalPrice = cart.getItems().stream().mapToDouble(CartItem::getPrice).sum();
+        priceLabel.setText(String.format("%.2f €", totalPrice));
     }
 }

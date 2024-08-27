@@ -54,7 +54,8 @@ public class MainShopController {
     public TextField typeField;
     public TextField priceField;
     public TextField quantityField;
-
+    @FXML
+    public Button addToCartButton;
 
 
     @FXML
@@ -165,6 +166,8 @@ public class MainShopController {
         } else if (currentUser.getClass() == Manager.class) {
             tabPane.getTabs().remove(usersTab);
             tabPane.getTabs().remove(myOrdersTab);
+            tabPane.getTabs().remove(cartsTab);
+            addToCartButton.setVisible(false);
         } else if (currentUser.getClass() == Customer.class) {
             tabPane.getTabs().remove(usersTab);
             tabPane.getTabs().remove(warehousesTab);
@@ -213,8 +216,8 @@ public class MainShopController {
                 }
             }
             orderTabController.setData(customHib);
-            }
         }
+    }
 
 
     public void leaveReview() throws IOException {

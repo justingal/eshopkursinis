@@ -6,7 +6,6 @@ import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.fxController.tableviews.MyOrderTableParameters;
 import com.coursework.eshop.model.CustomerOrder;
 import com.coursework.eshop.model.OrderStatus;
-import com.coursework.eshop.model.Product;
 import com.coursework.eshop.model.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -122,7 +121,7 @@ public class MyOrdersTabController implements Initializable {
     private void loadItems(MyOrderTableParameters order) {
         ObservableList<String> items = FXCollections.observableArrayList();
         CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, order.getId());
-        customerOrder.getAllProducts().forEach(product -> items.add(product.getTitle()+"  "+product.getAuthor()+"   "+product.getPrice()+"€"));
+        customerOrder.getAllProducts().forEach(product -> items.add(product.getTitle() + "  " + product.getAuthor() + "   " + product.getPrice() + "€"));
         myItemsListView.setItems(items);
     }
 

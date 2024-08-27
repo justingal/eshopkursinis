@@ -123,7 +123,6 @@ public class StatisticsTabController implements Initializable {
 
         loadStatisticsData();
         statisticsComboBox.setItems(FXCollections.observableArrayList( "Price", "Manager", "OrderStatus"));
-
     }
     private void loadManagers() {
         List<Manager> allManagers = customHib.getAllRecords(Manager.class);

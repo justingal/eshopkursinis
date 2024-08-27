@@ -284,7 +284,7 @@ public class CustomHib extends GenericHib {
         }
     }
 
-    public List<CustomerOrder> filterData (double minValue, double maxValue, Customer customer, Manager manager, OrderStatus orderStatus, LocalDate startDate, LocalDate finishDate) {
+    public List<CustomerOrder> filterData(double minValue, double maxValue, Customer customer, Manager manager, OrderStatus orderStatus, LocalDate startDate, LocalDate finishDate) {
         EntityManager em = getEntityManager();
         List<CustomerOrder> result = new ArrayList<>();
         try {
@@ -296,7 +296,7 @@ public class CustomHib extends GenericHib {
             if (minValue > 0) {
                 predicates.add(cb.ge(order.get("totalPrice"), minValue));
             }
-            if (maxValue< Double.MAX_VALUE) {
+            if (maxValue < Double.MAX_VALUE) {
                 predicates.add(cb.le(order.get("totalPrice"), maxValue));
             }
             if (customer != null) {
@@ -316,7 +316,7 @@ public class CustomHib extends GenericHib {
             }
             cq.where(predicates.toArray(new Predicate[0]));
             result = em.createQuery(cq).getResultList();
-        }finally {
+        } finally {
             if (em != null) {
                 em.close();
             }

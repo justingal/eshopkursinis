@@ -113,6 +113,10 @@ public class CustomerOrder {
         return inOrderDices;
     }
 
+    public void setInOrderDices(List<Dice> inOrderDices) {
+        this.inOrderDices = inOrderDices;
+    }
+
     public Manager getResponsibleManager() {
         return responsibleManager;
     }
@@ -127,10 +131,6 @@ public class CustomerOrder {
 
     public void setOrderChat(List<Comment> orderChat) {
         this.orderChat = orderChat;
-    }
-
-    public void setInOrderDices(List<Dice> inOrderDices) {
-        this.inOrderDices = inOrderDices;
     }
 
     public ShoppingCart getCart() {

@@ -1,6 +1,5 @@
 package com.coursework.eshop.fxController;
 
-//import com.coursework.eshop.HibernateControllers.UserHib;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.coursework.eshop.HibernateControllers.CustomHib;
@@ -82,7 +81,7 @@ public class RegistrationController {
         } else {
             returnButton.setVisible(true);
         }
-        // if selected button then visibilitie bet ne sitoje funkcijoje.
+
     }
 
     @FXML
@@ -154,7 +153,6 @@ public class RegistrationController {
             String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
             if (managerCheckbox.isSelected()) {
                 userHib.create(new Manager(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), employeeIdField.getText(), medCertificateField.getText(), employmentDateField.getValue()));
-                // Papildomi manager specifiniai laukai gali būti pridėti čia
             }
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
             try {

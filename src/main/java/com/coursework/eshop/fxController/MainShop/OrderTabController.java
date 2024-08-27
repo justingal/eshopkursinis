@@ -1,7 +1,6 @@
 package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
-import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.fxController.tableviews.OrderTableParameters;
@@ -23,10 +22,10 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.time.temporal.ChronoUnit;
 
 
 public class OrderTabController implements Initializable {
@@ -49,7 +48,6 @@ public class OrderTabController implements Initializable {
     public TableView<OrderTableParameters> ordersTableView;
     @FXML
     public ListView<String> myItemsListView;
-
 
 
     private ObservableList<Manager> managersData;
@@ -174,7 +172,7 @@ public class OrderTabController implements Initializable {
                 long hours = ChronoUnit.HOURS.between(order.getDateCreated().atStartOfDay(), LocalDate.now().atStartOfDay());
                 if (hours >= 24 && order.getOrderStatus() != OrderStatus.URGENT && order.getResponsibleManager() == null) {
                     order.setOrderStatus(OrderStatus.URGENT);
-                    customHib.update(order); 
+                    customHib.update(order);
                 }
 
                 ordersData.add(new OrderTableParameters(
@@ -188,9 +186,9 @@ public class OrderTabController implements Initializable {
         }
 
         ordersData.sort(Comparator.comparing((OrderTableParameters o) -> o.getOrderStatus() == OrderStatus.URGENT)
-        .reversed()
-        .thenComparing(OrderTableParameters::getDateCreated));
-        
+                .reversed()
+                .thenComparing(OrderTableParameters::getDateCreated));
+
         ordersTableView.setItems(ordersData);
 
         ordersTableView.setRowFactory(tv -> new TableRow<>() {
@@ -220,7 +218,7 @@ public class OrderTabController implements Initializable {
     private void loadItems(OrderTableParameters order) {
         ObservableList<String> items = FXCollections.observableArrayList();
         CustomerOrder customerOrder = customHib.getEntityById(CustomerOrder.class, order.getId());
-        customerOrder.getAllProducts().forEach(product -> items.add("ID:"+product.getId()+"  "+product.getTitle()+"  "+product.getAuthor()+"  "+product.getWarehouse()+"   "+product.getPrice()+"€"));
+        customerOrder.getAllProducts().forEach(product -> items.add("ID:" + product.getId() + "  " + product.getTitle() + "  " + product.getAuthor() + "  " + product.getWarehouse() + "   " + product.getPrice() + "€"));
         myItemsListView.setItems(items);
     }
 

@@ -51,7 +51,7 @@ public class CustomHib extends GenericHib {
         try {
             entityManager.getTransaction().begin();
 
-            if (productType == ProductType.BOARD_GAME) {
+            if (productType == ProductType.BOARD_GAME) {    
 
                 var product = entityManager.find(BoardGame.class, id);
 

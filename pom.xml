@@ -97,6 +97,12 @@
             <version>5.10.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jmockit</groupId>
+            <artifactId>jmockit</artifactId>
+            <version>1.49</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
@@ -143,12 +149,22 @@
                 <version>3.1.2</version>
                 <configuration>
                     <argLine>
+                        -javaagent:${settings.localRepository}/org/jmockit/jmockit/1.49/jmockit-1.49.jar
                         --add-opens javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
                         --add-opens javafx.graphics/javafx.stage=ALL-UNNAMED
                         --add-opens javafx.graphics/javafx.scene=ALL-UNNAMED
                     </argLine>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jmockit</groupId>
+                        <artifactId>jmockit</artifactId>
+                        <version>1.49</version>
+                        <scope>test</scope>
+                    </dependency>
+                </dependencies>
             </plugin>
+
         </plugins>
     </build>
 </project>

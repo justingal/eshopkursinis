@@ -161,7 +161,7 @@ public class OrderTabController implements Initializable {
         managersData = FXCollections.observableArrayList(allManagers);
     }
 
-    private void loadOrderData() {
+    public void loadOrderData() {
         User currentUser = StartGui.currentUser;
         List<CustomerOrder> allOrders = customHib.getAllRecords(CustomerOrder.class);
         ObservableList<OrderTableParameters> ordersData = FXCollections.observableArrayList();

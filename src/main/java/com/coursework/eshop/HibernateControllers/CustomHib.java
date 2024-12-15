@@ -17,10 +17,7 @@ public class CustomHib extends GenericHib {
     private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
 
     public CustomHib() {
-
-    }
-
-    ;
+    };
 
     public List<Comment> readAllRootComments() {
         EntityManager entityManager = getEntityManager();
@@ -51,8 +48,7 @@ public class CustomHib extends GenericHib {
         try {
             entityManager.getTransaction().begin();
 
-            if (productType == ProductType.BOARD_GAME) {    
-
+            if (productType == ProductType.BOARD_GAME) {
                 var product = entityManager.find(BoardGame.class, id);
 
                 Warehouse warehouse = product.getWarehouse();
@@ -60,40 +56,40 @@ public class CustomHib extends GenericHib {
                     warehouse.getInStockBoardGames().remove(product);
                     entityManager.merge(warehouse);
                 }
-
                 entityManager.remove(product);
-                entityManager.getTransaction().commit();
             } else if (productType == ProductType.PUZZLE) {
                 var product = entityManager.find(Puzzle.class, id);
-
                 Warehouse warehouse = product.getWarehouse();
                 if (warehouse != null) {
                     warehouse.getInStockPuzzles().remove(product);
                     entityManager.merge(warehouse);
                 }
-
                 entityManager.remove(product);
-                entityManager.getTransaction().commit();
             } else if (productType == ProductType.DICE) {
                 var product = entityManager.find(Dice.class, id);
-
                 Warehouse warehouse = product.getWarehouse();
-                if (warehouse != null) {
+                if (warehouse != null && warehouse.getInStockDices() != null) {
                     warehouse.getInStockDices().remove(product);
                     entityManager.merge(warehouse);
                 }
 
                 entityManager.remove(product);
-                entityManager.getTransaction().commit();
             }
+            entityManager.getTransaction().commit();
         } catch (Exception e) {
+            if (entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+
             JavaFxCustomsUtils.generateAlert(
-                    javafx.scene.control.Alert.AlertType.ERROR,
+                    Alert.AlertType.ERROR,
                     "Error",
                     "Error",
                     "Error while deleting product");
         } finally {
-            if (entityManager != null) entityManager.close();
+            if (entityManager != null) {
+                entityManager.close();
+            }
         }
     }
 

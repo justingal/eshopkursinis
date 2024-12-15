@@ -39,44 +39,35 @@ class CustomHibTest {
 
     @BeforeEach
     void setUp() {
-        // Mocking entity manager and transaction
+
         new Expectations(customHib) {{
             customHib.getEntityManager();
-            result = entityManager; // Mock the entity manager
+            result = entityManager;
 
             entityManager.getTransaction();
-            result = transaction; // Mock the transaction
+            result = transaction;
         }};
-
-        // Mock transaction methods explicitly
         new Expectations() {{
-            transaction.begin(); // Mock transaction begin
-            transaction.commit(); // Mock transaction commit
+            transaction.begin();
+            transaction.commit();
         }};
 
-        // Mock JavaFX alerts to avoid FX thread issues
         new MockUp<JavaFxCustomsUtils>() {
             @Mock
             public void generateAlert(Alert.AlertType alertType, String title, String header, String content) {
-                // Prevent JavaFX thread issues during alert generation
             }
         };
     }
 
     @Test
     void testDeleteProduct_DiceWithoutWarehouse() {
-        // Prepare test data
         Dice dice = new Dice();
         dice.setId(3);
 
-        // Set up expectations
         new Expectations() {{
-            // Expect finding the dice by ID
             entityManager.find(Dice.class, 3);
             result = dice;
         }};
-
-        // Perform the delete operation
         customHib.deleteProduct(3, ProductType.DICE);
 
         // Verify interactions
@@ -403,5 +394,6 @@ class CustomHibTest {
                     Alert.AlertType.ERROR, "Error", "Error", "Error while deleting product");
         }};
     }*/
+
 
 }

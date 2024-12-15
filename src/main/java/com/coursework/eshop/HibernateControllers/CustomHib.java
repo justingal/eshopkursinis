@@ -17,7 +17,9 @@ public class CustomHib extends GenericHib {
     private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
 
     public CustomHib() {
-    };
+    }
+
+    ;
 
     public List<Comment> readAllRootComments() {
         EntityManager entityManager = getEntityManager();
@@ -32,11 +34,7 @@ public class CustomHib extends GenericHib {
             return typedQuery.getResultList();
         } catch (NoResultException e) {
             JavaFxCustomsUtils JavaFxCustomUtils = new JavaFxCustomsUtils();
-            JavaFxCustomUtils.generateAlert(
-                    javafx.scene.control.Alert.AlertType.ERROR,
-                    "Error",
-                    "Error",
-                    "Error while getting root comments");
+            JavaFxCustomUtils.generateAlert(javafx.scene.control.Alert.AlertType.ERROR, "Error", "Error", "Error while getting root comments");
             return null;
         } finally {
             if (entityManager != null) entityManager.close();
@@ -72,7 +70,6 @@ public class CustomHib extends GenericHib {
                     warehouse.getInStockDices().remove(product);
                     entityManager.merge(warehouse);
                 }
-
                 entityManager.remove(product);
             }
             entityManager.getTransaction().commit();
@@ -81,11 +78,7 @@ public class CustomHib extends GenericHib {
                 entityManager.getTransaction().rollback();
             }
 
-            JavaFxCustomsUtils.generateAlert(
-                    Alert.AlertType.ERROR,
-                    "Error",
-                    "Error",
-                    "Error while deleting product");
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Error", "Error while deleting product");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -116,17 +109,11 @@ public class CustomHib extends GenericHib {
                     puzzle.getReviews().remove(review);
                     review.setPuzzle(null);
                 }
-
-
                 clearRelationships(review, entityManager);
-
-
                 for (Comment reply : new ArrayList<>(review.getReplies())) {
                     entityManager.remove(reply);
                 }
                 review.getReplies().clear();
-
-
                 entityManager.remove(review);
 
                 transaction.commit();
@@ -135,12 +122,7 @@ public class CustomHib extends GenericHib {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            JavaFxCustomsUtils.generateAlert(
-                    Alert.AlertType.ERROR,
-                    "Error",
-                    "Error while deleting review",
-                    e.getMessage()
-            );
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Error while deleting review", e.getMessage());
         } finally {
             if (entityManager != null) entityManager.close();
         }
@@ -152,11 +134,9 @@ public class CustomHib extends GenericHib {
         try {
             transaction.begin();
 
-
             Query deleteChildrenQuery = entityManager.createQuery("DELETE FROM Comment c WHERE c.parentComment.id = :parentId");
             deleteChildrenQuery.setParameter("parentId", commentId);
             deleteChildrenQuery.executeUpdate();
-
 
             Query deleteParentQuery = entityManager.createQuery("DELETE FROM Comment c WHERE c.id = :id");
             deleteParentQuery.setParameter("id", commentId);
@@ -172,20 +152,17 @@ public class CustomHib extends GenericHib {
             entityManager.close();
         }
     }
-
     private void clearRelationships(Comment comment, EntityManager em) {
         if (comment.getParentComment() != null) {
             Comment parent = comment.getParentComment();
             parent.getReplies().remove(comment);
             comment.setParentComment(null);
         }
-
         if (comment.getUser() != null) {
             User user = comment.getUser();
             user.getMyComments().remove(comment);
             comment.setUser(null);
         }
-
         if (comment instanceof Review review) {
             if (review.getBoardGame() != null) {
                 BoardGame boardGame = review.getBoardGame();
@@ -204,7 +181,6 @@ public class CustomHib extends GenericHib {
             }
         }
     }
-
     private void deleteCommentRecursive(Comment comment, EntityManager em) {
         comment = em.merge(comment);
         for (Comment reply : new ArrayList<>(comment.getReplies())) {
@@ -213,8 +189,6 @@ public class CustomHib extends GenericHib {
         clearRelationships(comment, em);
         em.remove(comment);
     }
-
-
     public void deleteManager(int id) {
         EntityManager entityManager = getEntityManager();
         try {
@@ -224,16 +198,11 @@ public class CustomHib extends GenericHib {
             entityManager.remove(manager);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
-            JavaFxCustomsUtils.generateAlert(
-                    javafx.scene.control.Alert.AlertType.ERROR,
-                    "Error",
-                    "Error",
-                    "Error while deleting manager");
+            JavaFxCustomsUtils.generateAlert(javafx.scene.control.Alert.AlertType.ERROR, "Error", "Error", "Error while deleting manager");
         } finally {
             if (entityManager != null) entityManager.close();
         }
     }
-
     public void deleteOrder(int orderId) {
         EntityManager entityManager = getEntityManager();
         try {
@@ -244,7 +213,6 @@ public class CustomHib extends GenericHib {
                 customer.getUserCustomerOrder().remove(customerOrder);
                 customerOrder.setCustomer(null);
             }
-
             if (customerOrder.getResponsibleManager() != null) {
                 Manager manager = customerOrder.getResponsibleManager();
                 manager.getManagedOrders().remove(customerOrder);
@@ -254,11 +222,7 @@ public class CustomHib extends GenericHib {
             entityManager.remove(customerOrder);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
-            JavaFxCustomsUtils.generateAlert(
-                    javafx.scene.control.Alert.AlertType.ERROR,
-                    "Error",
-                    "Error",
-                    "Error while deleting order");
+            JavaFxCustomsUtils.generateAlert(javafx.scene.control.Alert.AlertType.ERROR, "Error", "Error", "Error while deleting order");
         } finally {
             if (entityManager != null) entityManager.close();
         }
@@ -279,7 +243,6 @@ public class CustomHib extends GenericHib {
             if (entityManager != null) entityManager.close();
         }
     }
-
     public List<CustomerOrder> filterData(double minValue, double maxValue, Customer customer, Manager manager, OrderStatus orderStatus, LocalDate startDate, LocalDate finishDate) {
         EntityManager em = getEntityManager();
         List<CustomerOrder> result = new ArrayList<>();

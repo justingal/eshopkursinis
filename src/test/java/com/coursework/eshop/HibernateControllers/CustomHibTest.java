@@ -262,7 +262,7 @@ class CustomHibTest {
             entityManager.remove(dice);
         }};
     }
-    /*@Test
+    @Test
     void testDeleteProduct_ThrowsException() {
         // Prepare test data
         BoardGame boardGame = new BoardGame();
@@ -271,7 +271,9 @@ class CustomHibTest {
         // Set up expectations to simulate a database error
         new Expectations() {{
             // Explicitly expect transaction begin
+
             transaction.begin();
+            transaction.isActive(); result = true;
 
             // Simulate finding the entity throws an exception
             entityManager.find(BoardGame.class, 1);
@@ -283,18 +285,20 @@ class CustomHibTest {
 
             // Expect transaction rollback when error occurs
             transaction.rollback();
+            transaction.commit();
 
             // Mock the JavaFX alert generation
-            JavaFxCustomsUtils.generateAlert(
+            /*JavaFxCustomsUtils.generateAlert(
                     javafx.scene.control.Alert.AlertType.ERROR,
                     "Error",
                     "Error",
                     "Error while deleting product"
-            );
+            );*/
+
         }};
 
         // Execute and ensure no exceptions propagate
-        assertDoesNotThrow(() -> customHib.deleteProduct(1, ProductType.BOARD_GAME));
+        //assertThrows( Exception.class ,() -> customHib.deleteProduct(1, ProductType.BOARD_GAME));
 
         // Verify interactions
         new Verifications() {{
@@ -302,21 +306,21 @@ class CustomHibTest {
             transaction.begin();
             times = 1;
 
-            // Verify transaction rollback
-            transaction.rollback();
+            transaction.isActive();
             times = 1;
 
+            // Verify transaction rollback
+            System.out.println("lol");
+            transaction.rollback();
+            times = 1;
+            System.out.println("omg");
             // Verify alert generation
-            JavaFxCustomsUtils.generateAlert(
-                    javafx.scene.control.Alert.AlertType.ERROR,
-                    "Error",
-                    "Error",
-                    "Error while deleting product"
-            );
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Invalid Format", "Please enter valid numbers for price, quantities or other numeric fields.");
+
             times = 1;
         }};
     }
-
+/*
     @Test
     void testDeleteProduct_TransactionError() {
         // Prepare test data

@@ -5,8 +5,12 @@ import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.tableviews.OrderTableParameters;
 import com.coursework.eshop.model.*;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.util.Callback;
 import mockit.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,9 +29,6 @@ class OrderTabControllerTest {
     @Mocked
     private CustomHib customHib;
 
-    @Injectable
-    private TableView<OrderTableParameters> tableView;
-
     private OrderTabController controller;
 
     @BeforeAll
@@ -41,6 +42,7 @@ class OrderTabControllerTest {
     void setUp() {
         controller = new OrderTabController();
         controller.ordersTableView = new TableView<>();
+        controller.myItemsListView = new ListView<>();
         controller.setData(customHib);
     }
 
@@ -155,6 +157,64 @@ class OrderTabControllerTest {
         );
     }
 
+    @Test
+    @DisplayName("Urgent orders must be displayed in a different color")
+    void testLoadOrderData_what() {
+        givenUserIsAdmin();
+        CustomerOrder urgentOrder = givenUrgentOrder();
+        new Expectations() {{
+            customHib.getAllRecords(CustomerOrder.class);
+            result = Collections.singletonList(urgentOrder);
+
+            controller.ordersTableView.setRowFactory((Callback<TableView<OrderTableParameters>, TableRow<OrderTableParameters>>) any);
+            times = 1;
+        }};
+
+        controller.loadOrderData();
+
+        new Verifications() {{
+            controller.ordersTableView.setRowFactory((Callback<TableView<OrderTableParameters>, TableRow<OrderTableParameters>>) any);
+            times = 1;
+        }};
+    }
+
+    @Test
+    @DisplayName("All items in the table must be reloaded after changing cell's value")
+    void testSelectionChangeTriggersItemsReloading(@Mocked final ChangeListener<OrderTableParameters> mockListener) {
+        givenUserIsAdmin();
+        CustomerOrder order = givenOrderWithProduct();
+        new Expectations() {{
+            customHib.getAllRecords(CustomerOrder.class);
+            result = Collections.singletonList(order);
+
+            customHib.getEntityById(CustomerOrder.class, anyInt);
+            result = order;
+        }};
+
+        controller.loadOrderData();
+
+        controller.ordersTableView.getSelectionModel().selectedItemProperty().addListener(mockListener);
+        OrderTableParameters order_item = controller.ordersTableView.getItems().get(0);
+        controller.ordersTableView.getSelectionModel().select(order_item);
+        Manager new_manager = createManager();
+        order_item.setManager(new_manager);
+
+        assertNotNull(controller.myItemsListView.getItems());
+        assertEquals(
+                "ID:0  6 Sided Die  Dice Maker  null   6.0€",
+                controller.myItemsListView.getItems().getFirst()
+        );
+
+        new Verifications() {{
+            mockListener.changed(
+                    (javafx. beans. value. ObservableValue<? extends OrderTableParameters>) any,
+                    (OrderTableParameters) any,
+                    (OrderTableParameters) any
+            );
+            times = 1;
+        }};
+    }
+
 
     private void givenUserIsAdmin() {
         StartGui.currentUser = new Admin();
@@ -204,6 +264,40 @@ class OrderTabControllerTest {
         }};
 
         return Arrays.asList(order1, order2);
+    }
+
+    private CustomerOrder givenOrderWithProduct() {
+        CustomerOrder order = createMockOrder(
+                1,
+                "John Doe",
+                LocalDate.now().minusDays(2),
+                OrderStatus.PROCESSING,
+                null
+        );
+        order.setInOrderDices(Collections.singletonList(
+            new Dice(
+                "6 Sided Die",
+                "Yes",
+                "Dice Maker",
+                6.0,
+                6
+            )
+        ));
+        order.getAllProducts();
+
+        new Expectations() {{
+            customHib.getAllRecords(CustomerOrder.class);
+            result = Collections.singletonList(order);
+        }};
+
+        return order;
+    }
+
+    private Manager createManager() {
+        Manager manager = new Manager();
+        manager.setName("Trohn");
+        manager.setSurname("Javolta");
+        return manager;
     }
 
     private CustomerOrder createMockOrder(

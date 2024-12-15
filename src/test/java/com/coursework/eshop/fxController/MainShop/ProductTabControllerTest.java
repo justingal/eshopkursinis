@@ -11,6 +11,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ProductTabControllerTest {
@@ -18,7 +22,11 @@ class ProductTabControllerTest {
     @Mocked
     private CustomHib customHib;
 
+    @Injectable
+    private Warehouse warehouse;
+
     private ProductTabController controller;
+
 
     @BeforeAll
     static void initToolkit() {
@@ -44,6 +52,8 @@ class ProductTabControllerTest {
         controller.puzzleSizeField = new TextField();
         controller.diceNumberField = new TextField();
         controller.productListManager = new ListView<>();
+
+        warehouse = new Warehouse();
 
         controller.setData(customHib);
 
@@ -91,72 +101,155 @@ class ProductTabControllerTest {
     }
 
     @Test
-    void testAddNewProduct_BoardGameCreation() {
-        Warehouse warehouse = new Warehouse();
+    void testLoadProductListManager_WithMockedData() {
+        Puzzle mockedPuzzle = new Puzzle("Mock Puzzle", "Mock Description", "Mock Author", warehouse, 20.00, 500, "Cardboard", "20x30");
+
         new Expectations() {{
-            controller.productTitleField.getText(); result = "Board Game";
-            controller.descriptionField.getText(); result = "A fun board game";
-            controller.authorField.getText(); result = "Game Author";
-            controller.warehouseComboBox.getSelectionModel().getSelectedItem(); result = warehouse;
-            controller.priceField.getText(); result = "49.99";
-            controller.productType.getSelectionModel().getSelectedItem(); result = ProductType.BOARD_GAME;
-            controller.playersQuantityField.getText(); result = "4";
-            controller.gameDurationFIeld.getText(); result = "60";
-            customHib.getEntityById(Warehouse.class, warehouse.getId()); result = warehouse;
+            customHib.getAllRecords(Puzzle.class); result = List.of(mockedPuzzle);
         }};
+
+        controller.loadProductListManager();
+
+        assertEquals(1, controller.productListManager.getItems().size(), "The product list should contain one item.");
+        assertInstanceOf(Puzzle.class, controller.productListManager.getItems().getFirst(), "The item should be a Puzzle.");
+
+        Puzzle actualPuzzle = (Puzzle) controller.productListManager.getItems().getFirst();
+        assertEquals("Mock Puzzle", actualPuzzle.getTitle(), "Puzzle title should match.");
+        assertEquals("Mock Description", actualPuzzle.getDescription(), "Puzzle description should match.");
+    }
+
+    @Test
+    void testAddNewProduct_BoardGameCreation() {
+        Warehouse mockWarehouse = new Warehouse(1, "Mock Warehouse", "Mock Address", null, null, null);
+        new Expectations() {{
+            customHib.getEntityById(Warehouse.class, 1);
+            result = mockWarehouse;
+
+            customHib.getAllRecords(BoardGame.class); result = new ArrayList<BoardGame>();
+            customHib.getAllRecords(Puzzle.class); result = new ArrayList<Puzzle>();
+            customHib.getAllRecords(Dice.class); result = new ArrayList<Dice>();
+        }};
+
+        controller.authorField.setText("Board Game Author");
+        controller.productTitleField.setText("New Board Game");
+        controller.descriptionField.setText("New Description");
+        controller.priceField.setText("30.00");
+        controller.playersQuantityField.setText("2-4");
+        controller.gameDurationFIeld.setText("30-60");
+        controller.productType.getSelectionModel().select(ProductType.BOARD_GAME);
+
+        controller.warehouseComboBox.getItems().add(mockWarehouse);
+        controller.warehouseComboBox.getSelectionModel().select(mockWarehouse);
 
         controller.addNewProduct();
 
         new Verifications() {{
-            customHib.create((BoardGame) any);
-            times = 1;
+            BoardGame createdBoardGame;
+            customHib.create(createdBoardGame = withCapture());
+
+            assertNotNull(createdBoardGame, "Board Game should not be null");
+            assertEquals("New Board Game", createdBoardGame.getTitle(), "Board Game title mismatch");
+            assertEquals("New Description", createdBoardGame.getDescription(), "Board Game description mismatch");
+            assertEquals("Board Game Author", createdBoardGame.getAuthor(), "Board Game author mismatch");
+            assertEquals(30.00, createdBoardGame.getPrice(), 0.01, "Board Game price mismatch");
+            assertEquals("2-4", createdBoardGame.getPlayersQuantity(), "Board Game players quantity mismatch");
+            assertEquals("30-60", createdBoardGame.getGameDuration(), "Board Game game duration mismatch");
+            assertEquals(mockWarehouse, createdBoardGame.getWarehouse(), "Warehouse mismatch");
         }};
     }
 
     @Test
-    void testAddNewProduct_PuzzleCreation() {
-        Warehouse warehouse = new Warehouse();
-
+    void testAddNewProduct_CreatesPuzzle() {
+        Warehouse mockWarehouse = new Warehouse(1, "Mock Warehouse", "Mock Address", null, null, null);
         new Expectations() {{
-            controller.productTitleField.getText(); result = "Puzzle";
-            controller.descriptionField.getText(); result = "A challenging puzzle";
-            controller.authorField.getText(); result = "Puzzle Creator";
-            controller.priceField.getText(); result = "29.99";
-            controller.piecesQuantityField.getText(); result = "500";
-            controller.puzzleMaterialField.getText(); result = "Cardboard";
-            controller.puzzleSizeField.getText(); result = "20x30";
-            controller.productType.getSelectionModel().getSelectedItem(); result = ProductType.PUZZLE;
-            controller.warehouseComboBox.getSelectionModel().getSelectedItem(); result = warehouse;
-            customHib.getEntityById(Warehouse.class, warehouse.getId()); result = warehouse;
+
+
+            customHib.getEntityById(Warehouse.class, 1);
+            result = mockWarehouse;
+
+            customHib.getAllRecords(BoardGame.class); result = new ArrayList<BoardGame>();
+            customHib.getAllRecords(Puzzle.class); result = new ArrayList<Puzzle>();
+            customHib.getAllRecords(Dice.class); result = new ArrayList<Dice>();
+
         }};
+
+        controller.authorField.setText("Puzzle Author");
+        controller.productTitleField.setText("New Puzzle");
+        controller.descriptionField.setText("New Description");
+        controller.priceField.setText("20.00");
+        controller.piecesQuantityField.setText("500");
+        controller.puzzleMaterialField.setText("Cardboard");
+        controller.puzzleSizeField.setText("30x40");
+        controller.productType.getSelectionModel().select(ProductType.PUZZLE);
+
+        controller.warehouseComboBox.getItems().add(mockWarehouse);
+        controller.warehouseComboBox.getSelectionModel().select(mockWarehouse);
+
+        System.out.println("Warehouse Mock Debug:");
+        System.out.println("Warehouse ID: " + mockWarehouse.getId());
+        System.out.println("lmao" + controller.authorField.getText());
+        System.out.println("Warehouse from ComboBox: " + controller.warehouseComboBox.getSelectionModel().getSelectedItem());
+        System.out.println("Warehouse retrieved by ID: " + customHib.getEntityById(Warehouse.class, 1));
+
+
 
         controller.addNewProduct();
 
         new Verifications() {{
-            customHib.create(withInstanceOf(Puzzle.class));
-            times = 1;
+            Puzzle createdPuzzle;
+            customHib.create(createdPuzzle = withCapture());
+
+            assertNotNull(createdPuzzle, "Puzzle should not be null");
+            assertEquals("New Puzzle", createdPuzzle.getTitle(), "Puzzle title mismatch");
+            assertEquals("New Description", createdPuzzle.getDescription(), "Puzzle description mismatch");
+            assertEquals("Puzzle Author", createdPuzzle.getAuthor(), "Puzzle author mismatch");
+            assertEquals(20.00, createdPuzzle.getPrice(), 0.01, "Puzzle price mismatch");
+            assertEquals(500, createdPuzzle.getPiecesQuantity(), "Puzzle pieces quantity mismatch");
+            assertEquals("Cardboard", createdPuzzle.getPuzzleMaterial(), "Puzzle material mismatch");
+            assertEquals("30x40", createdPuzzle.getPuzzleSize(), "Puzzle size mismatch");
+            assertEquals(mockWarehouse, createdPuzzle.getWarehouse(), "Warehouse mismatch");
         }};
     }
+
+
 
     @Test
     void testAddNewProduct_DiceCreation() {
-        Warehouse warehouse = new Warehouse();
+        Warehouse mockWarehouse = new Warehouse(1, "Mock Warehouse", "Mock Address", null, null, null);
         new Expectations() {{
-            controller.productTitleField.getText(); result = "Dice Set";
-            controller.descriptionField.getText(); result = "A set of dice";
-            controller.authorField.getText(); result = "Dice Maker";
-            controller.warehouseComboBox.getSelectionModel().getSelectedItem(); result = warehouse;
-            controller.priceField.getText(); result = "19.99";
-            controller.productType.getSelectionModel().getSelectedItem(); result = ProductType.DICE;
-            controller.diceNumberField.getText(); result = "10";
-            customHib.getEntityById(Warehouse.class, warehouse.getId()); result = warehouse;
+            customHib.getEntityById(Warehouse.class, 1);
+            result = mockWarehouse;
+
+            customHib.getAllRecords(BoardGame.class); result = new ArrayList<BoardGame>();
+            customHib.getAllRecords(Puzzle.class); result = new ArrayList<Puzzle>();
+            customHib.getAllRecords(Dice.class); result = new ArrayList<Dice>();
         }};
+
+        controller.authorField.setText("Dice Author");
+        controller.productTitleField.setText("New Dice");
+        controller.descriptionField.setText("New Description");
+        controller.priceField.setText("5.00");
+        controller.diceNumberField.setText("6");
+        controller.productType.getSelectionModel().select(ProductType.DICE);
+
+        controller.warehouseComboBox.getItems().add(mockWarehouse);
+        controller.warehouseComboBox.getSelectionModel().select(mockWarehouse);
 
         controller.addNewProduct();
 
         new Verifications() {{
-            customHib.create((Dice) any);
-            times = 1;
+            Dice createdDice;
+            customHib.create(createdDice = withCapture());
+
+            assertNotNull(createdDice, "Dice should not be null");
+            assertEquals("New Dice", createdDice.getTitle(), "Dice title mismatch");
+            assertEquals("New Description", createdDice.getDescription(), "Dice description mismatch");
+            assertEquals("Dice Author", createdDice.getAuthor(), "Dice author mismatch");
+            assertEquals(5.00, createdDice.getPrice(), 0.01, "Dice price mismatch");
+            assertEquals(6, createdDice.getDiceNumber(), "Dice number mismatch");
+            assertEquals(mockWarehouse, createdDice.getWarehouse(), "Warehouse mismatch");
         }};
     }
+
+
 }

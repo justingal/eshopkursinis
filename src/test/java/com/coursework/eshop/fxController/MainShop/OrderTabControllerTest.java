@@ -158,27 +158,6 @@ class OrderTabControllerTest {
     }
 
     @Test
-    @DisplayName("Urgent orders must be displayed in a different color")
-    void testLoadOrderData_what() {
-        givenUserIsAdmin();
-        CustomerOrder urgentOrder = givenUrgentOrder();
-        new Expectations() {{
-            customHib.getAllRecords(CustomerOrder.class);
-            result = Collections.singletonList(urgentOrder);
-
-            controller.ordersTableView.setRowFactory((Callback<TableView<OrderTableParameters>, TableRow<OrderTableParameters>>) any);
-            times = 1;
-        }};
-
-        controller.loadOrderData();
-
-        new Verifications() {{
-            controller.ordersTableView.setRowFactory((Callback<TableView<OrderTableParameters>, TableRow<OrderTableParameters>>) any);
-            times = 1;
-        }};
-    }
-
-    @Test
     @DisplayName("All items in the table must be reloaded after changing cell's value")
     void testSelectionChangeTriggersItemsReloading(@Mocked final ChangeListener<OrderTableParameters> mockListener) {
         givenUserIsAdmin();

@@ -11,7 +11,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import mockit.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,17 +51,30 @@ class RegistrationControllerTest {
         controller.setData(customHib);
 
         new Expectations() {{
-            EntityManagerFactorySingleton.getEntityManagerFactory(); result = entityManagerFactory;
-            entityManagerFactory.createEntityManager();
-            result = entityManager;
+            Persistence.createEntityManagerFactory("coursework-eshop");
+            result = entityManagerFactory;
+//            entityManagerFactory.createEntityManager();
+//            result = entityManager;
 
-            entityManager.getTransaction(); result = entityTransaction;
-            entityTransaction.begin();
-            entityTransaction.commit();
-            entityManager.getTransaction().begin();
-            entityManager.persist(any);
-            entityManager.getTransaction().commit();
-            entityManager.close();
+//            entityManager.getTransaction(); result = entityTransaction;
+//            entityTransaction.begin();
+//            entityTransaction.commit();
+//            entityManager.getTransaction().begin();
+//            entityManager.persist(any);
+//            entityManager.getTransaction().commit();
+//            entityManager.close();
+
+            controller.loginField = new TextField();
+            controller.passwordField = new PasswordField();
+            controller.repeatPasswordField = new PasswordField();
+            controller.nameField = new TextField();
+            controller.surnameField = new TextField();
+            controller.addressField = new TextField();
+            controller.cardNoField = new TextField();
+            controller.birthDateField = new DatePicker();
+            controller.customerCheckbox = new RadioButton();
+            controller.managerCheckbox = new RadioButton();
+
         }};
 
         new MockUp<JavaFxCustomsUtils>() {
@@ -75,30 +88,41 @@ class RegistrationControllerTest {
     @Test
     @DisplayName("Customer must be created when fields are valid")
     void testCreateUser_validCustomerFields() {
-        assertEquals(2, 2);
-//        givenCustomerFieldsValid();
-//        new Expectations() {{
-//            customHib.create(Customer.class);
-//        }};
-//
-//        controller.createUser();
-//
-//        new Verifications() {{
-//            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
-//        }};
+        givenCustomerFieldsValid();
+        new Expectations() {{
+            customHib.create((Customer) any);
+        }};
 
+        controller.createUser();
+
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Registration INFO",
+                    "Success",
+                    "User created"
+            );
+            times = 1;
+        }};
     }
 
     @Test
     @DisplayName("Customer must not be created when a field is invalid")
     void testCreateUser_invalidCustomerField() {
+        givenCustomerFieldsValid();
+        controller.passwordField.setText("");
 
-        new Expectations() {
+        controller.createUser();
 
-        };
-//        controller.createUser();
-        // assert error alert generated
-
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Registration INFO",
+                    "Wrong data",
+                    "Please check credentials, no login"
+            );
+            times = 1;
+        }};
     }
 
     @Test
@@ -127,14 +151,15 @@ class RegistrationControllerTest {
     // todo: test the bitfields
 
     private void givenCustomerFieldsValid() {
-//        controller.loginField.setText("login");
-//        controller.passwordField.setText("login");
-//        controller.repeatPasswordField.setText("login");
-//        controller.nameField.setText("login");
-//        controller.surnameField.setText("login");
-//        controller.addressField.setText("login");
-//        controller.cardNoField.setText("login");
-//        controller.birthDateField.setValue(LocalDate.now());
+        controller.loginField.setText("login");
+        controller.passwordField.setText("login");
+        controller.repeatPasswordField.setText("login");
+        controller.nameField.setText("login");
+        controller.surnameField.setText("login");
+        controller.addressField.setText("login");
+        controller.cardNoField.setText("login");
+        controller.birthDateField.setValue(LocalDate.now());
+        controller.customerCheckbox.setSelected(true);
     }
 
 }

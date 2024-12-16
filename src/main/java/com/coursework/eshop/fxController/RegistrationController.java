@@ -70,6 +70,10 @@ public class RegistrationController {
         });
     }
 
+    public void setData(CustomHib customHib) {
+        this.userHib = customHib;
+    }
+
     private void updateUIBasedOnUserRole() {
         if (currentUser instanceof Admin) {
             managerCheckbox.setVisible(true);

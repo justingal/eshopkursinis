@@ -143,6 +143,22 @@ public class RegistrationController {
             if (customerCheckbox.isSelected()) {
                 userHib.create(new Customer(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
             }
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
+            try {
+                if (currentUser == null) {
+                    returnToLogin();
+                }
+                if (currentUser != null) {
+                        System.out.println("THIS");
+                    Scene scene = nameField.getScene();
+                    Stage stage = (Stage) scene.getWindow();
+                    stage.close();
+                        System.out.println("SUCCESS");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else if (managerCheckbox.isSelected() &&
                 !loginField.getText().isEmpty() &&
                 !passwordField.getText().isEmpty() &&
@@ -164,7 +180,7 @@ public class RegistrationController {
                     returnToLogin();
                 }
                 if (currentUser != null) {
-                    Stage stage = (Stage) surnameField.getScene().getWindow();
+                    Stage stage = (Stage) nameField.getScene().getWindow();
                     stage.close();
                 }
 

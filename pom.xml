@@ -112,15 +112,6 @@
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit5</artifactId>
             <version>4.0.18</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.testfx/openjfx-monocle -->
-        <dependency>
-            <groupId>org.testfx</groupId>
-            <artifactId>openjfx-monocle</artifactId>
-            <version>21.0.2</version>
-            <type>pom</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -191,7 +182,6 @@
                         <groupId>org.jmockit</groupId>
                         <artifactId>jmockit</artifactId>
                         <version>1.49</version>
-                        <scope>test</scope>
                     </dependency>
                 </dependencies>
             </plugin>

@@ -46,29 +46,29 @@ public class CartTabController {
                 customerOrder.setInOrderDices(new ArrayList<>());
 
                 double totalPrice = 0.0;
-
                 for (CartItem item : cart.getItems()) {
                     int productId = item.getProductId();
 
-                    BoardGame boardGame = customHib.getEntityById(BoardGame.class, productId);
-                    if (boardGame != null) {
-                        customerOrder.getInOrderBoardGames().add(boardGame);
-                        totalPrice += boardGame.getPrice();
-                        continue;
+                    if (item.getProductType() == ProductType.BOARD_GAME) {
+                        BoardGame boardGame = customHib.getEntityById(BoardGame.class, productId);
+                        if (boardGame != null) {
+                            customerOrder.getInOrderBoardGames().add(boardGame);
+                            totalPrice += boardGame.getPrice();
+                        }
+                    } else if (item.getProductType() == ProductType.PUZZLE) {
+                        Puzzle puzzle = customHib.getEntityById(Puzzle.class, productId);
+                        if (puzzle != null) {
+                            customerOrder.getInOrderPuzzles().add(puzzle);
+                            totalPrice += puzzle.getPrice();
+                        }
+                    } else if (item.getProductType() == ProductType.DICE) {
+                        Dice dice = customHib.getEntityById(Dice.class, productId);
+                        if (dice != null) {
+                            customerOrder.getInOrderDices().add(dice);
+                            totalPrice += dice.getPrice();
+                        }
                     }
 
-                    Puzzle puzzle = customHib.getEntityById(Puzzle.class, productId);
-                    if (puzzle != null) {
-                        customerOrder.getInOrderPuzzles().add(puzzle);
-                        totalPrice += puzzle.getPrice();
-                        continue;
-                    }
-
-                    Dice dice = customHib.getEntityById(Dice.class, productId);
-                    if (dice != null) {
-                        customerOrder.getInOrderDices().add(dice);
-                        totalPrice += dice.getPrice();
-                    }
                 }
 
                 customerOrder.setTotalPrice(totalPrice);
@@ -76,7 +76,7 @@ public class CartTabController {
                 customHib.create(customerOrder);
 
                 cart.getItems().clear();
-                updatePriceLabel(); // Atnaujiname krepšelio kainą po užsakymo
+                updatePriceLabel();
 
                 JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Success", "Order Created", "Your order has been successfully created.");
 
@@ -102,7 +102,9 @@ public class CartTabController {
     public void setData(CustomHib customHib, ShoppingCart cart) {
         this.customHib = customHib;
         this.cart = cart;
-        loadCartItemList();
+        if (cart != null) {
+            loadCartItemList();
+        }
     }
 
     private void loadCartItemList() {

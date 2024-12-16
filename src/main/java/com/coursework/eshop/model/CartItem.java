@@ -8,14 +8,16 @@ class CartItem {
     private int productId;
     private String name;
     private double price;
+    private ProductType productType;
 
     public int getProductId() {
         return productId;
     }
-    public CartItem(int productId, String name, double price) {
+    public CartItem(int productId, String name, double price, ProductType productType) {
         this.productId = productId;
         this.name = name;
         this.price = price;
+        this.productType = productType;
     }
 
     public void setProductId(int productId) {
@@ -32,6 +34,14 @@ class CartItem {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public ProductType getProductType() {
+        return productType;
+    }
+
+    public void setProductType(ProductType productType) {
+        this.productType = productType;
     }
 
     public CartItem() {

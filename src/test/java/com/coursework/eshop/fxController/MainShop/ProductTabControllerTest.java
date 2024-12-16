@@ -251,5 +251,254 @@ class ProductTabControllerTest {
         }};
     }
 
+    @Test
+    void testAddNewProduct_MissingPuzzleSpecificFields() {
+        Warehouse mockWarehouse = new Warehouse(1, "Mock Warehouse", "Mock Address", null, null, null);
+        new Expectations() {{
+            customHib.getEntityById(Warehouse.class, 1);
+            result = mockWarehouse;
+        }};
+
+        controller.productType.getSelectionModel().select(ProductType.PUZZLE);
+        controller.authorField.setText("Puzzle Author");
+        controller.productTitleField.setText("Puzzle Title");
+        controller.descriptionField.setText("Puzzle Description");
+        controller.priceField.setText("20.00");
+        controller.piecesQuantityField.setText("500");
+        controller.puzzleMaterialField.setText("");
+        controller.puzzleSizeField.setText("");
+        controller.warehouseComboBox.getItems().add(mockWarehouse);
+        controller.warehouseComboBox.getSelectionModel().select(mockWarehouse);
+
+        controller.addNewProduct();
+
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Puzzle specific fields are empty.", "Please complete all fields properly.");
+            times = 1;
+        }};
+    }
+
+    @Test
+    void testAddNewProduct_MissingBoardGameSpecificFields() {
+        Warehouse mockWarehouse = new Warehouse(1, "Mock Warehouse", "Mock Address", null, null, null);
+        new Expectations() {{
+            customHib.getEntityById(Warehouse.class, 1);
+            result = mockWarehouse;
+        }};
+
+        controller.productType.getSelectionModel().select(ProductType.BOARD_GAME);
+        controller.authorField.setText("Board Game Author");
+        controller.productTitleField.setText("Board Game Title");
+        controller.descriptionField.setText("Board Game Description");
+        controller.priceField.setText("40.00");
+        controller.playersQuantityField.setText("");
+        controller.gameDurationFIeld.setText("");
+        controller.warehouseComboBox.getItems().add(mockWarehouse);
+        controller.warehouseComboBox.getSelectionModel().select(mockWarehouse);
+
+        controller.addNewProduct();
+
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Board game specific fields are empty.", "Please complete all fields properly.");
+            times = 1;
+        }};
+    }
+
+    @Test
+    void testAddNewProduct_InvalidNumberFormat() {
+        Warehouse mockWarehouse = new Warehouse(1, "Mock Warehouse", "Mock Address", null, null, null);
+        new Expectations() {{
+            customHib.getEntityById(Warehouse.class, 1);
+            result = mockWarehouse;
+
+            customHib.getAllRecords(BoardGame.class); result = new ArrayList<BoardGame>();
+            customHib.getAllRecords(Puzzle.class); result = new ArrayList<Puzzle>();
+            customHib.getAllRecords(Dice.class); result = new ArrayList<Dice>();
+        }};
+
+        controller.productType.getSelectionModel().select(ProductType.DICE);
+        controller.authorField.setText("Dice Author");
+        controller.productTitleField.setText("Dice Title");
+        controller.descriptionField.setText("Dice Description");
+        controller.priceField.setText("InvalidNumber");
+        controller.diceNumberField.setText("6");
+        controller.warehouseComboBox.getItems().add(mockWarehouse);
+        controller.warehouseComboBox.getSelectionModel().select(mockWarehouse);
+
+        controller.addNewProduct();
+
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Invalid Format", "Please enter valid numbers for price, quantities or other numeric fields.");
+            times = 1;
+
+            customHib.getEntityById(Warehouse.class, anyInt);
+            times = 1;
+        }};
+    }
+
+    @Test
+    void testAddNewProduct_GenericIllegalArgumentException() {
+        Warehouse mockWarehouse = new Warehouse(1, "Mock Warehouse", "Mock Address", null, null, null);
+        new Expectations() {{
+            customHib.getEntityById(Warehouse.class, 1);
+            result = mockWarehouse;
+        }};
+
+        controller.productType.getSelectionModel().select(ProductType.BOARD_GAME);
+        controller.authorField.setText("Board Game Author");
+        controller.productTitleField.setText("");
+        controller.descriptionField.setText("Board Game Description");
+        controller.priceField.setText("50.00");
+        controller.playersQuantityField.setText("2-4");
+        controller.gameDurationFIeld.setText("30-60");
+        controller.warehouseComboBox.getItems().add(mockWarehouse);
+        controller.warehouseComboBox.getSelectionModel().select(mockWarehouse);
+
+        controller.addNewProduct();
+
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Missing Information", "Please fill all required fields correctly.");
+            times = 1;
+
+            customHib.getEntityById(Warehouse.class, anyInt);
+            times = 0;
+        }};
+    }
+
+    @Test
+    void testUpdateProduct_NoSelection() {
+        controller.productListManager.getSelectionModel().clearSelection();
+
+        controller.updateProduct();
+
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "No Selection", "No product selected", "Please select a product to update.");
+            times = 1;
+        }};
+    }
+
+    @Test
+    void testUpdateProduct_MissingFields() {
+        Product mockProduct = new BoardGame("Existing Title", "Existing Description", "Existing Author", warehouse, 50.00, "2-4", "30-60");
+        controller.productListManager.getItems().add(mockProduct);
+        controller.productListManager.getSelectionModel().select(mockProduct);
+
+        controller.productTitleField.setText("");
+        controller.descriptionField.setText("Updated Description");
+        controller.authorField.setText("Updated Author");
+        controller.warehouseComboBox.getSelectionModel().clearSelection();
+        controller.priceField.setText("40.00");
+
+        controller.updateProduct();
+
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Missing Information", "Please fill all required fields.");
+            times = 1;
+        }};
+    }
+
+    @Test
+    void testUpdateProduct_MissingPuzzleSpecificFields() {
+        Product mockProduct = new Puzzle("Existing Title", "Existing Description", "Existing Author", warehouse, 20.00, 500, "Cardboard", "30x40");
+        controller.productListManager.getItems().add(mockProduct);
+        controller.productListManager.getSelectionModel().select(mockProduct);
+
+        controller.productType.getSelectionModel().select(ProductType.PUZZLE);
+        controller.productTitleField.setText("Updated Title");
+        controller.descriptionField.setText("Updated Description");
+        controller.authorField.setText("Updated Author");
+        controller.priceField.setText("20.00");
+        controller.piecesQuantityField.setText("1000");
+        controller.puzzleMaterialField.setText(""); // Empty
+        controller.puzzleSizeField.setText("");     // Empty
+        controller.warehouseComboBox.getItems().add(warehouse);
+        controller.warehouseComboBox.getSelectionModel().select(warehouse);
+
+        controller.updateProduct();
+
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Error", "Puzzle specific fields cannot be empty.");
+            times = 1;
+        }};
+    }
+
+    @Test
+    void testUpdateProduct_SuccessfulBoardGameUpdate() {
+        BoardGame mockBoardGame = new BoardGame("Old Title", "Old Description", "Old Author", warehouse, 50.00, "2-4", "30-60");
+        controller.productListManager.getItems().add(mockBoardGame);
+        controller.productListManager.getSelectionModel().select(mockBoardGame);
+
+        new Expectations() {{
+            customHib.getEntityById(BoardGame.class, mockBoardGame.getId());
+            result = mockBoardGame;
+        }};
+
+        controller.productType.getSelectionModel().select(ProductType.BOARD_GAME);
+        controller.productTitleField.setText("Updated Title");
+        controller.descriptionField.setText("Updated Description");
+        controller.authorField.setText("Updated Author");
+        controller.priceField.setText("60.00");
+        controller.playersQuantityField.setText("3-5");
+        controller.gameDurationFIeld.setText("40-80");
+        controller.warehouseComboBox.getItems().add(warehouse);
+        controller.warehouseComboBox.getSelectionModel().select(warehouse);
+
+        controller.updateProduct();
+
+        new Verifications() {{
+            customHib.update(mockBoardGame);
+            times = 1;
+
+            assertEquals("Updated Title", mockBoardGame.getTitle());
+            assertEquals("Updated Description", mockBoardGame.getDescription());
+            assertEquals("Updated Author", mockBoardGame.getAuthor());
+            assertEquals(60.00, mockBoardGame.getPrice(), 0.01);
+            assertEquals("3-5", mockBoardGame.getPlayersQuantity());
+            assertEquals("40-80", mockBoardGame.getGameDuration());
+        }};
+    }
+
+
+
+    @Test
+    void testUpdateProduct_SuccessfulPuzzleUpdate() {
+        Puzzle mockPuzzle = new Puzzle("Old Title", "Old Description", "Old Author", warehouse, 30.00, 500, "Cardboard", "30x40");
+        controller.productListManager.getItems().add(mockPuzzle);
+        controller.productListManager.getSelectionModel().select(mockPuzzle);
+
+        new Expectations() {{
+            customHib.getEntityById(Puzzle.class, mockPuzzle.getId());
+            result = mockPuzzle;
+        }};
+
+        controller.productType.getSelectionModel().select(ProductType.PUZZLE);
+        controller.productTitleField.setText("Updated Title");
+        controller.descriptionField.setText("Updated Description");
+        controller.authorField.setText("Updated Author");
+        controller.priceField.setText("35.00");
+        controller.piecesQuantityField.setText("1000");
+        controller.puzzleMaterialField.setText("Plastic");
+        controller.puzzleSizeField.setText("40x60");
+        controller.warehouseComboBox.getItems().add(warehouse);
+        controller.warehouseComboBox.getSelectionModel().select(warehouse);
+
+        controller.updateProduct();
+
+        new Verifications() {{
+            customHib.update(mockPuzzle);
+            times = 1;
+
+            assertEquals("Updated Title", mockPuzzle.getTitle());
+            assertEquals("Updated Description", mockPuzzle.getDescription());
+            assertEquals("Updated Author", mockPuzzle.getAuthor());
+            assertEquals(35.00, mockPuzzle.getPrice(), 0.01);
+            assertEquals(1000, mockPuzzle.getPiecesQuantity());
+            assertEquals("Plastic", mockPuzzle.getPuzzleMaterial());
+            assertEquals("40x60", mockPuzzle.getPuzzleSize());
+        }};
+    }
+
+
+
 
 }

@@ -72,5 +72,11 @@ public class Dice extends Product {
         this.reviews = reviews;
     }
 
+    @Override
+    public void removeFromWarehouse() {
+        if (getWarehouse() != null && getWarehouse().getInStockDices() != null) {
+            getWarehouse().getInStockDices().remove(this);
+        }
+    }
 
 }

@@ -5,7 +5,6 @@ import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.model.*;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import mockit.*;
 import org.junit.jupiter.api.BeforeAll;

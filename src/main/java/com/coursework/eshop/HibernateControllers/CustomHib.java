@@ -19,8 +19,6 @@ public class CustomHib extends GenericHib {
     public CustomHib() {
     }
 
-    ;
-
     public List<Comment> readAllRootComments() {
         EntityManager entityManager = getEntityManager();
         try {
@@ -33,8 +31,7 @@ public class CustomHib extends GenericHib {
             TypedQuery<Comment> typedQuery = entityManager.createQuery(query);
             return typedQuery.getResultList();
         } catch (NoResultException e) {
-            JavaFxCustomsUtils JavaFxCustomUtils = new JavaFxCustomsUtils();
-            JavaFxCustomUtils.generateAlert(javafx.scene.control.Alert.AlertType.ERROR, "Error", "Error", "Error while getting root comments");
+            JavaFxCustomsUtils.generateAlert(javafx.scene.control.Alert.AlertType.ERROR, "Error", "Error", "Error while getting root comments");
             return null;
         } finally {
             if (entityManager != null) entityManager.close();
@@ -43,49 +40,45 @@ public class CustomHib extends GenericHib {
 
     public void deleteProduct(int id, ProductType productType) {
         EntityManager entityManager = getEntityManager();
+
         try {
             entityManager.getTransaction().begin();
 
-            if (productType == ProductType.BOARD_GAME) {
-                var product = entityManager.find(BoardGame.class, id);
+            Class<? extends Product> productClass = switch (productType) {
+                case BOARD_GAME -> BoardGame.class;
+                case PUZZLE -> Puzzle.class;
+                case DICE -> Dice.class;
+            };
 
-                Warehouse warehouse = product.getWarehouse();
-                if (warehouse != null) {
-                    warehouse.getInStockBoardGames().remove(product);
-                    entityManager.merge(warehouse);
-                }
-                entityManager.remove(product);
-            } else if (productType == ProductType.PUZZLE) {
-                var product = entityManager.find(Puzzle.class, id);
-                Warehouse warehouse = product.getWarehouse();
-                if (warehouse != null) {
-                    warehouse.getInStockPuzzles().remove(product);
-                    entityManager.merge(warehouse);
-                }
-                entityManager.remove(product);
-            } else if (productType == ProductType.DICE) {
-                var product = entityManager.find(Dice.class, id);
-                Warehouse warehouse = product.getWarehouse();
-                if (warehouse != null && warehouse.getInStockDices() != null) {
-                    warehouse.getInStockDices().remove(product);
-                    entityManager.merge(warehouse);
-                }
-                entityManager.remove(product);
+            Product product = entityManager.find(productClass, id);
+            if (product == null) {
+                throw new IllegalArgumentException("Product not found with id: " + id);
             }
+
+            product.removeFromWarehouse();
+            entityManager.merge(product.getWarehouse());
+            entityManager.remove(product);
+
             entityManager.getTransaction().commit();
         } catch (Exception e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Error", "Error while deleting product");
+            handleDeletionError(entityManager, e);
         } finally {
-            if (entityManager != null) {
-                entityManager.close();
-            }
+            closeEntityManager(entityManager);
         }
     }
 
+    private void handleDeletionError(EntityManager entityManager, Exception e) {
+        if (entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().rollback();
+        }
+        JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Error", "Error while deleting product");
+    }
+
+    private void closeEntityManager(EntityManager entityManager) {
+        if (entityManager != null) {
+            entityManager.close();
+        }
+    }
 
     public void deleteReview(int id) {
         EntityManager entityManager = getEntityManager();
@@ -124,7 +117,7 @@ public class CustomHib extends GenericHib {
             }
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Error while deleting review", e.getMessage());
         } finally {
-            if (entityManager != null) entityManager.close();
+            entityManager.close();
         }
     }
 
@@ -243,44 +236,56 @@ public class CustomHib extends GenericHib {
             if (entityManager != null) entityManager.close();
         }
     }
-    public List<CustomerOrder> filterData(double minValue, double maxValue, Customer customer, Manager manager, OrderStatus orderStatus, LocalDate startDate, LocalDate finishDate) {
+
+    public List<CustomerOrder> filterData(CustomerOrderFilter filter) {
         EntityManager em = getEntityManager();
         List<CustomerOrder> result = new ArrayList<>();
+
         try {
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<CustomerOrder> cq = cb.createQuery(CustomerOrder.class);
             Root<CustomerOrder> order = cq.from(CustomerOrder.class);
 
-            List<Predicate> predicates = new ArrayList<>();
-            if (minValue > 0) {
-                predicates.add(cb.ge(order.get("totalPrice"), minValue));
-            }
-            if (maxValue < Double.MAX_VALUE) {
-                predicates.add(cb.le(order.get("totalPrice"), maxValue));
-            }
-            if (customer != null) {
-                predicates.add(cb.equal(order.get("customer"), customer));
-            }
-            if (manager != null) {
-                predicates.add(cb.equal(order.get("responsibleManager"), manager));
-            }
-            if (orderStatus != null) {
-                predicates.add(cb.equal(order.get("orderStatus"), orderStatus));
-            }
-            if (startDate != null) {
-                predicates.add(cb.greaterThanOrEqualTo(order.get("dateCreated"), startDate));
-            }
-            if (finishDate != null) {
-                predicates.add(cb.lessThanOrEqualTo(order.get("dateCreated"), finishDate));
-            }
+            List<Predicate> predicates = buildPredicates(cb, order, filter);
             cq.where(predicates.toArray(new Predicate[0]));
+
             result = em.createQuery(cq).getResultList();
         } finally {
             if (em != null) {
                 em.close();
             }
         }
+
         return result;
     }
+
+    private List<Predicate> buildPredicates(CriteriaBuilder cb, Root<CustomerOrder> order, CustomerOrderFilter filter) {
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (filter.getMinValue() > 0) {
+            predicates.add(cb.ge(order.get("totalPrice"), filter.getMinValue()));
+        }
+        if (filter.getMaxValue() < Double.MAX_VALUE) {
+            predicates.add(cb.le(order.get("totalPrice"), filter.getMaxValue()));
+        }
+        if (filter.getCustomer() != null) {
+            predicates.add(cb.equal(order.get("customer"), filter.getCustomer()));
+        }
+        if (filter.getManager() != null) {
+            predicates.add(cb.equal(order.get("responsibleManager"), filter.getManager()));
+        }
+        if (filter.getOrderStatus() != null) {
+            predicates.add(cb.equal(order.get("orderStatus"), filter.getOrderStatus()));
+        }
+        if (filter.getStartDate() != null) {
+            predicates.add(cb.greaterThanOrEqualTo(order.get("dateCreated"), filter.getStartDate()));
+        }
+        if (filter.getFinishDate() != null) {
+            predicates.add(cb.lessThanOrEqualTo(order.get("dateCreated"), filter.getFinishDate()));
+        }
+
+        return predicates;
+    }
+
 
 }

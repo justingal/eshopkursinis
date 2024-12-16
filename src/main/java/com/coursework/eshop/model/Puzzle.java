@@ -102,5 +102,11 @@ public class Puzzle extends Product {
         this.reviews = reviews;
     }
 
+    @Override
+    public void removeFromWarehouse() {
+        if (getWarehouse() != null) {
+            getWarehouse().getInStockPuzzles().remove(this);
+        }
+    }
 
 }

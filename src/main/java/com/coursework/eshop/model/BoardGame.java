@@ -84,5 +84,12 @@ public class BoardGame extends Product {
         this.reviews = reviews;
     }
 
+    @Override
+    public void removeFromWarehouse() {
+        if (getWarehouse() != null) {
+            getWarehouse().getInStockBoardGames().remove(this);
+        }
+    }
+
 
 }

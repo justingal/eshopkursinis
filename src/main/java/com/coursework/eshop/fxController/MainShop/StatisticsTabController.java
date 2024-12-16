@@ -1,6 +1,8 @@
 package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
+import com.coursework.eshop.HibernateControllers.CustomerOrderFilter;
+import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.fxController.tableviews.OrderTableParameters;
 import com.coursework.eshop.fxController.tableviews.StatisticsTableParameters;
 import com.coursework.eshop.model.Customer;
@@ -66,28 +68,23 @@ public class StatisticsTabController implements Initializable {
     private CustomHib customHib = new CustomHib();
 
     public void filterData(ActionEvent actionEvent) {
-        double minValue = 0.0;
-        double maxValue = Double.MAX_VALUE;
-        Customer customer = null;
-        Manager manager = null;
-        OrderStatus orderStatus = null;
-        LocalDate startDate = null;
-        LocalDate endDate = null;
-
         try {
+            CustomerOrderFilter filter = new CustomerOrderFilter();
+
             if (!minValueField.getText().isEmpty()) {
-                minValue = Double.parseDouble(minValueField.getText());
+                filter.setMinValue(Double.parseDouble(minValueField.getText()));
             }
             if (!maxValueField.getText().isEmpty()) {
-                maxValue = Double.parseDouble(maxValueField.getText());
+                filter.setMaxValue(Double.parseDouble(maxValueField.getText()));
             }
-            startDate = startDateField.getValue();
-            endDate = endDateField.getValue();
-            orderStatus = orderStatusComboBox.getValue();
-            customer = customerComboBox.getValue();
-            manager = managerComboBox.getValue();
+            filter.setStartDate(startDateField.getValue());
+            filter.setFinishDate(endDateField.getValue());
+            filter.setOrderStatus(orderStatusComboBox.getValue());
+            filter.setCustomer(customerComboBox.getValue());
+            filter.setManager(managerComboBox.getValue());
 
-            List<CustomerOrder> filteredData = customHib.filterData(minValue, maxValue, customer, manager, orderStatus, startDate, endDate);
+            List<CustomerOrder> filteredData = customHib.filterData(filter);
+
             ObservableList<StatisticsTableParameters> filteredStatisticsData = FXCollections.observableArrayList();
 
             for (CustomerOrder order : filteredData) {
@@ -100,10 +97,11 @@ public class StatisticsTabController implements Initializable {
                         order.getOrderStatus()
                 ));
             }
+
             statisticsDataTableView.setItems(filteredStatisticsData);
 
         } catch (NumberFormatException e) {
-
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Invalid Input", "Invalid Number", "Please enter valid numbers for the minimum and maximum values.");
         }
     }
 

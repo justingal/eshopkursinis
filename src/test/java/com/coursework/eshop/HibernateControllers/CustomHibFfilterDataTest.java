@@ -39,36 +39,32 @@ class CustomHibFfilterDataTest {
         @Mocked
         private Root<CustomerOrder> root;
 
-    @BeforeEach
-    void setUp() {
+        @BeforeEach
+        void setUp() {
 
-        new Expectations(customHib) {{
-            customHib.getEntityManager();
-            result = entityManager;
-        }};
-
-
-        new Expectations() {{
-            entityManager.getCriteriaBuilder();
-            result = criteriaBuilder;
-        }};
-
-
-        new Expectations() {{
-            entityManager.close();
-        }};
-    }
-
-
-    @Test
-        void testFilterData_NoFilters() {
-            new Expectations() {{
+            new Expectations(customHib) {{
                 customHib.getEntityManager();
                 result = entityManager;
+            }};
 
+
+            new Expectations() {{
                 entityManager.getCriteriaBuilder();
                 result = criteriaBuilder;
+            }};
 
+
+            new Expectations() {{
+                entityManager.close();
+            }};
+        }
+
+
+        @Test
+        void testFilterData_NoFilters() {
+            CustomerOrderFilter filter = new CustomerOrderFilter();
+
+            new Expectations() {{
                 criteriaBuilder.createQuery(CustomerOrder.class);
                 result = criteriaQuery;
 
@@ -76,12 +72,10 @@ class CustomHibFfilterDataTest {
                 result = root;
 
                 entityManager.createQuery(criteriaQuery).getResultList();
-                result = new ArrayList<CustomerOrder>();
+                result = new ArrayList<>();
             }};
 
-            List<CustomerOrder> result = customHib.filterData(
-                    0, Double.MAX_VALUE, null, null, null, null, null
-            );
+            List<CustomerOrder> result = customHib.filterData(filter);
 
             assertNotNull(result);
             assertTrue(result.isEmpty());
@@ -94,42 +88,33 @@ class CustomHibFfilterDataTest {
 
         @Test
         void testFilterData_WithMinMaxPrice() {
-            Customer mockCustomer = new Customer();
-            Manager mockManager = new Manager();
-            List<CustomerOrder> expectedOrders = Arrays.asList(new CustomerOrder());
+            CustomerOrderFilter filter = new CustomerOrderFilter();
+            filter.setMinValue(10.0);
+            filter.setMaxValue(100.0);
 
             new Expectations() {{
-                customHib.getEntityManager();
-                result = entityManager;
-
-                entityManager.getCriteriaBuilder();
-                result = criteriaBuilder;
-
                 criteriaBuilder.createQuery(CustomerOrder.class);
                 result = criteriaQuery;
 
                 criteriaQuery.from(CustomerOrder.class);
                 result = root;
 
-                entityManager.createQuery(criteriaQuery).getResultList();
-                result = expectedOrders;
-            }};
-
-            List<CustomerOrder> result = customHib.filterData(
-                    10.0, 100.0, null, null, null, null, null
-            );
-
-            assertNotNull(result);
-            assertEquals(1, result.size());
-
-            new Verifications() {{
-                // Verify predicates for min and max price
                 criteriaBuilder.ge(root.get("totalPrice"), 10.0);
                 times = 1;
 
                 criteriaBuilder.le(root.get("totalPrice"), 100.0);
                 times = 1;
 
+                entityManager.createQuery(criteriaQuery).getResultList();
+                result = Arrays.asList(new CustomerOrder());
+            }};
+
+            List<CustomerOrder> result = customHib.filterData(filter);
+
+            assertNotNull(result);
+            assertEquals(1, result.size());
+
+            new Verifications() {{
                 entityManager.close();
                 times = 1;
             }};
@@ -137,141 +122,57 @@ class CustomHibFfilterDataTest {
 
         @Test
         void testFilterData_WithCustomerManagerStatusDates() {
-            // Arrange
-            Customer mockCustomer = new Customer();
-            Manager mockManager = new Manager();
-            LocalDate startDate = LocalDate.of(2023, 1, 1);
-            LocalDate finishDate = LocalDate.of(2023, 12, 31);
-            OrderStatus status = OrderStatus.FINISHED;
-
-            List<CustomerOrder> expectedOrders = Arrays.asList(
-                    new CustomerOrder(),
-                    new CustomerOrder()
-            );
+            CustomerOrderFilter filter = new CustomerOrderFilter();
+            filter.setCustomer(new Customer());
+            filter.setManager(new Manager());
+            filter.setOrderStatus(OrderStatus.PENDING);
+            filter.setStartDate(LocalDate.of(2023, 1, 1));
+            filter.setFinishDate(LocalDate.of(2023, 12, 31));
 
             new Expectations() {{
-                customHib.getEntityManager();
-                result = entityManager;
-
-                entityManager.getCriteriaBuilder();
-                result = criteriaBuilder;
-
                 criteriaBuilder.createQuery(CustomerOrder.class);
                 result = criteriaQuery;
 
                 criteriaQuery.from(CustomerOrder.class);
                 result = root;
 
+                criteriaBuilder.equal(root.get("customer"), filter.getCustomer());
+                times = 1;
+
+                criteriaBuilder.equal(root.get("responsibleManager"), filter.getManager());
+                times = 1;
+
+                criteriaBuilder.equal(root.get("orderStatus"), filter.getOrderStatus());
+                times = 1;
+
+                criteriaBuilder.greaterThanOrEqualTo(root.get("dateCreated"), filter.getStartDate());
+                times = 1;
+
+                criteriaBuilder.lessThanOrEqualTo(root.get("dateCreated"), filter.getFinishDate());
+                times = 1;
+
                 entityManager.createQuery(criteriaQuery).getResultList();
-                result = expectedOrders;
+                result = Arrays.asList(new CustomerOrder(), new CustomerOrder());
             }};
 
-            List<CustomerOrder> result = customHib.filterData(
-                    0, Double.MAX_VALUE,
-                    mockCustomer, mockManager, status,
-                    startDate, finishDate
-            );
+            List<CustomerOrder> result = customHib.filterData(filter);
 
             assertNotNull(result);
             assertEquals(2, result.size());
 
             new Verifications() {{
-                criteriaBuilder.equal(root.get("customer"), mockCustomer);
-                times = 1;
-
-                criteriaBuilder.equal(root.get("responsibleManager"), mockManager);
-                times = 1;
-
-                criteriaBuilder.equal(root.get("orderStatus"), status);
-                times = 1;
-
-                criteriaBuilder.greaterThanOrEqualTo(root.get("dateCreated"), startDate);
-                times = 1;
-
-                criteriaBuilder.lessThanOrEqualTo(root.get("dateCreated"), finishDate);
-                times = 1;
-
                 entityManager.close();
                 times = 1;
             }};
         }
 
-        @Test
-        void testFilterData_EmptyResultSet() {
-            new Expectations() {{
-                customHib.getEntityManager();
-                result = entityManager;
-
-                entityManager.getCriteriaBuilder();
-                result = criteriaBuilder;
-
-                criteriaBuilder.createQuery(CustomerOrder.class);
-                result = criteriaQuery;
-
-                criteriaQuery.from(CustomerOrder.class);
-                result = root;
-
-                entityManager.createQuery(criteriaQuery).getResultList();
-                result = Collections.emptyList();
-            }};
-
-            List<CustomerOrder> result = customHib.filterData(
-                    50.0, 100.0, null, null, null, null, null
-            );
-
-            assertNotNull(result);
-            assertTrue(result.isEmpty());
-
-            new Verifications() {{
-                entityManager.close();
-                times = 1;
-            }};
-        }
-
-        @Test
-        void testFilterData_ExceptionHandling() {
-            new Expectations() {{
-                customHib.getEntityManager();
-                result = entityManager;
-
-                entityManager.getCriteriaBuilder();
-                result = criteriaBuilder;
-
-                criteriaBuilder.createQuery(CustomerOrder.class);
-                result = criteriaQuery;
-
-                criteriaQuery.from(CustomerOrder.class);
-                result = root;
-
-                entityManager.createQuery(criteriaQuery).getResultList();
-                result = new RuntimeException("Database error");
-            }};
-
-            assertThrows(RuntimeException.class, () -> {
-                customHib.filterData(
-                        0, Double.MAX_VALUE, null, null, null, null, null
-                );
-            });
-
-            new Verifications() {{
-                entityManager.close();
-                times = 1;
-            }};
-        }
     @Test
-    void testFilterData_WithSingleCustomerFilter() {
-        // Arrange
-        Customer mockCustomer = new Customer();
-        mockCustomer.setId(1);
-        List<CustomerOrder> expectedOrders = Arrays.asList(new CustomerOrder());
+    void testFilterData_EmptyResultSet() {
+        CustomerOrderFilter filter = new CustomerOrderFilter();
+        filter.setMinValue(50.0);
+        filter.setMaxValue(100.0);
 
         new Expectations() {{
-            customHib.getEntityManager();
-            result = entityManager;
-
-            entityManager.getCriteriaBuilder();
-            result = criteriaBuilder;
-
             criteriaBuilder.createQuery(CustomerOrder.class);
             result = criteriaQuery;
 
@@ -279,35 +180,77 @@ class CustomHibFfilterDataTest {
             result = root;
 
             entityManager.createQuery(criteriaQuery).getResultList();
-            result = expectedOrders;
+            result = Collections.emptyList();
         }};
 
-        List<CustomerOrder> result = customHib.filterData(
-                0, Double.MAX_VALUE, mockCustomer, null, null, null, null
-        );
+        List<CustomerOrder> result = customHib.filterData(filter);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        new Verifications() {{
+            entityManager.close();
+            times = 1;
+        }};
+    }
+
+
+    @Test
+    void testFilterData_ExceptionHandling() {
+        CustomerOrderFilter filter = new CustomerOrderFilter();
+
+        new Expectations() {{
+            entityManager.createQuery(criteriaQuery).getResultList();
+            result = new RuntimeException("Database error");
+        }};
+
+        assertThrows(RuntimeException.class, () -> customHib.filterData(filter));
+
+        new Verifications() {{
+            entityManager.close();
+            times = 1;
+        }};
+    }
+
+    @Test
+    void testFilterData_WithSingleCustomerFilter() {
+        Customer mockCustomer = new Customer();
+        mockCustomer.setId(1);
+
+        CustomerOrderFilter filter = new CustomerOrderFilter();
+        filter.setCustomer(mockCustomer);
+
+        new Expectations() {{
+            criteriaBuilder.createQuery(CustomerOrder.class);
+            result = criteriaQuery;
+
+            criteriaQuery.from(CustomerOrder.class);
+            result = root;
+
+            criteriaBuilder.equal(root.get("customer"), mockCustomer);
+            times = 1;
+
+            entityManager.createQuery(criteriaQuery).getResultList();
+            result = Arrays.asList(new CustomerOrder());
+        }};
+
+        List<CustomerOrder> result = customHib.filterData(filter);
 
         assertNotNull(result);
         assertEquals(1, result.size());
 
         new Verifications() {{
-            criteriaBuilder.equal(root.get("customer"), mockCustomer);
-            times = 1;
-
             entityManager.close();
             times = 1;
         }};
     }
+
+
     @Test
     void testFilterData_DefaultParameters() {
-        List<CustomerOrder> expectedOrders = Arrays.asList(new CustomerOrder(), new CustomerOrder());
+        CustomerOrderFilter filter = new CustomerOrderFilter();
 
         new Expectations() {{
-            customHib.getEntityManager();
-            result = entityManager;
-
-            entityManager.getCriteriaBuilder();
-            result = criteriaBuilder;
-
             criteriaBuilder.createQuery(CustomerOrder.class);
             result = criteriaQuery;
 
@@ -315,12 +258,10 @@ class CustomHibFfilterDataTest {
             result = root;
 
             entityManager.createQuery(criteriaQuery).getResultList();
-            result = expectedOrders;
+            result = Arrays.asList(new CustomerOrder(), new CustomerOrder());
         }};
 
-        List<CustomerOrder> result = customHib.filterData(
-                0, Double.MAX_VALUE, null, null, null, null, null
-        );
+        List<CustomerOrder> result = customHib.filterData(filter);
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -330,18 +271,12 @@ class CustomHibFfilterDataTest {
             times = 1;
         }};
     }
+
     @Test
     void testFilterData_NullValuesIgnored() {
-        // Arrange
-        List<CustomerOrder> expectedOrders = Arrays.asList(new CustomerOrder());
+        CustomerOrderFilter filter = new CustomerOrderFilter();
 
         new Expectations() {{
-            customHib.getEntityManager();
-            result = entityManager;
-
-            entityManager.getCriteriaBuilder();
-            result = criteriaBuilder;
-
             criteriaBuilder.createQuery(CustomerOrder.class);
             result = criteriaQuery;
 
@@ -349,14 +284,11 @@ class CustomHibFfilterDataTest {
             result = root;
 
             entityManager.createQuery(criteriaQuery).getResultList();
-            result = expectedOrders;
+            result = Arrays.asList(new CustomerOrder());
         }};
 
-        List<CustomerOrder> result = customHib.filterData(
-                0, 0, null, null, null, null, null
-        );
+        List<CustomerOrder> result = customHib.filterData(filter);
 
-        // Assert
         assertNotNull(result);
         assertEquals(1, result.size());
 
@@ -365,16 +297,14 @@ class CustomHibFfilterDataTest {
             times = 1;
         }};
     }
+
     @Test
     void testFilterData_InvalidPriceRange() {
-        // Arrange
+        CustomerOrderFilter filter = new CustomerOrderFilter();
+        filter.setMinValue(100.0);
+        filter.setMaxValue(10.0);
+
         new Expectations() {{
-            customHib.getEntityManager();
-            result = entityManager;
-
-            entityManager.getCriteriaBuilder();
-            result = criteriaBuilder;
-
             criteriaBuilder.createQuery(CustomerOrder.class);
             result = criteriaQuery;
 
@@ -385,9 +315,7 @@ class CustomHibFfilterDataTest {
             result = Collections.emptyList();
         }};
 
-        List<CustomerOrder> result = customHib.filterData(
-                100.0, 10.0, null, null, null, null, null
-        );
+        List<CustomerOrder> result = customHib.filterData(filter);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
@@ -397,22 +325,20 @@ class CustomHibFfilterDataTest {
             times = 1;
         }};
     }
+
+
     @Test
     void testFilterData_MultipleFiltersNoResult() {
-        // Arrange
-        Customer mockCustomer = new Customer();
-        Manager mockManager = new Manager();
-        OrderStatus status = OrderStatus.PENDING;
-        LocalDate startDate = LocalDate.of(2023, 1, 1);
-        LocalDate endDate = LocalDate.of(2023, 12, 31);
+        CustomerOrderFilter filter = new CustomerOrderFilter();
+        filter.setMinValue(100.0);
+        filter.setMaxValue(200.0);
+        filter.setCustomer(new Customer());
+        filter.setManager(new Manager());
+        filter.setOrderStatus(OrderStatus.PENDING);
+        filter.setStartDate(LocalDate.of(2023, 1, 1));
+        filter.setFinishDate(LocalDate.of(2023, 12, 31));
 
         new Expectations() {{
-            customHib.getEntityManager();
-            result = entityManager;
-
-            entityManager.getCriteriaBuilder();
-            result = criteriaBuilder;
-
             criteriaBuilder.createQuery(CustomerOrder.class);
             result = criteriaQuery;
 
@@ -423,9 +349,7 @@ class CustomHibFfilterDataTest {
             result = Collections.emptyList();
         }};
 
-        List<CustomerOrder> result = customHib.filterData(
-                100.0, 200.0, mockCustomer, mockManager, status, startDate, endDate
-        );
+        List<CustomerOrder> result = customHib.filterData(filter);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
@@ -435,6 +359,7 @@ class CustomHibFfilterDataTest {
             times = 1;
         }};
     }
+
 
 
 

@@ -101,6 +101,10 @@ public class Product implements Serializable {
         this.warehouse = warehouse;
     }
 
+    public void removeFromWarehouse() {
+
+    }
+
 
     @Override
     public String toString() {

@@ -51,10 +51,12 @@ public class ProductTabController {
     }
 
     public void loadProductListManager() {
+        System.out.println("Loading product list...");
         productListManager.getItems().clear();
         List<BoardGame> boardGames = customHib.getAllRecords(BoardGame.class);
         productListManager.getItems().addAll(boardGames);
         List<Puzzle> puzzles = customHib.getAllRecords(Puzzle.class);
+        System.out.println("Puzzles retrieved: " + puzzles.size());
         productListManager.getItems().addAll(puzzles);
         List<Dice> dices = customHib.getAllRecords(Dice.class);
         productListManager.getItems().addAll(dices);
@@ -70,8 +72,11 @@ public class ProductTabController {
             return;
         }
         try {
+            System.out.println("Creating product...");
             double price = Double.parseDouble(priceField.getText().trim());
             Warehouse selectedWarehouse = customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId());
+            System.out.println("Warehouse from ComboBox: " + warehouseComboBox.getSelectionModel().getSelectedItem());
+            System.out.println("Warehouse ID in addNewProduct: " + selectedWarehouse.getId());
 
             if (productType.getSelectionModel().getSelectedItem() == ProductType.BOARD_GAME) {
                 if (playersQuantityField.getText().trim().isEmpty() || gameDurationFIeld.getText().trim().isEmpty()) {
@@ -83,7 +88,7 @@ public class ProductTabController {
                 if (puzzleMaterialField.getText().trim().isEmpty() || puzzleSizeField.getText().trim().isEmpty()) {
                     throw new IllegalArgumentException("Puzzle specific fields are empty.");
                 }
-                customHib.create(new Puzzle(productTitleField.getText().trim(), descriptionField.getText().trim(), authorField.getText().trim(), selectedWarehouse, price, piecesQuantity, puzzleMaterialField.getText().trim(), puzzleSizeField.getText().trim()));
+                customHib.create(new Puzzle(productTitleField.getText().trim(), descriptionField.getText().trim(), authorField.getText().trim(), selectedWarehouse, price, piecesQuantity, puzzleSizeField.getText().trim(), puzzleMaterialField.getText().trim()));
             } else if (productType.getSelectionModel().getSelectedItem() == ProductType.DICE) {
                 int diceNumber = Integer.parseInt(diceNumberField.getText().trim());
                 customHib.create(new Dice(productTitleField.getText().trim(), descriptionField.getText().trim(), authorField.getText().trim(), selectedWarehouse, price, diceNumber));
@@ -141,6 +146,7 @@ public class ProductTabController {
                 puzzle.setPuzzleSize(puzzleSize);
             }
             customHib.update(product);
+            System.out.println("Calling loadProductListManager...");
             loadProductListManager();
         } catch (NumberFormatException e) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Invalid Input", "Please enter valid numbers for numeric fields.");

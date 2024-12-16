@@ -241,11 +241,12 @@ public class MainShopController {
 
     public void addProductToCart(ActionEvent actionEvent) {
         Product selectedProduct = productList.getSelectionModel().getSelectedItem();
+        ProductType productType = selectedProduct instanceof BoardGame ? ProductType.BOARD_GAME : selectedProduct instanceof Puzzle ? ProductType.PUZZLE : ProductType.DICE;
         if (selectedProduct == null) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.WARNING, "No Selection", "No product selected", "Please select a product to add to the cart.");
             return;
         }
-        CartItem item = new CartItem(selectedProduct.getId(), selectedProduct.getTitle(), selectedProduct.getPrice());
+        CartItem item = new CartItem(selectedProduct.getId(), selectedProduct.getTitle(), selectedProduct.getPrice(), productType);
         cart.addItem(item);
 
     }

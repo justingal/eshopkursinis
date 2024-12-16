@@ -8,6 +8,18 @@
     <class>com.coursework.eshop.model.BoardGame</class>
     <class>com.coursework.eshop.model.Puzzle</class>
     <class>com.coursework.eshop.model.Dice</class>
+    <class>com.coursework.eshop.model.Warehouse</class>
+    <class>com.coursework.eshop.model.ShoppingCart</class>
+    <class>com.coursework.eshop.model.Review</class>
+    <class>com.coursework.eshop.model.ProductType</class>
+    <class>com.coursework.eshop.model.Product</class>
+    <class>com.coursework.eshop.model.OrderStatus</class>
+    <class>com.coursework.eshop.model.Manager</class>
+    <class>com.coursework.eshop.model.CustomerOrder</class>
+    <class>com.coursework.eshop.model.Customer</class>
+    <class>com.coursework.eshop.model.Comment</class>
+    <class>com.coursework.eshop.model.CartItem</class>
+
     <properties>
       <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
       <property name="jakarta.persistence.jdbc.url"    value="jdbc:mysql://localhost:3306/eshop_hibernate?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF-8" />
@@ -16,6 +28,7 @@
       <property name="hibernate.show_sql"   value="true" />
       <property name="hibernate.hbm2ddl.auto" value="update"/>
       <property name="hibernate.format_sql" value="true" />
+
     </properties>
   </persistence-unit>
 </persistence>

@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProductTabController {
     @FXML
@@ -40,6 +42,8 @@ public class ProductTabController {
     public AnchorPane productTabAnchor;
     public TextField priceField;
 
+    private final Logger logger = Logger.getAnonymousLogger();
+
     private CustomHib customHib;
 
     public void setData(CustomHib customHib) {
@@ -52,14 +56,19 @@ public class ProductTabController {
     }
 
     public void loadProductListManager() {
-        System.out.println("Loading product list...");
+        logger.log(Level.INFO, "Loading product list...");
         productListManager.getItems().clear();
+
         List<BoardGame> boardGames = customHib.getAllRecords(BoardGame.class);
+        logger.log(Level.INFO, "Board games retrieved: " + boardGames.size());
         productListManager.getItems().addAll(boardGames);
+
         List<Puzzle> puzzles = customHib.getAllRecords(Puzzle.class);
-        System.out.println("Puzzles retrieved: " + puzzles.size());
+        logger.log(Level.INFO, "Puzzles retrieved: " + puzzles.size());
         productListManager.getItems().addAll(puzzles);
+
         List<Dice> dices = customHib.getAllRecords(Dice.class);
+        logger.log(Level.INFO, "Dices retrieved: " + dices.size());
         productListManager.getItems().addAll(dices);
     }
 
@@ -70,7 +79,7 @@ public class ProductTabController {
         }
 
         try {
-            System.out.println("Creating product...");
+            logger.log(Level.INFO, "Creating product...");
             double price = Double.parseDouble(priceField.getText().trim());
             Warehouse selectedWarehouse = getSelectedWarehouse();
 
@@ -93,8 +102,10 @@ public class ProductTabController {
 
         } catch (NumberFormatException e) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Invalid Format", "Please enter valid numbers for price, quantities, or other numeric fields.");
+            logger.log(Level.SEVERE, e.getMessage());
         } catch (IllegalArgumentException e) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", e.getMessage(), "Please complete all fields properly.");
+            logger.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -108,8 +119,8 @@ public class ProductTabController {
 
     private Warehouse getSelectedWarehouse() {
         Warehouse warehouse = customHib.getEntityById(Warehouse.class, warehouseComboBox.getSelectionModel().getSelectedItem().getId());
-        System.out.println("Warehouse from ComboBox: " + warehouseComboBox.getSelectionModel().getSelectedItem());
-        System.out.println("Warehouse ID in addNewProduct: " + warehouse.getId());
+        logger.log(Level.SEVERE, "Warehouse from ComboBox: " + warehouseComboBox.getSelectionModel().getSelectedItem());
+        logger.log(Level.SEVERE, "Warehouse ID in addNewProduct: " + warehouse.getId());
         return warehouse;
     }
 
@@ -132,7 +143,8 @@ public class ProductTabController {
             selectedType.updateProduct(product, fields);
 
             customHib.update(product);
-            System.out.println("Calling loadProductListManager...");
+            logger.log(Level.INFO, "Calling loadProductListManager...");
+
             loadProductListManager();
 
         } catch (NumberFormatException e) {

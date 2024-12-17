@@ -18,6 +18,8 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class RegistrationController {
@@ -70,6 +72,10 @@ public class RegistrationController {
         });
     }
 
+    public void setData(CustomHib customHib) {
+        this.userHib = customHib;
+    }
+
     private void updateUIBasedOnUserRole() {
         if (currentUser instanceof Admin) {
             managerCheckbox.setVisible(true);
@@ -96,77 +102,86 @@ public class RegistrationController {
         cardNoField.setVisible(isCustomer);
     }
 
+    /**
+     * Use this class to validate fields.
+     * @field applicableUsersBitField - 1st bit set -> applicable to Customer, 2nd bit set -> applicable to Manager
+     */
+    private class FieldValidation {
+        private final boolean isValid;
+        private final String errorMessage;
+        private int applicableUsersBitField;
+
+        public FieldValidation(boolean valid, String errorMessage, int applicableUsersBitField) {
+            this.isValid = valid;
+            this.errorMessage = errorMessage;
+            this.applicableUsersBitField = applicableUsersBitField;
+        }
+
+        public boolean isValid() {
+            return this.isValid;
+        }
+
+        public String getErrorMessage() {
+            return this.errorMessage;
+        }
+
+        public int getApplicableUsersBitField() {
+            return this.applicableUsersBitField;
+        }
+    }
+
+    private boolean validateFields(List<FieldValidation> validations, int userBitField) {
+        boolean validFields = true;
+        for(FieldValidation fv : validations) {
+            if((fv.getApplicableUsersBitField() & userBitField) != 0 && !fv.isValid()) {
+                JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", fv.getErrorMessage());
+                validFields = false;
+            }
+        }
+        return validFields;
+    }
+
+    private void generateSuccessAlert() {
+        JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
+        try {
+            if (currentUser == null) {
+                returnToLogin();
+            }
+            if (currentUser != null) {
+                Stage stage = (Stage) surnameField.getScene().getWindow();
+                stage.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String generatePasswordHash(String password) {
+        return BCrypt.withDefaults().hashToString(12, password.toCharArray());
+    }
+
     public void createUser() {
-        if (loginField.getText().isEmpty()) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no login");
-        }
-        if (passwordField.getText().isEmpty()) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no password");
-        }
-        if (repeatPasswordField.getText().isEmpty()) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no repeated password");
-        }
-        if (!repeatPasswordField.getText().equals(passwordField.getText())) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Passwords do not match");
-        }
-        if (nameField.getText().isEmpty()) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no name");
-        }
-        if (surnameField.getText().isEmpty()) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no surname");
-        }
-        if (addressField.getText().isEmpty() && customerCheckbox.isSelected()) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no address");
-        }
-        if (cardNoField.getText().isEmpty() && customerCheckbox.isSelected()) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no card number");
-        }
-        if (birthDateField.getValue() == null) {
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no birth date");
-        }
-        if (customerCheckbox.isSelected() &&
-                !loginField.getText().isEmpty() &&
-                !passwordField.getText().isEmpty() &&
-                repeatPasswordField.getText().equals(passwordField.getText()) &&
-                !repeatPasswordField.getText().isEmpty() &&
-                !nameField.getText().isEmpty() &&
-                !surnameField.getText().isEmpty() &&
-                !addressField.getText().isEmpty() &&
-                !cardNoField.getText().isEmpty() &&
-                birthDateField.getValue() != null) {
+        ArrayList<FieldValidation> validations = new ArrayList<>();
+        validations.add(new FieldValidation(!loginField.getText().isEmpty(), "Please check credentials, no login", 3));
+        validations.add(new FieldValidation(!passwordField.getText().isEmpty(), "Please check credentials, no password", 3));
+        validations.add(new FieldValidation(!repeatPasswordField.getText().isEmpty(), "Please check credentials, no repeated password", 3));
+        validations.add(new FieldValidation(repeatPasswordField.getText().equals(passwordField.getText()), "Passwords do not match", 3));
+        validations.add(new FieldValidation(!nameField.getText().isEmpty(), "Please check credentials, no name", 3));
+        validations.add(new FieldValidation(!surnameField.getText().isEmpty(), "Please check credentials, no surname", 1));
+        validations.add(new FieldValidation(!addressField.getText().isEmpty() && customerCheckbox.isSelected(), "Please check credentials, no address", 1));
+        validations.add(new FieldValidation(!cardNoField.getText().isEmpty() && customerCheckbox.isSelected(), "Please check credentials, no card number", 1));
+        validations.add(new FieldValidation(birthDateField.getValue() != null, "Please check credentials, no birth date", 3));
 
-            String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
-            if (customerCheckbox.isSelected()) {
-                userHib.create(new Customer(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
-            }
-        } else if (managerCheckbox.isSelected() &&
-                !loginField.getText().isEmpty() &&
-                !passwordField.getText().isEmpty() &&
-                repeatPasswordField.getText().equals(passwordField.getText()) &&
-                !repeatPasswordField.getText().isEmpty() &&
-                !nameField.getText().isEmpty() &&
-                !employeeIdField.getText().isEmpty() &&
-                employmentDateField.getValue() != null &&
-                !medCertificateField.getText().isEmpty() &&
-                birthDateField.getValue() != null) {
+        validations.add(new FieldValidation(!employeeIdField.getText().isEmpty(), "Please check credentials, no employee ID", 2));
+        validations.add(new FieldValidation(employmentDateField.getValue() != null, "Please check credentials, no employment date", 2));
+        validations.add(new FieldValidation(!medCertificateField.getText().isEmpty(), "Please check credentials, no medical certificate", 2));
 
-            String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
-            if (managerCheckbox.isSelected()) {
-                userHib.create(new Manager(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), employeeIdField.getText(), medCertificateField.getText(), employmentDateField.getValue()));
-            }
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
-            try {
-                if (currentUser == null) {
-                    returnToLogin();
-                }
-                if (currentUser != null) {
-                    Stage stage = (Stage) surnameField.getScene().getWindow();
-                    stage.close();
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (customerCheckbox.isSelected() && validateFields(validations, 1)) {
+            userHib.create(new Customer(loginField.getText(), generatePasswordHash(passwordField.getText()), birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
+            generateSuccessAlert();
+        } else if (managerCheckbox.isSelected() && validateFields(validations, 2)) {
+            userHib.create(new Manager(loginField.getText(), generatePasswordHash(passwordField.getText()), birthDateField.getValue(), nameField.getText(), surnameField.getText(), employeeIdField.getText(), medCertificateField.getText(), employmentDateField.getValue()));
+            generateSuccessAlert();
         }
     }
 

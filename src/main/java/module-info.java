@@ -6,7 +6,7 @@ module com.coursework.eshop {
     requires jakarta.persistence;
     requires bcrypt;
     requires net.bytebuddy;
-    requires javafx.swing;
+//    requires javafx.swing;
     requires junit;
 
     exports com.coursework.eshop.fxController.tableviews to javafx.base;

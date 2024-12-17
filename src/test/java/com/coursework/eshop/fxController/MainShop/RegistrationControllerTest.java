@@ -127,16 +127,106 @@ class RegistrationControllerTest {
         givenCustomerFieldsValid();
 
         new Expectations() {{
-            controller.nameField.getScene(); result = scene;
-            scene.getWindow(); result = stage;
+            controller.nameField.getScene();
+            result = scene;
+            scene.getWindow();
+            result = stage;
             customHib.create((Customer) any);
         }};
 
-        // Run createUser on the FX thread
         Platform.runLater(controller::createUser);
         WaitForAsyncUtils.waitForFxEvents();
 
-        // Now verify
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Registration INFO",
+                    "Success",
+                    "User created"
+            );
+            times = 1;
+        }};
+    }
+
+    @Test
+    @DisplayName("Customer must not be created when password field is invalid")
+    void testCreateUser_invalidCustomerFields1() {
+        givenCustomerFieldsValid();
+        controller.passwordField.setText("");
+
+        new Expectations() {{
+            controller.nameField.getScene();
+            result = scene;
+            scene.getWindow();
+            result = stage;
+
+        }};
+
+        Platform.runLater(controller::createUser);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Registration INFO",
+                    "Wrong data",
+                    "Please check credentials, no password"
+            );
+            times = 1;
+
+            customHib.create((Customer) any);
+            times = 0;
+        }};
+    }
+
+    @Test
+    @DisplayName("Customer must not be created when passwords do not match")
+    void testCreateUser_invalidCustomerFields2() {
+        givenCustomerFieldsValid();
+        controller.passwordField.setText("password1");
+        controller.repeatPasswordField.setText("1pass");
+
+        new Expectations() {{
+            controller.nameField.getScene();
+            result = scene;
+            scene.getWindow();
+            result = stage;
+
+        }};
+
+        Platform.runLater(controller::createUser);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Registration INFO",
+                    "Wrong data",
+                    "Passwords do not match"
+            );
+            times = 1;
+
+            customHib.create((Customer) any);
+            times = 0;
+        }};
+    }
+
+    @Test
+    @DisplayName("Manager must be created when fields are valid")
+    void testCreateUser_validManagerFields() {
+        givenManagerFieldsValid();
+
+        new Expectations() {{
+            controller.nameField.getScene();
+            result = scene;
+            scene.getWindow();
+            result = stage;
+            customHib.create((Customer) any);
+        }};
+
+        Platform.runLater(controller::createUser);
+        WaitForAsyncUtils.waitForFxEvents();
+
         new Verifications() {{
             JavaFxCustomsUtils.generateAlert(
                     Alert.AlertType.INFORMATION,

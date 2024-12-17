@@ -1,15 +1,12 @@
 package com.coursework.eshop.fxController.MainShop;
 
 import com.coursework.eshop.HibernateControllers.CustomHib;
-import com.coursework.eshop.HibernateControllers.EntityManagerFactorySingleton;
 import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
 import com.coursework.eshop.fxController.LoginController;
 import com.coursework.eshop.fxController.RegistrationController;
 import com.coursework.eshop.model.Admin;
 import com.coursework.eshop.model.Customer;
-import com.coursework.eshop.model.CustomerOrder;
-import com.coursework.eshop.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -28,9 +25,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testfx.util.WaitForAsyncUtils;
 
+import java.io.IOException;
 import java.time.LocalDate;
-
-import static org.junit.Assert.assertEquals;
 
 class RegistrationControllerTest {
 
@@ -238,7 +234,35 @@ class RegistrationControllerTest {
         }};
     }
 
-    // todo: test the bitfields
+    @Test
+    @DisplayName("Exception is printed when returning to login screen fails")
+    void testCreateUser_loginScreenError() throws IOException {
+        givenManagerFieldsValid();
+
+        new Expectations() {{
+            controller.nameField.getScene();
+            result = scene;
+            scene.getWindow();
+            result = stage;
+            customHib.create((Customer) any);
+            fxmlLoader.load();
+            controller.currentUser = null;
+            result = new IOException();
+        }};
+
+        Platform.runLater(controller::createUser);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        new Verifications() {{
+            JavaFxCustomsUtils.generateAlert(
+                    Alert.AlertType.INFORMATION,
+                    "Registration INFO",
+                    "Success",
+                    "User created"
+            );
+            times = 1;
+        }};
+    }
 
     private void givenCustomerFieldsValid() {
         controller.customerCheckbox.setSelected(true);

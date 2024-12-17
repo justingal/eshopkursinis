@@ -3,12 +3,13 @@ package com.coursework.eshop.model;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Embeddable
 
-public class ShoppingCart {
+public class ShoppingCart implements Serializable {
 
     @ElementCollection
     private List<CartItem> items = new ArrayList<>();

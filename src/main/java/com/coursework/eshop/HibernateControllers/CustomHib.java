@@ -16,8 +16,6 @@ import java.util.List;
 public class CustomHib extends GenericHib {
     private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
 
-    public CustomHib() {
-    }
 
     private final String errorConstant = "Error";
     public List<Comment> readAllRootComments() {

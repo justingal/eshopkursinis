@@ -25,7 +25,7 @@ public abstract class User implements Serializable {
     String surname;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @LazyCollection(LazyCollectionOption.FALSE)
-    List<Comment> myComments;
+    private List<Comment> myComments;
 
 
     public User() {

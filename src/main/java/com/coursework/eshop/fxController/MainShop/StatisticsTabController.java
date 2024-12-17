@@ -198,6 +198,8 @@ public class StatisticsTabController implements Initializable {
                         .map(entry -> new PieChart.Data(entry.getKey().getLabel(), entry.getValue())) // Use name() method for enum
                         .collect(Collectors.toCollection(FXCollections::observableArrayList));
                 break;
+            default:
+                break;
         }
 
         salesPieChart.setData(pieChartData);

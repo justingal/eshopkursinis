@@ -25,12 +25,12 @@ class CartTabControllerTest {
     @Injectable
     private ShoppingCart cart;
 
-    @BeforeAll
-    static void initToolkit() {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.startup(() -> {});
-        }
-    }
+//    @BeforeAll
+//    static void initToolkit() {
+//        if (!Platform.isFxApplicationThread()) {
+//            Platform.startup(() -> {});
+//        }
+//    }
 
     @BeforeEach
     void setup() {

@@ -57,13 +57,13 @@ class RegistrationControllerTest {
 
     private RegistrationController controller;
 
-//    @BeforeAll
-//    static void initToolkit() {
-//        StartGui.currentUser = new Admin();
-//        if (!Platform.isFxApplicationThread()) {
-//            Platform.startup(() -> {});
-//        }
-//    }
+    @BeforeAll
+    static void initToolkit() {
+        StartGui.currentUser = new Admin();
+        if (!Platform.isFxApplicationThread()) {
+            Platform.startup(() -> {});
+        }
+    }
 
     @BeforeEach
     void setUp() {

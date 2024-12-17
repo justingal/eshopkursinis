@@ -6,13 +6,14 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
-public class Comment {
+public class Comment implements Serializable {
 
 
     @Id

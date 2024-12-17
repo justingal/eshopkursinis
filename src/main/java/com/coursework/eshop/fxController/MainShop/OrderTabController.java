@@ -18,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.hibernate.criterion.Order;
 
 import java.io.IOException;
 import java.net.URL;
@@ -161,37 +162,41 @@ public class OrderTabController implements Initializable {
         managersData = FXCollections.observableArrayList(allManagers);
     }
 
-    public void loadOrderData() {
-        User currentUser = StartGui.currentUser;
-        List<CustomerOrder> allOrders = customHib.getAllRecords(CustomerOrder.class);
+    private boolean isOrderRelevantForUser(CustomerOrder order, User user) {
+        return order.getResponsibleManager() == null || order.getResponsibleManager().getId() == user.getId() || user instanceof Admin;
+    }
+
+    private boolean isOrderUrgent(CustomerOrder order) {
+        long hours = ChronoUnit.HOURS.between(order.getDateCreated().atStartOfDay(), LocalDate.now().atStartOfDay());
+        return hours >= 24 && order.getOrderStatus() != OrderStatus.URGENT && order.getResponsibleManager() == null;
+    }
+
+    private ObservableList<OrderTableParameters> getOrderData(List<CustomerOrder> orders) {
         ObservableList<OrderTableParameters> ordersData = FXCollections.observableArrayList();
-
-        for (CustomerOrder order : allOrders) {
-            if (order.getResponsibleManager() == null || order.getResponsibleManager().getId() == currentUser.getId() || currentUser instanceof Admin) {
-
-                long hours = ChronoUnit.HOURS.between(order.getDateCreated().atStartOfDay(), LocalDate.now().atStartOfDay());
-                if (hours >= 24 && order.getOrderStatus() != OrderStatus.URGENT && order.getResponsibleManager() == null) {
-                    order.setOrderStatus(OrderStatus.URGENT);
-                    customHib.update(order);
-                }
-
-                ordersData.add(new OrderTableParameters(
-                        order.getId(),
-                        order.getDateCreated(),
-                        order.getCustomer().getName(),
-                        order.getOrderStatus(),
-                        order.getResponsibleManager()
-                ));
+        for (CustomerOrder order : orders) {
+            if(!isOrderRelevantForUser(order, StartGui.currentUser)) {
+                continue;
             }
+
+            if(isOrderUrgent(order)) {
+                order.setOrderStatus(OrderStatus.URGENT);
+                customHib.update(order);
+            }
+
+            ordersData.add(new OrderTableParameters(
+                    order.getId(),
+                    order.getDateCreated(),
+                    order.getCustomer().getName(),
+                    order.getOrderStatus(),
+                    order.getResponsibleManager()
+            ));
         }
 
-        ordersData.sort(Comparator.comparing((OrderTableParameters o) -> o.getOrderStatus() == OrderStatus.URGENT)
-                .reversed()
-                .thenComparing(OrderTableParameters::getDateCreated));
+        return ordersData;
+    }
 
-        ordersTableView.setItems(ordersData);
-
-        ordersTableView.setRowFactory(tv -> new TableRow<>() {
+    private TableRow<OrderTableParameters> createTableRow() {
+        return new TableRow<>() {
             @Override
             protected void updateItem(OrderTableParameters item, boolean empty) {
                 super.updateItem(item, empty);
@@ -206,8 +211,22 @@ public class OrderTabController implements Initializable {
                     }
                 }
             }
-        });
+        };
+    }
 
+    public ObservableList<OrderTableParameters> sortOrderDataByUrgency(ObservableList<OrderTableParameters> ordersData) {
+        ordersData.sort(Comparator.comparing((OrderTableParameters o) -> o.getOrderStatus() == OrderStatus.URGENT)
+                .reversed()
+                .thenComparing(OrderTableParameters::getDateCreated));
+        return ordersData;
+    }
+
+    public void loadOrderData() {
+        List<CustomerOrder> allOrders = customHib.getAllRecords(CustomerOrder.class);
+        ObservableList<OrderTableParameters> ordersData = getOrderData(allOrders);
+
+        ordersTableView.setItems(sortOrderDataByUrgency(ordersData));
+        ordersTableView.setRowFactory(tv -> createTableRow());
         ordersTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 loadItems(newValue);

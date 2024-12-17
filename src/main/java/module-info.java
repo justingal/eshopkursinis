@@ -21,5 +21,9 @@ module com.coursework.eshop {
     exports com.coursework.eshop.HibernateControllers to javafx.fxml;
     exports com.coursework.eshop.fxController.MainShop to javafx.fxml;
     opens com.coursework.eshop.fxController.MainShop to javafx.fxml;
+    exports com.coursework.eshop.fxController.MainShop.Util to javafx.fxml;
+    opens com.coursework.eshop.fxController.MainShop.Util to javafx.fxml;
+    exports com.coursework.eshop.fxController.MainShop.Util.ProductProcessors to javafx.fxml;
+    opens com.coursework.eshop.fxController.MainShop.Util.ProductProcessors to javafx.fxml;
 
 }

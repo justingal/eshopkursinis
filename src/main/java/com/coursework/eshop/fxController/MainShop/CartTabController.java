@@ -3,6 +3,7 @@ package com.coursework.eshop.fxController.MainShop;
 import com.coursework.eshop.HibernateControllers.CustomHib;
 import com.coursework.eshop.StartGui;
 import com.coursework.eshop.fxController.JavaFxCustomsUtils;
+import com.coursework.eshop.fxController.MainShop.Util.OrderService;
 import com.coursework.eshop.model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -27,65 +28,30 @@ public class CartTabController {
     public void moveCartToOrder(ActionEvent actionEvent) {
         User user = StartGui.currentUser;
 
-        if (user instanceof Customer || user instanceof Admin) {
-            Customer customer = (Customer) user;
-
-            if (cart == null) {
-                JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Shopping Cart Error", "Shopping cart is not available.");
-                return;
-            }
-
-            try {
-                CustomerOrder customerOrder = new CustomerOrder();
-                customerOrder.setCustomer(customer);
-                customerOrder.setDateCreated(LocalDate.now());
-                customerOrder.setOrderStatus(OrderStatus.PENDING);
-
-                customerOrder.setInOrderBoardGames(new ArrayList<>());
-                customerOrder.setInOrderPuzzles(new ArrayList<>());
-                customerOrder.setInOrderDices(new ArrayList<>());
-
-                double totalPrice = 0.0;
-                for (CartItem item : cart.getItems()) {
-                    int productId = item.getProductId();
-
-                    if (item.getProductType() == ProductType.BOARD_GAME) {
-                        BoardGame boardGame = customHib.getEntityById(BoardGame.class, productId);
-                        if (boardGame != null) {
-                            customerOrder.getInOrderBoardGames().add(boardGame);
-                            totalPrice += boardGame.getPrice();
-                        }
-                    } else if (item.getProductType() == ProductType.PUZZLE) {
-                        Puzzle puzzle = customHib.getEntityById(Puzzle.class, productId);
-                        if (puzzle != null) {
-                            customerOrder.getInOrderPuzzles().add(puzzle);
-                            totalPrice += puzzle.getPrice();
-                        }
-                    } else if (item.getProductType() == ProductType.DICE) {
-                        Dice dice = customHib.getEntityById(Dice.class, productId);
-                        if (dice != null) {
-                            customerOrder.getInOrderDices().add(dice);
-                            totalPrice += dice.getPrice();
-                        }
-                    }
-
-                }
-
-                customerOrder.setTotalPrice(totalPrice);
-
-                customHib.create(customerOrder);
-
-                cart.getItems().clear();
-                updatePriceLabel();
-
-                JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Success", "Order Created", "Your order has been successfully created.");
-
-            } catch (Exception e) {
-                JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Order Creation Error", "There was an error creating the order: " + e.getMessage());
-            }
-        } else {
+        if (!OrderService.isValidUser(user)) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "User Error", "Current user is not a customer.");
+            return;
         }
+
+        if (cart == null) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Shopping Cart Error", "Shopping cart is not available.");
+            return;
+        }
+
+        try {
+            OrderService orderService = new OrderService(customHib, cart);
+            CustomerOrder customerOrder = orderService.createOrder((Customer) user);
+
+            clearCartAndRefreshUI();
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Success", "Order Created", "Your order has been successfully created.");
+        } catch (Exception e) {
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Order Creation Error", "There was an error creating the order: " + e.getMessage());
+        }
+    }
+
+    private void clearCartAndRefreshUI() {
+        cart.getItems().clear();
+        updatePriceLabel();
     }
 
     public void removeFromCart(ActionEvent actionEvent) {

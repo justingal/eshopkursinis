@@ -59,7 +59,7 @@ public class RegistrationController {
 
     private EntityManagerFactory entityManagerFactory = EntityManagerFactorySingleton.getEntityManagerFactory();
 
-    private User currentUser = StartGui.currentUser;
+    public User currentUser = StartGui.currentUser;
 
     private CustomHib userHib = new CustomHib();
 

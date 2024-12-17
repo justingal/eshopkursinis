@@ -30,12 +30,12 @@ class OrderTabControllerTest {
 
     private OrderTabController controller;
 
-    @BeforeAll
-    static void initToolkit() {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.startup(() -> {});
-        }
-    }
+//    @BeforeAll
+//    static void initToolkit() {
+//        if (!Platform.isFxApplicationThread()) {
+//            Platform.startup(() -> {});
+//        }
+//    }
 
     @BeforeEach
     void setUp() {

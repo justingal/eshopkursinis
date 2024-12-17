@@ -19,6 +19,7 @@ public class CustomHib extends GenericHib {
     public CustomHib() {
     }
 
+    private final String errorConstant = "Error";
     public List<Comment> readAllRootComments() {
         EntityManager entityManager = getEntityManager();
         try {
@@ -31,7 +32,7 @@ public class CustomHib extends GenericHib {
             TypedQuery<Comment> typedQuery = entityManager.createQuery(query);
             return typedQuery.getResultList();
         } catch (NoResultException e) {
-            JavaFxCustomsUtils.generateAlert(javafx.scene.control.Alert.AlertType.ERROR, "Error", "Error", "Error while getting root comments");
+            JavaFxCustomsUtils.generateAlert(javafx.scene.control.Alert.AlertType.ERROR, errorConstant, errorConstant, "Error while getting root comments");
             return null;
         } finally {
             if (entityManager != null) entityManager.close();
@@ -71,7 +72,7 @@ public class CustomHib extends GenericHib {
         if (entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().rollback();
         }
-        JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Error", "Error while deleting product");
+        JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, errorConstant, errorConstant, "Error while deleting product");
     }
 
     private void closeEntityManager(EntityManager entityManager) {
@@ -115,7 +116,7 @@ public class CustomHib extends GenericHib {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Error while deleting review", e.getMessage());
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.ERROR, errorConstant, "Error while deleting review", e.getMessage());
         } finally {
             entityManager.close();
         }
@@ -191,7 +192,7 @@ public class CustomHib extends GenericHib {
             entityManager.remove(manager);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
-            JavaFxCustomsUtils.generateAlert(javafx.scene.control.Alert.AlertType.ERROR, "Error", "Error", "Error while deleting manager");
+            JavaFxCustomsUtils.generateAlert(javafx.scene.control.Alert.AlertType.ERROR, errorConstant, errorConstant, "Error while deleting manager");
         } finally {
             if (entityManager != null) entityManager.close();
         }
@@ -215,7 +216,7 @@ public class CustomHib extends GenericHib {
             entityManager.remove(customerOrder);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
-            JavaFxCustomsUtils.generateAlert(javafx.scene.control.Alert.AlertType.ERROR, "Error", "Error", "Error while deleting order");
+            JavaFxCustomsUtils.generateAlert(javafx.scene.control.Alert.AlertType.ERROR, errorConstant, errorConstant, "Error while deleting order");
         } finally {
             if (entityManager != null) entityManager.close();
         }

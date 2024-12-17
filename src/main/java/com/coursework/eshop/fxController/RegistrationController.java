@@ -101,6 +101,7 @@ public class RegistrationController {
     }
 
     public void createUser() {
+        // Validate fields
         if (loginField.getText().isEmpty()) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no login");
         }
@@ -128,7 +129,8 @@ public class RegistrationController {
         if (birthDateField.getValue() == null) {
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Wrong data", "Please check credentials, no birth date");
         }
-        if (customerCheckbox.isSelected() &&
+
+        boolean validCustomerData = customerCheckbox.isSelected() &&
                 !loginField.getText().isEmpty() &&
                 !passwordField.getText().isEmpty() &&
                 repeatPasswordField.getText().equals(passwordField.getText()) &&
@@ -137,29 +139,9 @@ public class RegistrationController {
                 !surnameField.getText().isEmpty() &&
                 !addressField.getText().isEmpty() &&
                 !cardNoField.getText().isEmpty() &&
-                birthDateField.getValue() != null) {
+                birthDateField.getValue() != null;
 
-            String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
-            if (customerCheckbox.isSelected()) {
-                userHib.create(new Customer(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
-            }
-            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
-            try {
-                if (currentUser == null) {
-                    returnToLogin();
-                }
-                if (currentUser != null) {
-                        System.out.println("THIS");
-                    Scene scene = nameField.getScene();
-                    Stage stage = (Stage) scene.getWindow();
-                    stage.close();
-                        System.out.println("SUCCESS");
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else if (managerCheckbox.isSelected() &&
+        boolean validManagerData = managerCheckbox.isSelected() &&
                 !loginField.getText().isEmpty() &&
                 !passwordField.getText().isEmpty() &&
                 repeatPasswordField.getText().equals(passwordField.getText()) &&
@@ -168,22 +150,39 @@ public class RegistrationController {
                 !employeeIdField.getText().isEmpty() &&
                 employmentDateField.getValue() != null &&
                 !medCertificateField.getText().isEmpty() &&
-                birthDateField.getValue() != null) {
+                birthDateField.getValue() != null;
 
+        if (validCustomerData) {
             String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
-            if (managerCheckbox.isSelected()) {
-                userHib.create(new Manager(loginField.getText(), bcryptHashString, birthDateField.getValue(), nameField.getText(), surnameField.getText(), employeeIdField.getText(), medCertificateField.getText(), employmentDateField.getValue()));
-            }
+            userHib.create(new Customer(loginField.getText(), bcryptHashString, birthDateField.getValue(),
+                    nameField.getText(), surnameField.getText(), addressField.getText(), cardNoField.getText()));
+
             JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
             try {
                 if (currentUser == null) {
                     returnToLogin();
+                } else {
+                    // Use the UI hierarchy to get the stage
+                    Stage currentStage = (Stage) nameField.getScene().getWindow();
+                    currentStage.close();
                 }
-                if (currentUser != null) {
-                    Stage stage = (Stage) nameField.getScene().getWindow();
-                    stage.close();
-                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (validManagerData) {
+            String bcryptHashString = BCrypt.withDefaults().hashToString(12, passwordField.getText().toCharArray());
+            userHib.create(new Manager(loginField.getText(), bcryptHashString, birthDateField.getValue(),
+                    nameField.getText(), surnameField.getText(), employeeIdField.getText(),
+                    medCertificateField.getText(), employmentDateField.getValue()));
 
+            JavaFxCustomsUtils.generateAlert(Alert.AlertType.INFORMATION, "Registration INFO", "Success", "User created");
+            try {
+                if (currentUser == null) {
+                    returnToLogin();
+                } else {
+                    Stage currentStage = (Stage) nameField.getScene().getWindow();
+                    currentStage.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

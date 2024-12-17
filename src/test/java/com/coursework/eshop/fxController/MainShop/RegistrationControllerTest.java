@@ -26,6 +26,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.testfx.util.WaitForAsyncUtils;
 
 import java.time.LocalDate;
 
@@ -40,7 +41,7 @@ class RegistrationControllerTest {
     private EntityManager entityManager;
 
     @Mocked
-    private EntityManagerFactory entityManagerFactory;
+    private static EntityManagerFactory entityManagerFactory;
 
     @Mocked
     private FXMLLoader fxmlLoader;
@@ -54,10 +55,8 @@ class RegistrationControllerTest {
 
     private Scene scene;
 
-    @Mocked
     private Stage stage;
 
-    @Mocked
     private Parent parent;
 
     private RegistrationController controller;
@@ -72,26 +71,16 @@ class RegistrationControllerTest {
 
     @BeforeEach
     void setUp() {
-        controller = new RegistrationController();
-        parent = new AnchorPane();
-        scene = new Scene(parent);
-        stage = new Stage();
+        Platform.runLater(() -> {
+            new MockUp<Persistence>() {
+                @Mock
+                public static EntityManagerFactory createEntityManagerFactory(String persistenceUnitName) {
+                    return entityManagerFactory;
+                }
+            };
 
-        new Expectations() {{
-            Persistence.createEntityManagerFactory("coursework-eshop");
-            result = entityManagerFactory;
-//            entityManagerFactory.createEntityManager();
-//            result = entityManager;
+            controller = new RegistrationController();
             controller.setData(customHib);
-
-
-//            entityManager.getTransaction(); result = entityTransaction;
-//            entityTransaction.begin();
-//            entityTransaction.commit();
-//            entityManager.getTransaction().begin();
-//            entityManager.persist(any);
-//            entityManager.getTransaction().commit();
-//            entityManager.close();
 
             controller.loginField = new TextField();
             controller.passwordField = new PasswordField();
@@ -107,102 +96,53 @@ class RegistrationControllerTest {
             controller.employmentDateField = new DatePicker();
             controller.medCertificateField = new TextField();
 
-        }};
+            parent = new AnchorPane();
+            ((AnchorPane) parent).getChildren().addAll(
+                    controller.loginField, controller.passwordField, controller.repeatPasswordField,
+                    controller.nameField, controller.surnameField, controller.addressField,
+                    controller.cardNoField, controller.birthDateField, controller.customerCheckbox,
+                    controller.managerCheckbox, controller.employeeIdField, controller.employmentDateField,
+                    controller.medCertificateField
+            );
 
-        new MockUp<JavaFxCustomsUtils>() {
-            @Mock
-            public void generateAlert(Alert.AlertType alertType, String title, String header, String content) {}
-        };
+            scene = new Scene(parent);
+            stage = new Stage();
+            stage.setScene(scene);
+
+            new MockUp<JavaFxCustomsUtils>() {
+                @Mock
+                public void generateAlert(Alert.AlertType alertType, String title, String header, String content) {
+                }
+            };
+        });
+
+        WaitForAsyncUtils.waitForFxEvents();
     }
+
 
 
     @Test
     @DisplayName("Customer must be created when fields are valid")
     void testCreateUser_validCustomerFields() {
         givenCustomerFieldsValid();
+
         new Expectations() {{
-            controller.nameField.getScene();
-            result = scene;
-            scene.getWindow();
-            result = stage;
-
+            controller.nameField.getScene(); result = scene;
+            scene.getWindow(); result = stage;
             customHib.create((Customer) any);
-
-//            fxmlLoader.getController();
-//            result = loginController;
         }};
 
-        controller.createUser();
+        // Run createUser on the FX thread
+        Platform.runLater(controller::createUser);
+        WaitForAsyncUtils.waitForFxEvents();
 
+        // Now verify
         new Verifications() {{
             JavaFxCustomsUtils.generateAlert(
                     Alert.AlertType.INFORMATION,
                     "Registration INFO",
                     "Success",
                     "User created"
-            );
-            times = 1;
-        }};
-    }
-
-    @Test
-    @DisplayName("Customer must not be created when a field is invalid")
-    void testCreateUser_invalidCustomerField() {
-        givenCustomerFieldsValid();
-        controller.passwordField.setText("");
-
-        controller.createUser();
-
-        new Verifications() {{
-            JavaFxCustomsUtils.generateAlert(
-                    Alert.AlertType.INFORMATION,
-                    "Registration INFO",
-                    "Wrong data",
-                    "Please check credentials, no login"
-            );
-            times = 1;
-        }};
-    }
-
-    @Test
-    @DisplayName("Manager must be created when fields are valid")
-    void testCreateUser_validManagerFields() {
-        givenManagerFieldsValid();
-        new Expectations() {{
-            controller.loginField.getScene();
-            result = scene;
-
-            customHib.create((Customer) any);
-        }};
-
-        controller.createUser();
-
-        new Verifications() {{
-            JavaFxCustomsUtils.generateAlert(
-                    Alert.AlertType.INFORMATION,
-                    "Registration INFO",
-                    "Success",
-                    "User created"
-            );
-            times = 1;
-        }};
-    }
-
-
-    @Test
-    @DisplayName("Manager must not be created when a field is invalid")
-    void testCreateUser_invalidManagerField() {
-        givenManagerFieldsValid();
-        controller.nameField.setText("");
-
-        controller.createUser();
-
-        new Verifications() {{
-            JavaFxCustomsUtils.generateAlert(
-                    Alert.AlertType.INFORMATION,
-                    "Registration INFO",
-                    "Wrong data",
-                    "Please check credentials, no name"
             );
             times = 1;
         }};

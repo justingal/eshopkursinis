@@ -7,8 +7,10 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.io.Serializable;
+
 @Entity
-public class Review extends Comment {
+public class Review extends Comment implements Serializable {
 
     private double rating;
 

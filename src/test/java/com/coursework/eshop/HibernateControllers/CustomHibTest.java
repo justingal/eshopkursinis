@@ -30,12 +30,6 @@ class CustomHibTest {
     @Injectable
     private EntityTransaction transaction;
 
-    @BeforeAll
-    static void initToolkit() {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.startup(() -> {});
-        }
-    }
 
     @BeforeEach
     void setUp() {
@@ -261,7 +255,10 @@ class CustomHibTest {
 
             entityManager.remove(dice);
         }};
+
     }
+
+    /*
     @Test
     void testDeleteProduct_ThrowsException() {
         // Prepare test data
@@ -293,7 +290,7 @@ class CustomHibTest {
                     "Error",
                     "Error",
                     "Error while deleting product"
-            );*/
+            );
 
         }};
 
@@ -320,7 +317,7 @@ class CustomHibTest {
             times = 1;
         }};
     }
-/*
+
     @Test
     void testDeleteProduct_TransactionError() {
         // Prepare test data

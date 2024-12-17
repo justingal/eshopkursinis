@@ -28,12 +28,12 @@ class ProductTabControllerTest {
     private ProductTabController controller;
 
 
-    @BeforeAll
-    static void initToolkit() {
-        if (!Platform.isFxApplicationThread()) {
-            Platform.startup(() -> {});
-        }
-    }
+//    @BeforeAll
+//    static void initToolkit() {
+//        if (!Platform.isFxApplicationThread()) {
+//            Platform.startup(() -> {});
+//        }
+//    }
 
     @BeforeEach
     void setup() {
